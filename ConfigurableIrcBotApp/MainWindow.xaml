@@ -1,0 +1,28 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Title="Bot Configuration" Height="375" Width="775">
+    <Grid>
+        <Label x:Name="userNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="passwordLabel" Content="Oauth key:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="channelLabel" Content="Channel:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="userNameInput" HorizontalAlignment="Left" Height="26" Margin="81,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="passwordInput" HorizontalAlignment="Left" Height="26" Margin="81,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="channelInput" HorizontalAlignment="Left" Height="24" Margin="81,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="179"/>
+        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="80,110,0,0" VerticalAlignment="Top" Width="75" Click="connectButton_Click"/>
+        <Button x:Name="disconnectButton" Content="Disconnect" HorizontalAlignment="Left" Margin="185,110,0,0" VerticalAlignment="Top" Width="75" Click="disconnectButton_Click"/>
+        <Label x:Name="motdLabel" Content="Set Message of the Day:" HorizontalAlignment="Left" Margin="28,154,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="motdInput" HorizontalAlignment="Left" Height="50" Margin="27,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
+        <Label x:Name="streamInfoLabel" Content="Set Stream Information:" HorizontalAlignment="Left" Margin="28,235,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="streamInfoInput" HorizontalAlignment="Left" Height="43" Margin="28,266,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="234"/>
+        <Button x:Name="motdButton" Content="Set Motd" HorizontalAlignment="Left" Margin="279,180,0,0" VerticalAlignment="Top" Width="75" Height="50" Click="motdButton_Click"/>
+        <Button x:Name="streamInfoButton" Content="Set Stream" HorizontalAlignment="Left" Margin="279,266,0,0" VerticalAlignment="Top" Width="75" Height="43" Click="streamInfoButton_Click"/>
+        <Label x:Name="sendmessageLabel" Content="Send Message as bot:" HorizontalAlignment="Left" Margin="275,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="sendMessageInput" HorizontalAlignment="Left" Height="48" Margin="405,0,0,286" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="205"/>
+        <Button x:Name="botMessage" Content="Send" HorizontalAlignment="Left" Margin="405,63,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="sendMessage_Click"/>
+    </Grid>
+</Window>
