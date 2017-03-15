@@ -70,5 +70,10 @@ namespace ConfigurableIrcBotApp
         {
             bot.sendChatMessage(sendMessageInput.Text);
         }
+
+        public void write(string message)
+        {
+            MessageBox.Show(message);
+        }
     }
 }

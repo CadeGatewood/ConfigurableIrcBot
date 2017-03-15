@@ -24,5 +24,6 @@
         <Label x:Name="sendmessageLabel" Content="Send Message as bot:" HorizontalAlignment="Left" Margin="275,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="sendMessageInput" HorizontalAlignment="Left" Height="48" Margin="405,0,0,286" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="205"/>
         <Button x:Name="botMessage" Content="Send" HorizontalAlignment="Left" Margin="405,63,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="sendMessage_Click"/>
+        <Label Content="Commands:" HorizontalAlignment="Left" Margin="405,154,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
