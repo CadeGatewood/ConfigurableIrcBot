@@ -9,10 +9,36 @@ using System.Net.Sockets;
 
 using System.Threading;
 
-using System.Diagnostics;
-
 namespace ConfigurableIrcBotApp
 {
+
+    class Message
+    {
+        private string userName="";
+        private string message="";
+
+        public Message()
+        {
+
+        }
+
+        public Message(string userName, string message)
+        {
+            this.userName = userName;
+            this.message = message;
+        }
+
+        public string getMessage()
+        {
+            return this.message;
+        }
+
+        public string getUserName()
+        {
+            return this.userName;
+        }
+    }
+
     class IrcClient
     {
         private string userName;
@@ -32,6 +58,8 @@ namespace ConfigurableIrcBotApp
         private string motd = "placeholder";
         private string streamInfo = "placeholder";
 
+        private MainWindow main;
+
         public IrcClient(MainWindow main, string userName, string password, string channel)
         {
             ircThread = new Thread(new ThreadStart(Run));
@@ -40,6 +68,8 @@ namespace ConfigurableIrcBotApp
             this.userName = userName;
             this.password = password;
             this.channel = channel;
+
+            this.main = main;
 
         }
 
@@ -59,7 +89,15 @@ namespace ConfigurableIrcBotApp
 
             while (_running)
             {
-                parseMessage(readMessage());    
+                string rawMessage = inputStream.ReadLine();
+                Message message = new Message();
+                if (rawMessage.StartsWith(":") && rawMessage.Contains("!"))
+                {
+                    message = new Message(  rawMessage.Substring(rawMessage.IndexOf(":")+1, rawMessage.IndexOf("!")-1),
+                                            rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":")+1)+1)
+                                        );
+                }
+                parseMessage(message);
             }
         }
 
@@ -94,22 +132,19 @@ namespace ConfigurableIrcBotApp
 
         public string readMessage()
         {
-            string message = inputStream.ReadLine();
-            return message;
+            return inputStream.ReadLine();
         }
 
-        public void parseMessage(string message)
+        public void parseMessage(Message message)
         {
-            //todo proof of concept, more robust message object planned, smarter parsing planned
-            Trace.WriteLine(message);
-            if (message.Contains("!hello")){
-                sendChatMessage("Hi there!");
+            if (message.getMessage().Equals("!hello")){
+                sendChatMessage("Hi there, " + message.getUserName() + "!");
             }
-            else if (message.Contains("!motd"))
+            else if (message.getMessage().Equals("!motd"))
             {
                 sendChatMessage(motd);
             }
-            else if (message.Contains("!stream"))
+            else if (message.getMessage().Equals("!stream"))
             {
                 sendChatMessage(streamInfo);
             }
