@@ -45,8 +45,8 @@ namespace ConfigurableIrcBotApp
         private string channel;
         private string password;
 
-        private string ip = "irc.twitch.tv";
-        private int port = 6667;
+        private string ip;
+        private int port;
 
         private TcpClient tcpClient;
         private StreamReader inputStream;
@@ -60,10 +60,15 @@ namespace ConfigurableIrcBotApp
 
         private MainWindow main;
 
-        public IrcClient(MainWindow main, string userName, string password, string channel)
+        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
+
+
             ircThread = new Thread(new ThreadStart(Run));
             ircThread.IsBackground = true;
+
+            this.ip = ip;
+            this.port = port;
 
             this.userName = userName;
             this.password = password;
@@ -110,8 +115,6 @@ namespace ConfigurableIrcBotApp
         {
             this._running = false;
         }
-
-
 
         public void joinRoom(string channel)
         {

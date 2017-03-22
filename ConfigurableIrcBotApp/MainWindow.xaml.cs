@@ -4,76 +4,99 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using System.Threading;
+using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
     {
+        List<String> settingsKeys;
+
         public MainWindow()
         {
             InitializeComponent();
+            this.settingsKeys = new List<String>(new string[] {"ip", "port", "channel", "userName", "password"});
+
+            foreach (string key in settingsKeys)
+            {
+                ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
+            }
+
+        }
+
+
+
+        private void portInput_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         private IrcClient bot;
 
+        public void write(string message)
+        {
+            System.Windows.MessageBox.Show(message);
+        }
+
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (userNameInput.Text != "" &&
-                passwordInput.Text != "" &&
-                channelInput.Text != ""
+            if (userName.Text != "" &&
+                password.Text != "" &&
+                channel.Text != "" &&
+                ip.Text != "" &&
+                port.Text != "" 
                 )
             {
                 if (bot == null || (bot != null && !bot.isRunning()))
                 {
-                    bot = new IrcClient(this, userNameInput.Text, passwordInput.Text, channelInput.Text);
+                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
                     bot.Start();
                 }
                 else if (bot.isRunning())
                 {
-                    MessageBox.Show("You already have a bot running, please disconnect the first before attempting a new connection");
+                    System.Windows.MessageBox.Show("You already have a bot running, please disconnect the first before attempting a new connection");
                 }
             }
             else
             {
-                MessageBox.Show("Please enter the relevant information");
+                System.Windows.MessageBox.Show("Please enter the relevant information");
             }
-
+            
         }
 
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            bot.sendChatMessage("bye!");
-            bot.Stop();
+            bot.sendChatMessage("Goodbye!");
         }
 
-        private void motdButton_Click(object sender, RoutedEventArgs e)
+        private void saveSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            bot.setMotd(motdInput.Text);
-        }
-
-        private void streamInfoButton_Click(object sender, RoutedEventArgs e)
-        {
-            bot.setStreamInfo(streamInfoInput.Text);
-        }
-
-        private void sendMessage_Click(object sender, RoutedEventArgs e)
-        {
-            bot.sendChatMessage(sendMessageInput.Text);
-        }
-
-        public void write(string message)
-        {
-            MessageBox.Show(message);
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var settings = configFile.AppSettings.Settings;
+            foreach (String key in this.settingsKeys)
+            {
+                if (settings[key] != null)
+                {
+                    configFile.AppSettings.Settings[key].Value = ((TextBox)grid.FindName(key)).Text;
+                    configFile.Save();
+                }
+                else
+                {
+                    configFile.AppSettings.Settings.Add(key, ((TextBox)grid.FindName(key)).Text);
+                    configFile.Save();
+                }
+            }
         }
     }
 }
