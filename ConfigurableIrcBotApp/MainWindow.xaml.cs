@@ -13,14 +13,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Collections.Generic;
+
 using System.Text.RegularExpressions;
 using System.Configuration;
+using System.IO;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
     {
         List<String> settingsKeys;
+        IDictionary<string, Moderator> moderators;
+
+        string moderatorsFile = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "moderators.JSON";
 
         public MainWindow()
         {
@@ -31,6 +40,8 @@ namespace ConfigurableIrcBotApp
             {
                 ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
+
+
 
         }
 
@@ -78,6 +89,7 @@ namespace ConfigurableIrcBotApp
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
             bot.sendChatMessage("Goodbye!");
+            bot.Stop();
         }
 
         private void saveSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -97,6 +109,54 @@ namespace ConfigurableIrcBotApp
                     configFile.Save();
                 }
             }
+        }
+
+        private void loadModerators()
+        {
+            JsonTextReader jsonReader;
+            StreamReader fileRead;
+
+            try
+            {
+                fileRead = File.OpenText(moderatorsFile);
+                jsonReader = new JsonTextReader(fileRead);
+            }
+            catch (FileNotFoundException)
+            {
+                File.Create(moderatorsFile);
+                fileRead = File.OpenText(moderatorsFile);
+                jsonReader = new JsonTextReader(fileRead);
+            }
+
+            JsonSerializer serializer = new JsonSerializer();
+            List<Moderator> savedModerators = (List<Moderator>)serializer.Deserialize(jsonReader, typeof(Moderator));
+            foreach (Moderator mod in savedModerators)
+            {
+                this.moderators[mod.userName] = mod;
+            }
+
+        }
+
+        private void moderatorAdd_Click(object sender, RoutedEventArgs e)
+        {
+            loadModerators();
+
+            this.moderators.Add(moderatorInput.Text, new Moderator(moderatorInput.Text, 0));
+        }
+
+        private void moderatorRemove_Click(object sender, RoutedEventArgs e)
+        {
+            string fileLocation = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "moderators.JSON";
+
+            loadModerators();
+
+            this.moderators.Remove(moderatorInput.Text);
+
+        }
+
+        private void writeModeratorsFile()
+        {
+            File.WriteAllText(moderatorsFile, JsonConvert.SerializeObject(moderators));
         }
     }
 }
