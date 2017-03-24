@@ -158,7 +158,7 @@ namespace ConfigurableIrcBotApp
 
         private void writeModeratorsFile()
         {
-            File.WriteAllText(moderatorsFile, JsonConvert.SerializeObject(moderators));
+            File.WriteAllText(moderatorsFile, JsonConvert.SerializeObject(moderators, Formatting.Indented));
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
