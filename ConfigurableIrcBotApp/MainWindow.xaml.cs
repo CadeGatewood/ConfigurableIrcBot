@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.ComponentModel;
 using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
@@ -41,13 +41,14 @@ namespace ConfigurableIrcBotApp
                 ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
 
-
+            moderators = new Dictionary<string, Moderator>();
+            loadModerators();
 
         }
 
 
 
-        private void portInput_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void numberValidation(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
@@ -129,34 +130,40 @@ namespace ConfigurableIrcBotApp
             }
 
             JsonSerializer serializer = new JsonSerializer();
-            List<Moderator> savedModerators = (List<Moderator>)serializer.Deserialize(jsonReader, typeof(Moderator));
-            foreach (Moderator mod in savedModerators)
+            IDictionary<string, Moderator> savedModerators = (Dictionary<string, Moderator>)serializer.Deserialize(jsonReader, typeof(Dictionary<string, Moderator>));
+            if (savedModerators != null)
             {
-                this.moderators[mod.userName] = mod;
+                foreach (string mod in savedModerators.Keys)
+                {
+                    this.moderators[mod] = savedModerators[mod];
+                }
             }
-
+            fileRead.Close();
+            jsonReader.Close();
         }
 
         private void moderatorAdd_Click(object sender, RoutedEventArgs e)
         {
             loadModerators();
 
-            this.moderators.Add(moderatorInput.Text, new Moderator(moderatorInput.Text, 0));
+            this.moderators[moderatorInput.Text] = new Moderator(moderatorInput.Text, Int32.Parse(authLevelBox.Text));
         }
 
         private void moderatorRemove_Click(object sender, RoutedEventArgs e)
         {
-            string fileLocation = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "moderators.JSON";
-
             loadModerators();
 
             this.moderators.Remove(moderatorInput.Text);
-
         }
 
         private void writeModeratorsFile()
         {
             File.WriteAllText(moderatorsFile, JsonConvert.SerializeObject(moderators));
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            writeModeratorsFile();
         }
     }
 }

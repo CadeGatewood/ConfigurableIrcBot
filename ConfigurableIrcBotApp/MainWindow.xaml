@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        Closing="MainWindow_Closing"
         mc:Ignorable="d"
         Title="Bot Configuration" Height="375" Width="850">
     <Grid x:Name="grid" HorizontalAlignment="Left" Height="325" Margin="10,10,0,0" VerticalAlignment="Top" Width="825">
@@ -13,7 +14,7 @@
         <Label x:Name="userNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="6,86,0,0" VerticalAlignment="Top"/>
         <Label x:Name="passwordLabel" Content="OAuth:" HorizontalAlignment="Left" Margin="25,112,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="ip" HorizontalAlignment="Left" Height="23" Margin="77,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="port" HorizontalAlignment="Left" Height="23" Margin="77,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="portInput_PreviewTextInput"/>
+        <TextBox x:Name="port" HorizontalAlignment="Left" Height="23" Margin="77,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="numberValidation"/>
         <TextBox x:Name="channel" HorizontalAlignment="Left" Height="23" Margin="77,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="userName" HorizontalAlignment="Left" Height="23" Margin="77,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="password" HorizontalAlignment="Left" Height="23" Margin="77,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" AcceptsReturn="True"/>
@@ -22,10 +23,13 @@
         <Button x:Name="saveSettingsButton" HorizontalAlignment="Left" Margin="30,146,0,0" VerticalAlignment="Top" Width="80" Height="45" Click="saveSettingsButton_Click">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Save Settings as Default</TextBlock>
         </Button>
-        <Label x:Name="moderatorsLabel" Content="Add/Remove Moderators:" HorizontalAlignment="Left" Margin="38,197,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="moderatorInput" HorizontalAlignment="Left" Height="23" Margin="44,223,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="141"/>
-        <Button x:Name="moderatorAdd" Content="Add mod" HorizontalAlignment="Left" Margin="30,251,0,0" VerticalAlignment="Top" Width="75" Click="moderatorAdd_Click"/>
-        <Button x:Name="moderatorRemove" Content="Remove mod" HorizontalAlignment="Left" Margin="122,251,0,0" VerticalAlignment="Top" Width="75" Click="moderatorRemove_Click"/>
+        <Label x:Name="moderatorsLabel" Content="Add/Remove Moderators:" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="moderatorInput" HorizontalAlignment="Left" Height="23" Margin="16,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94"/>
+        <Button x:Name="moderatorAdd" Content="Add mod" HorizontalAlignment="Left" Margin="16,273,0,0" VerticalAlignment="Top" Width="75" Click="moderatorAdd_Click"/>
+        <Button x:Name="moderatorRemove" Content="Remove mod" HorizontalAlignment="Left" Margin="114,273,0,0" VerticalAlignment="Top" Width="75" Click="moderatorRemove_Click"/>
+        <TextBox x:Name="authLevelBox" HorizontalAlignment="Left" Height="23" Margin="122,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="numberValidation"/>
+        <Label x:Name="moderatorUserNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="10,219,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="moderatorAuthLabel" Content="Auth Level:" HorizontalAlignment="Left" Margin="119,219,0,0" VerticalAlignment="Top"/>
     </Grid>
 
 </Window>
