@@ -13,14 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
 using System.Configuration;
-using System.IO;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 
 namespace ConfigurableIrcBotApp
 {
@@ -28,8 +25,11 @@ namespace ConfigurableIrcBotApp
     {
         List<String> settingsKeys;
         IDictionary<string, Moderator> moderators;
+        IDictionary<string, Commands> commands;
 
-        string moderatorsFile = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "moderators.JSON";
+        private IrcClient bot;
+
+        private JsonFileHandler jsonFileHandler;
 
         public MainWindow()
         {
@@ -41,20 +41,23 @@ namespace ConfigurableIrcBotApp
                 ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
 
-            moderators = new Dictionary<string, Moderator>();
-            loadModerators();
+            jsonFileHandler = new JsonFileHandler();
 
+            this.moderators = jsonFileHandler.loadModerators();
+            this.commands = jsonFileHandler.loadCommands();
         }
 
-
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            jsonFileHandler.writeModerators(this.moderators, "moderators.JSON");
+            jsonFileHandler.writeCommands(this.commands, "commands.JSON");
+        }
 
         private void numberValidation(object sender, TextCompositionEventArgs e)
-        {
+                {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-
-        private IrcClient bot;
 
         public void write(string message)
         {
@@ -74,6 +77,8 @@ namespace ConfigurableIrcBotApp
                 {
                     bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
                     bot.Start();
+                    bot.setModerators(this.moderators);
+                    bot.setCommands(this.commands);
                 }
                 else if (bot.isRunning())
                 {
@@ -112,58 +117,48 @@ namespace ConfigurableIrcBotApp
             }
         }
 
-        private void loadModerators()
-        {
-            JsonTextReader jsonReader;
-            StreamReader fileRead;
-
-            try
-            {
-                fileRead = File.OpenText(moderatorsFile);
-                jsonReader = new JsonTextReader(fileRead);
-            }
-            catch (FileNotFoundException)
-            {
-                File.Create(moderatorsFile);
-                fileRead = File.OpenText(moderatorsFile);
-                jsonReader = new JsonTextReader(fileRead);
-            }
-
-            JsonSerializer serializer = new JsonSerializer();
-            IDictionary<string, Moderator> savedModerators = (Dictionary<string, Moderator>)serializer.Deserialize(jsonReader, typeof(Dictionary<string, Moderator>));
-            if (savedModerators != null)
-            {
-                foreach (string mod in savedModerators.Keys)
-                {
-                    this.moderators[mod] = savedModerators[mod];
-                }
-            }
-            fileRead.Close();
-            jsonReader.Close();
-        }
-
         private void moderatorAdd_Click(object sender, RoutedEventArgs e)
         {
-            loadModerators();
-
             this.moderators[moderatorInput.Text] = new Moderator(moderatorInput.Text, Int32.Parse(authLevelBox.Text));
+            bot.setModerators(this.moderators);
         }
 
         private void moderatorRemove_Click(object sender, RoutedEventArgs e)
         {
-            loadModerators();
-
             this.moderators.Remove(moderatorInput.Text);
+            bot.setModerators(this.moderators);
         }
 
-        private void writeModeratorsFile()
+        private void motdButton_Click(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText(moderatorsFile, JsonConvert.SerializeObject(moderators, Formatting.Indented));
+            bot.setMotd(motdInput.Text);
         }
 
-        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        private void clearMotdButton_Click(object sender, RoutedEventArgs e)
         {
-            writeModeratorsFile();
+            bot.setMotd("");
+        }
+
+        private void streamInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setStreamInfo(streamInfoInput.Text);
+        }
+
+        private void clearStreamInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setStreamInfo("");
+        }
+
+        private void commandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.commands["!"+commandInput.Text] = new Commands(commandInput.Text, responseInput.Text, Int32.Parse(authInput.Text));
+            bot.setCommands(this.commands);
+        }
+
+        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.commands.Remove("!"+commandInput.Text);
+            bot.setCommands(this.commands);
         }
     }
 }
