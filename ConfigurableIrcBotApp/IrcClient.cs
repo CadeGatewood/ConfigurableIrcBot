@@ -17,10 +17,7 @@ namespace ConfigurableIrcBotApp
         private string userName="";
         private string message="";
 
-        public Message()
-        {
-
-        }
+        public Message(){}
 
         public Message(string userName, string message)
         {
@@ -60,6 +57,9 @@ namespace ConfigurableIrcBotApp
 
         private MainWindow main;
 
+        IDictionary<string, Moderator> moderators;
+        IDictionary<string, Commands> commands;
+
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
 
@@ -76,6 +76,16 @@ namespace ConfigurableIrcBotApp
 
             this.main = main;
 
+        }
+
+        public void setModerators(IDictionary<string, Moderator> moderators)
+        {
+            this.moderators = moderators;
+        }
+
+        public void setCommands(IDictionary<string, Commands> commands)
+        {
+            this.commands = commands;
         }
 
         public void Run()
@@ -140,16 +150,36 @@ namespace ConfigurableIrcBotApp
 
         public void parseMessage(Message message)
         {
-            if (message.getMessage().Equals("!hello")){
-                sendChatMessage("Hi there, " + message.getUserName() + "!");
-            }
-            else if (message.getMessage().Equals("!motd"))
+            if (!message.getMessage().StartsWith("!")){return;}
+
+            string commandParent = message.getMessage().IndexOf(" ") > 0 ?
+                    message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
+                    message.getMessage();
+
+            switch (commandParent)
             {
-                sendChatMessage(motd);
-            }
-            else if (message.getMessage().Equals("!stream"))
-            {
-                sendChatMessage(streamInfo);
+                case "!hello":
+                    sendChatMessage("Hi there, " + message.getUserName() + "!");
+                    break;
+                case "!motd":
+                    sendChatMessage(motd);
+                    break;
+                case "!stream":
+                    sendChatMessage(streamInfo);
+                    break;
+                default:
+                    /*int startIndex = message.getMessage().IndexOf("!")+1;
+                    int endIndex = message.getMessage().IndexOf(" ") > 0 ? message.getMessage().IndexOf(" ") : message.getMessage().Length;
+
+                    string key = message.getMessage().Substring(
+                            startIndex, endIndex);*/
+                    if (commands.ContainsKey(commandParent))
+                    {
+                        Commands command = commands[commandParent];
+                        sendChatMessage(command.response);
+                    }
+                    
+                    break;
             }
         }
 

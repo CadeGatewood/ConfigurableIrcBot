@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
 using System.Configuration;
@@ -26,10 +25,11 @@ namespace ConfigurableIrcBotApp
     {
         List<String> settingsKeys;
         IDictionary<string, Moderator> moderators;
+        IDictionary<string, Commands> commands;
 
         private IrcClient bot;
 
-        private ModeratorJson moderatorJson;
+        private JsonFileHandler jsonFileHandler;
 
         public MainWindow()
         {
@@ -41,19 +41,20 @@ namespace ConfigurableIrcBotApp
                 ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
 
-            moderatorJson = new ModeratorJson();
-            
-            this.moderators = moderatorJson.loadModerators();
+            jsonFileHandler = new JsonFileHandler();
 
+            this.moderators = jsonFileHandler.loadModerators();
+            this.commands = jsonFileHandler.loadCommands();
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            moderatorJson.writeModeratorsFile(this.moderators);
+            jsonFileHandler.writeModerators(this.moderators, "moderators.JSON");
+            jsonFileHandler.writeCommands(this.commands, "commands.JSON");
         }
 
         private void numberValidation(object sender, TextCompositionEventArgs e)
-        {
+                {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -76,6 +77,8 @@ namespace ConfigurableIrcBotApp
                 {
                     bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
                     bot.Start();
+                    bot.setModerators(this.moderators);
+                    bot.setCommands(this.commands);
                 }
                 else if (bot.isRunning())
                 {
@@ -117,11 +120,45 @@ namespace ConfigurableIrcBotApp
         private void moderatorAdd_Click(object sender, RoutedEventArgs e)
         {
             this.moderators[moderatorInput.Text] = new Moderator(moderatorInput.Text, Int32.Parse(authLevelBox.Text));
+            bot.setModerators(this.moderators);
         }
 
         private void moderatorRemove_Click(object sender, RoutedEventArgs e)
         {
             this.moderators.Remove(moderatorInput.Text);
+            bot.setModerators(this.moderators);
+        }
+
+        private void motdButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setMotd(motdInput.Text);
+        }
+
+        private void clearMotdButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setMotd("");
+        }
+
+        private void streamInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setStreamInfo(streamInfoInput.Text);
+        }
+
+        private void clearStreamInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            bot.setStreamInfo("");
+        }
+
+        private void commandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.commands["!"+commandInput.Text] = new Commands(commandInput.Text, responseInput.Text, Int32.Parse(authInput.Text));
+            bot.setCommands(this.commands);
+        }
+
+        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.commands.Remove("!"+commandInput.Text);
+            bot.setCommands(this.commands);
         }
     }
 }
