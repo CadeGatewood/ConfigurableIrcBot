@@ -98,6 +98,44 @@ namespace ConfigurableIrcBotApp
             bot.Stop();
         }
 
+        private void enterSendMessage(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+            {
+                sendMessage();
+            }
+        }
+
+        private void sendMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            sendMessage();
+        }
+
+        private void sendMessage()
+        {
+            if (bot != null)
+            {
+                bot.sendChatMessage(sendMessageBox.Text);
+            }
+            else
+            {
+                write("Please connect the bot to a channel before trying to send a message");
+            }
+        }
+
+        public void writeToChatBlock(Message message, bool command)
+        {
+            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd);
+            output.Text = message.getUserName() + ": " + message.getMessage();
+            output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
+            if (command)
+            {
+                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+            }
+            chatTextBox.AppendText(Environment.NewLine);
+            chatTextBox.ScrollToEnd();
+        }
+
         private void saveSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);

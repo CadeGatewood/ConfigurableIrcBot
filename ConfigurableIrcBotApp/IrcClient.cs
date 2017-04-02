@@ -12,7 +12,7 @@ using System.Threading;
 namespace ConfigurableIrcBotApp
 {
 
-    class Message
+    public class Message
     {
         private string userName="";
         private string message="";
@@ -36,7 +36,7 @@ namespace ConfigurableIrcBotApp
         }
     }
 
-    class IrcClient
+    public class IrcClient
     {
         private string userName;
         private string channel;
@@ -150,11 +150,24 @@ namespace ConfigurableIrcBotApp
 
         public void parseMessage(Message message)
         {
-            if (!message.getMessage().StartsWith("!")){return;}
+            if (!message.getMessage().StartsWith("!")){
+                main.Dispatcher.Invoke(() =>
+                {
+                    main.writeToChatBlock(message, false);
+                });
+                return;
+            }
+
+
 
             string commandParent = message.getMessage().IndexOf(" ") > 0 ?
                     message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
                     message.getMessage();
+
+            main.Dispatcher.Invoke(() =>
+            {
+                main.writeToChatBlock(message, true);
+            });
 
             switch (commandParent)
             {
@@ -168,11 +181,6 @@ namespace ConfigurableIrcBotApp
                     sendChatMessage(streamInfo);
                     break;
                 default:
-                    /*int startIndex = message.getMessage().IndexOf("!")+1;
-                    int endIndex = message.getMessage().IndexOf(" ") > 0 ? message.getMessage().IndexOf(" ") : message.getMessage().Length;
-
-                    string key = message.getMessage().Substring(
-                            startIndex, endIndex);*/
                     if (commands.ContainsKey(commandParent))
                     {
                         Commands command = commands[commandParent];
@@ -181,6 +189,8 @@ namespace ConfigurableIrcBotApp
                     
                     break;
             }
+
+
         }
 
         public Boolean isRunning()

@@ -11,7 +11,7 @@ using System.IO;
 
 namespace ConfigurableIrcBotApp
 {
-    class JsonFileHandler
+    public class JsonFileHandler
     {
         string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 

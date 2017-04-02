@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurableIrcBotApp
 {
-    class Moderator
+    public class Moderator
     {
 
         public string userName;
@@ -20,7 +20,7 @@ namespace ConfigurableIrcBotApp
 
     }
 
-    class Commands
+    public class Commands
     {
         public string command;
         public string response;

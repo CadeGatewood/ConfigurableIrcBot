@@ -30,7 +30,7 @@
         <TextBox x:Name="authLevelBox" HorizontalAlignment="Left" Height="23" Margin="122,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="numberValidation"/>
         <Label x:Name="moderatorUserNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="10,219,0,0" VerticalAlignment="Top"/>
         <Label x:Name="moderatorAuthLabel" Content="Auth Level:" HorizontalAlignment="Left" Margin="119,219,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="motdLabel" Content="Set Message of the Day:" HorizontalAlignment="Left" Margin="227,14,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="motdLabel" Content="Set Message of the Day:" HorizontalAlignment="Left" Margin="227,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="motdInput" HorizontalAlignment="Left" Height="70" Margin="232,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
         <Button x:Name="motdButton" Content="Set MOTD" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="232,115,0,0" Click="motdButton_Click"/>
         <Button x:Name="clearMotdButton" Content="Clear MOTD" HorizontalAlignment="Left" Margin="336,115,0,0" VerticalAlignment="Top" Width="75" Click="clearMotdButton_Click"/>
@@ -38,18 +38,27 @@
         <TextBox x:Name="streamInfoInput" HorizontalAlignment="Left" Height="70" Margin="232,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
         <Button x:Name="streamInfoButton" Content="Set Info" HorizontalAlignment="Left" Margin="232,245,0,0" VerticalAlignment="Top" Width="75" Click="streamInfoButton_Click"/>
         <Button x:Name="clearStreamInfoButton" Content="Clear Info" HorizontalAlignment="Left" Margin="336,245,0,0" VerticalAlignment="Top" Width="75" Click="clearStreamInfoButton_Click"/>
-        <Label x:Name="commandsLabel" Content="Edit Commands:" HorizontalAlignment="Left" Margin="421,14,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="commandLabel" Content="Command:" HorizontalAlignment="Left" Margin="449,40,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="responseLabel" Content="Response:" HorizontalAlignment="Left" Margin="454,86,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="authLabel" Content="Authorization:" HorizontalAlignment="Left" Margin="433,64,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="23" Margin="517,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
-        <TextBox x:Name="authInput" HorizontalAlignment="Left" Height="23" Margin="517,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" PreviewTextInput="numberValidation"/>
+        <Label x:Name="commandsLabel" Content="Edit Commands:" HorizontalAlignment="Left" Margin="421,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="commandLabel" Content="Command:" HorizontalAlignment="Left" Margin="449,31,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="responseLabel" Content="Response:" HorizontalAlignment="Left" Margin="454,82,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="authLabel" Content="Authorization:" HorizontalAlignment="Left" Margin="433,57,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="23" Margin="517,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
+        <TextBox x:Name="authInput" HorizontalAlignment="Left" Height="23" Margin="517,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" PreviewTextInput="numberValidation"/>
         <TextBox x:Name="responseInput" HorizontalAlignment="Left" Height="79" Margin="517,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
         <Button x:Name="commandButton" Content="Add Command" HorizontalAlignment="Left" Margin="723,60,0,0" VerticalAlignment="Top" Width="92" Click="commandButton_Click"/>
         <Button x:Name="clearCommandButton" HorizontalAlignment="Left" Margin="723,115,0,0" VerticalAlignment="Top" Width="92" Click="clearCommandButton_Click">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remove Command</TextBlock>
         </Button>
-        <Label x:Name="chatLabel" Content="Active Chat:" HorizontalAlignment="Left" Margin="444,166,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="chatLabel" Content="Active Chat:" HorizontalAlignment="Left" Margin="444,173,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="sendMessageBox" HorizontalAlignment="Left" Height="23" Margin="517,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" KeyDown="enterSendMessage"/>
+        <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="723,260,0,0" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
+        <RichTextBox x:Name="chatTextBox" HorizontalAlignment="Left" Height="83" VerticalAlignment="Top" Width="199" Margin="517,171,0,0" IsReadOnly="True">
+            <FlowDocument>
+                <Paragraph Margin="0">
+                    <Run/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
 
     </Grid>
 
