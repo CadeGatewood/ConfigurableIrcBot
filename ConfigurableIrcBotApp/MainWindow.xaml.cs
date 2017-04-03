@@ -17,8 +17,6 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Configuration;
 
-
-
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
@@ -54,7 +52,7 @@ namespace ConfigurableIrcBotApp
         }
 
         private void numberValidation(object sender, TextCompositionEventArgs e)
-                {
+        {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -75,10 +73,8 @@ namespace ConfigurableIrcBotApp
             {
                 if (bot == null || (bot != null && !bot.isRunning()))
                 {
-                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
-                    bot.Start();
-                    bot.setModerators(this.moderators);
-                    bot.setCommands(this.commands);
+                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
+                    bot.IrcStart();
                 }
                 else if (bot.isRunning())
                 {
@@ -95,7 +91,7 @@ namespace ConfigurableIrcBotApp
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
             bot.sendChatMessage("Goodbye!");
-            bot.Stop();
+            bot.IrcStop();
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
