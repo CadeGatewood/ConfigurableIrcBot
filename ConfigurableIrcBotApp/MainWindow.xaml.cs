@@ -121,8 +121,9 @@ namespace ConfigurableIrcBotApp
 
         public void writeToChatBlock(Message message, bool command)
         {
-            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd);
-            output.Text = message.getUserName() + ": " + message.getMessage();
+            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd) {
+                Text = message.getUserName() + ": " + message.getMessage()
+            };
             output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
             if (command)
             {

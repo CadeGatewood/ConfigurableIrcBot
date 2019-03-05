@@ -63,8 +63,9 @@ namespace ConfigurableIrcBotApp
 
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
         {
-            ircThread = new Thread(new ThreadStart(IrcRun));
-            ircThread.IsBackground = true;
+            ircThread = new Thread(new ThreadStart(IrcRun)) {
+                IsBackground = true
+            };
 
             this.ip = ip;
             this.port = port;
@@ -114,8 +115,9 @@ namespace ConfigurableIrcBotApp
                                         );
                     if (message.getMessage().StartsWith("!"))
                     {
-                        parseMessageThread = new Thread(() => ParseMessageThread(message));
-                        parseMessageThread.IsBackground = true;
+                        parseMessageThread = new Thread(() => ParseMessageThread(message)) {
+                            IsBackground = true
+                    };
                         parseMessageThread.Start();
                     }
                     else
