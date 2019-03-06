@@ -19,12 +19,16 @@ namespace ConfigurableIrcBotApp
         IDictionary<string, Commands> commands;
 
         private IrcClient bot;
-
+        private PlayBot playBot;
         private JsonFileHandler jsonFileHandler;
+
+        private PopOutChat popOutChat;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.popOutChat = new PopOutChat();
+
             this.settingsKeys = new List<String>(new string[] {"ip", "port", "channel", "userName", "password"});
 
             foreach (string key in settingsKeys)
@@ -66,7 +70,7 @@ namespace ConfigurableIrcBotApp
             {
                 if (bot == null || (bot != null && !bot.isRunning()))
                 {
-                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
+                    bot = new IrcClient(this, this.popOutChat, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
                     bot.IrcStart();
                 }
                 else if (bot.isRunning())
@@ -187,6 +191,11 @@ namespace ConfigurableIrcBotApp
         {
             this.commands.Remove("!"+commandInput.Text);
             bot.setCommands(this.commands);
+        }
+
+        private void popoutChat_Click(object sender, RoutedEventArgs e)
+        {
+            this.popOutChat.Show();
         }
     }
 }

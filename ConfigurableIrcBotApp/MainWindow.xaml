@@ -49,6 +49,9 @@
         <Button x:Name="clearCommandButton" HorizontalAlignment="Left" Margin="723,115,0,0" VerticalAlignment="Top" Width="92" Click="clearCommandButton_Click">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remove Command</TextBlock>
         </Button>
+        <Button x:Name="popoutChat" HorizontalAlignment="Left" Margin="723,200,0,0" VerticalAlignment="Top" Width="92" Click="popoutChat_Click" >
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Pop Out Chat</TextBlock>
+        </Button>
         <Label x:Name="chatLabel" Content="Active Chat:" HorizontalAlignment="Left" Margin="444,173,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="sendMessageBox" HorizontalAlignment="Left" Height="23" Margin="517,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" KeyDown="enterSendMessage"/>
         <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="723,260,0,0" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
