@@ -54,12 +54,11 @@ namespace ConfigurableIrcBotApp
         private string streamInfo = "placeholder";
 
         private MainWindow main;
-        private PopOutChat popoutChat;
 
         IDictionary<string, Moderator> moderators;
         IDictionary<string, Commands> commands;
 
-        public IrcClient(MainWindow main, PopOutChat popoutChat, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
+        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
         {
             ircThread = new Thread(new ThreadStart(IrcRun)) {
                 IsBackground = true
@@ -73,7 +72,6 @@ namespace ConfigurableIrcBotApp
             this.channel = channel.ToLower();
 
             this.main = main;
-            this.popoutChat = popoutChat;
           
             this.moderators = moderators;
             this.commands = commands;

@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConfigurableIrcBotApp"
         mc:Ignorable="d"
+        Closing="popoutChat_Closing"
         Title="Chat" Background="#323232"  Height="300" Width="150">
     <Grid>
-        <DockPanel>
-            <RichTextBox x:Name="popoutChatTextBox"  Background="#323232" IsReadOnly="True" TextChanged="chatTextBox_TextChanged" Width="142">
-                <FlowDocument>
-                    <Paragraph Margin="0">
-                        <Run/>
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>
-        </DockPanel>
+
+        <RichTextBox x:Name="popoutChatTextBox"  Background="#323232" IsReadOnly="True" TextChanged="chatTextBox_TextChanged" Margin="-3,0,-3,35">
+            <FlowDocument>
+                <Paragraph Margin="0">
+                    <Run/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <Label x:Name="lblTime" Margin="0,243,0,6" />
     </Grid>
 </Window>

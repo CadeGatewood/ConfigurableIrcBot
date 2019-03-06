@@ -1,0 +1,23 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.CommandEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="commandEditor_Closing"
+        Title="CommandEditor" Height="300" Width="400">
+    <Grid>
+        <Label x:Name="commandsLabel" Content="Edit Commands" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="commandLabel" Content="Command:" HorizontalAlignment="Left" Margin="36,59,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="responseLabel" Content="Response:" HorizontalAlignment="Left" Margin="41,112,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="authLabel" Content="Authorization:" HorizontalAlignment="Left" Margin="20,87,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="23" Margin="109,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
+        <TextBox x:Name="authInput" HorizontalAlignment="Left" Height="23" Margin="109,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" PreviewTextInput="numberValidation"/>
+        <TextBox x:Name="responseInput" HorizontalAlignment="Left" Height="79" Margin="109,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" TextChanged="responseInput_TextChanged"/>
+        <Button x:Name="commandButton" Content="Add Command" HorizontalAlignment="Left" Margin="109,211,0,0" VerticalAlignment="Top" Width="92" Click="commandButton_Click"/>
+        <Button x:Name="clearCommandButton" HorizontalAlignment="Left" Margin="216,211,0,0" VerticalAlignment="Top" Width="92" Click="clearCommandButton_Click">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remove Command</TextBlock>
+        </Button>
+    </Grid>
+</Window>

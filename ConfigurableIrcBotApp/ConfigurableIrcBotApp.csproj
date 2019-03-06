@@ -59,6 +59,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="BotChatControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChatDisplaySettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CommandEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionSetup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -66,6 +82,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BotChatControls.xaml.cs">
+      <DependentUpon>BotChatControls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatDisplaySettings.xaml.cs">
+      <DependentUpon>ChatDisplaySettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommandEditor.xaml.cs">
+      <DependentUpon>CommandEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionSetup.xaml.cs">
+      <DependentUpon>ConnectionSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlayBot.cs" />
     <Compile Include="JsonFileHandler.cs" />

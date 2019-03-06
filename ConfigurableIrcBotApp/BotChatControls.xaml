@@ -1,0 +1,27 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.BotChatControls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="chatBotControl_Closing"
+        Title="BotChatControls" Height="300" Width="411.356">
+    <Grid>
+        <Label x:Name="moderatorsLabel" Content="Add/Remove Moderators" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="moderatorInput" HorizontalAlignment="Left" Height="23" Margin="16,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="moderatorAdd" Content="Add mod" HorizontalAlignment="Left" Margin="16,76,0,0" VerticalAlignment="Top" Width="75" Click="moderatorAdd_Click"/>
+        <Button x:Name="moderatorRemove" Content="Remove mod" HorizontalAlignment="Left" Margin="114,76,0,0" VerticalAlignment="Top" Width="75" Click="moderatorRemove_Click"/>
+        <TextBox x:Name="authLevelBox" HorizontalAlignment="Left" Height="23" Margin="114,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="numberValidation"/>
+        <Label x:Name="moderatorUserNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="moderatorAuthLabel" Content="Auth Level:" HorizontalAlignment="Left" Margin="109,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.538"/>
+        <Label x:Name="motdLabel" Content="Set Message of the Day" HorizontalAlignment="Left" Margin="11,112,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="motdInput" HorizontalAlignment="Left" Height="70" Margin="16,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
+        <Button x:Name="motdButton" Content="Set MOTD" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="16,217,0,0" Click="motdButton_Click"/>
+        <Button x:Name="clearMotdButton" Content="Clear MOTD" HorizontalAlignment="Left" Margin="96,217,0,0" VerticalAlignment="Top" Width="75" Click="clearMotdButton_Click"/>
+        <Label x:Name="streamInfoLabel" Content="Set Stream Information" HorizontalAlignment="Left" Margin="202,112,-42,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="streamInfoInput" HorizontalAlignment="Left" Height="70" Margin="207,142,-95,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
+        <Button x:Name="streamInfoButton" Content="Set Info" HorizontalAlignment="Left" Margin="207,217,0,0" VerticalAlignment="Top" Width="75" Click="streamInfoButton_Click"/>
+        <Button x:Name="clearStreamInfoButton" Content="Clear Info" HorizontalAlignment="Left" Margin="287,217,-70,0" VerticalAlignment="Top" Width="75" Click="clearStreamInfoButton_Click"/>
+    </Grid>
+</Window>
