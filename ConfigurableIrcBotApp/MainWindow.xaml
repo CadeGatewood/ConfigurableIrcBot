@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Bot Configuration" Height="375" Width="850">
     <Grid x:Name="grid" HorizontalAlignment="Left" Height="325" Margin="10,10,0,0" VerticalAlignment="Top" Width="825">
-        <Label x:Name="ipLabel" Content="IP:" HorizontalAlignment="Left" Margin="49,8,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="ipLabel" Content="Server:" HorizontalAlignment="Left" Margin="26,8,0,0" VerticalAlignment="Top"/>
         <Label x:Name="portLabel" Content="Port:" HorizontalAlignment="Left" Margin="38,34,0,0" VerticalAlignment="Top"/>
         <Label x:Name="channelLabel" Content="Channel:" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.847,0.429"/>
         <Label x:Name="userNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="6,86,0,0" VerticalAlignment="Top"/>
