@@ -1,23 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.ComponentModel;
 
 using System.Text.RegularExpressions;
 using System.Configuration;
-
-
 
 namespace ConfigurableIrcBotApp
 {
@@ -54,7 +45,7 @@ namespace ConfigurableIrcBotApp
         }
 
         private void numberValidation(object sender, TextCompositionEventArgs e)
-                {
+        {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -75,10 +66,8 @@ namespace ConfigurableIrcBotApp
             {
                 if (bot == null || (bot != null && !bot.isRunning()))
                 {
-                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
-                    bot.Start();
-                    bot.setModerators(this.moderators);
-                    bot.setCommands(this.commands);
+                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
+                    bot.IrcStart();
                 }
                 else if (bot.isRunning())
                 {
@@ -95,7 +84,7 @@ namespace ConfigurableIrcBotApp
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
             bot.sendChatMessage("Goodbye!");
-            bot.Stop();
+            bot.IrcStop();
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -125,8 +114,9 @@ namespace ConfigurableIrcBotApp
 
         public void writeToChatBlock(Message message, bool command)
         {
-            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd);
-            output.Text = message.getUserName() + ": " + message.getMessage();
+            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd) {
+                Text = message.getUserName() + ": " + message.getMessage()
+            };
             output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
             if (command)
             {

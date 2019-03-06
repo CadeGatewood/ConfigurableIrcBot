@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 using System.Net.Sockets;
@@ -50,7 +47,8 @@ namespace ConfigurableIrcBotApp
         private StreamWriter outputStream;
 
         private Thread ircThread;
-        private bool _running;
+        private Thread parseMessageThread;
+        private bool _ircrunning;
 
         private string motd = "placeholder";
         private string streamInfo = "placeholder";
@@ -60,22 +58,23 @@ namespace ConfigurableIrcBotApp
         IDictionary<string, Moderator> moderators;
         IDictionary<string, Commands> commands;
 
-        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
+        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
         {
-
-
-            ircThread = new Thread(new ThreadStart(Run));
-            ircThread.IsBackground = true;
+            ircThread = new Thread(new ThreadStart(IrcRun)) {
+                IsBackground = true
+            };
 
             this.ip = ip;
             this.port = port;
 
             this.userName = userName;
             this.password = password;
-            this.channel = channel;
+            this.channel = channel.ToLower();
 
             this.main = main;
 
+            this.moderators = moderators;
+            this.commands = commands;
         }
 
         public void setModerators(IDictionary<string, Moderator> moderators)
@@ -88,9 +87,9 @@ namespace ConfigurableIrcBotApp
             this.commands = commands;
         }
 
-        public void Run()
+        public void IrcRun()
         {
-            this._running = true;
+            this._ircrunning = true;
 
             tcpClient = new TcpClient(ip, port);
             inputStream = new StreamReader(tcpClient.GetStream());
@@ -102,7 +101,7 @@ namespace ConfigurableIrcBotApp
             joinRoom(channel);
             outputStream.Flush();
 
-            while (_running)
+            while (_ircrunning)
             {
                 string rawMessage = inputStream.ReadLine();
                 Message message = new Message();
@@ -111,19 +110,33 @@ namespace ConfigurableIrcBotApp
                     message = new Message(  rawMessage.Substring(rawMessage.IndexOf(":")+1, rawMessage.IndexOf("!")-1),
                                             rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":")+1)+1)
                                         );
+                    if (message.getMessage().StartsWith("!"))
+                    {
+                        parseMessageThread = new Thread(() => ParseMessageThread(message)) {
+                            IsBackground = true
+                    };
+                        parseMessageThread.Start();
+                    }
+                    else
+                    {
+                        main.Dispatcher.Invoke(() =>
+                        {
+                            main.writeToChatBlock(message, false);
+                        });
+                    }
                 }
-                parseMessage(message);
+                
             }
         }
 
-        public void Start()
+        public void IrcStart()
         {
             ircThread.Start();
         }
 
-        public void Stop()
+        public void IrcStop()
         {
-            this._running = false;
+            this._ircrunning = false;
         }
 
         public void joinRoom(string channel)
@@ -136,6 +149,10 @@ namespace ConfigurableIrcBotApp
         public void sendIrcMessage(String message)
         {
             outputStream.WriteLine(message);
+            main.Dispatcher.Invoke(() =>
+            {
+                main.sendMessageBox.Text = "";
+            });
         }
 
         public void sendChatMessage(string message)
@@ -143,23 +160,58 @@ namespace ConfigurableIrcBotApp
             sendIrcMessage(":" + userName + "!" + userName + "@" + userName + ".tmi.twitch.tv PRIVMSG #" + channel + " :" + message);
         }
 
+        public void sendPrivateMessage(string message, string targetUser)
+        {
+            sendIrcMessage(":" + userName + "!" + userName + "@" + userName + ".tmi.twitch.tv PRIVMSG #" + channel + " :/w " + targetUser + " " + message);
+        }
+
         public string readMessage()
         {
             return inputStream.ReadLine();
         }
 
-        public void parseMessage(Message message)
+        public void ParseMessageThread(Message message)
         {
-            if (!message.getMessage().StartsWith("!")){
-                main.Dispatcher.Invoke(() =>
-                {
-                    main.writeToChatBlock(message, false);
-                });
-                return;
+
+            if (moderators != null && moderators.Count > 0 && moderators.ContainsKey(message.getUserName()))
+            {
+                parseAuthorizedCommand(message, moderators[message.getUserName()].authLevel);
             }
+            else
+            {
+                parseCommand(message);
+            }
+            return;
+        }
 
+        public void parseAuthorizedCommand(Message message, int authorization)
+        {
+            string commandParent = message.getMessage().IndexOf(" ") > 0 ?
+                    message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
+                    message.getMessage();
 
+            switch (commandParent)
+            {
+                //Todo add default authorized/complex commands
+                default:
+                    if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
+                    {
+                        Commands command = commands[commandParent];
+                        if(command.requiredAuthLevel <= authorization)
+                        {
+                            sendChatMessage(command.response);
+                        }
+                    }
+                    else
+                    {
+                        parseCommand(message);
+                    }
+                    break;
+            }
+        }
 
+        public void parseCommand(Message message)
+        {
             string commandParent = message.getMessage().IndexOf(" ") > 0 ?
                     message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
                     message.getMessage();
@@ -181,21 +233,18 @@ namespace ConfigurableIrcBotApp
                     sendChatMessage(streamInfo);
                     break;
                 default:
-                    if (commands.ContainsKey(commandParent))
+                    if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
                     {
                         Commands command = commands[commandParent];
                         sendChatMessage(command.response);
                     }
-                    
                     break;
             }
-
-
         }
 
         public Boolean isRunning()
         {
-            return _running;
+            return _ircrunning;
         }
 
         public void setMotd(String message)
