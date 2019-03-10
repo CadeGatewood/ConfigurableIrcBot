@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using System.Collections;
 
 namespace ConfigurableIrcBotApp
 {
@@ -16,8 +17,8 @@ namespace ConfigurableIrcBotApp
     public partial class ConnectionSetup : Window
     {
         List<String> settingsKeys;
-        IDictionary<string, Moderator> moderators;
-        IDictionary<string, Commands> commands;
+        IDictionary<string, Moderator> moderators { get; set; }
+        IDictionary<string, Commands> commands { get; set; }
 
         private JsonFileHandler jsonFileHandler;
 
@@ -37,7 +38,11 @@ namespace ConfigurableIrcBotApp
             jsonFileHandler = new JsonFileHandler();
 
             this.moderators = jsonFileHandler.loadModerators();
+            if (moderators == null)
+                moderators = new Dictionary<string, Moderator>();
             this.commands = jsonFileHandler.loadCommands();
+            if (commands == null)
+                commands = new Dictionary<string, Commands>();
 
             this.main = new MainWindow(this, this.bot, settingsKeys, jsonFileHandler, moderators, commands);
         }
@@ -63,15 +68,16 @@ namespace ConfigurableIrcBotApp
                 port.Text != ""
                 )
             {
-                if (bot == null || (bot != null && !bot.isRunning()))
+                if (bot == null || (bot != null && !bot._ircrunning))
                 {
                     this.bot = new IrcClient(main, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
                     bot.IrcStart();
-                    main.setClient(bot);   
+
+                    main.botSetup(bot);
                     main.Show();
                     this.Hide();
                 }
-                else if (bot.isRunning())
+                else if (bot._ircrunning)
                 {
                     System.Windows.MessageBox.Show("You already have a bot running, please disconnect the first before attempting a new connection");
                 }
@@ -80,7 +86,7 @@ namespace ConfigurableIrcBotApp
             {
                 System.Windows.MessageBox.Show("Please enter the relevant information");
             }
-
+            
         }
 
         private void saveSettingsButton_Click(object sender, RoutedEventArgs e)

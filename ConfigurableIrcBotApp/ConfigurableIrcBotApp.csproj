@@ -67,10 +67,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CommandEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ConnectionSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -89,12 +85,10 @@
     <Compile Include="ChatDisplaySettings.xaml.cs">
       <DependentUpon>ChatDisplaySettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CommandEditor.xaml.cs">
-      <DependentUpon>CommandEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ConnectionSetup.xaml.cs">
       <DependentUpon>ConnectionSetup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CrossWindowController.cs" />
     <Compile Include="PlayBot.cs" />
     <Compile Include="JsonFileHandler.cs" />
     <Compile Include="jsonObjects.cs" />

@@ -11,8 +11,8 @@ namespace ConfigurableIrcBotApp
 
     public class Message
     {
-        private string userName="";
-        private string message="";
+        public string userName { get; set; }
+        public string message { get; set; }
 
         public Message(){}
 
@@ -21,46 +21,37 @@ namespace ConfigurableIrcBotApp
             this.userName = userName;
             this.message = message;
         }
-
-        public string getMessage()
-        {
-            return this.message;
-        }
-
-        public string getUserName()
-        {
-            return this.userName;
-        }
     }
 
     public class IrcClient
     {
-        private string userName;
-        private string channel;
-        private string password;
+        public string userName{ get; set; }
+        public string channel{ get; set; }
+        public string password{ get; set; }
 
-        private string ip;
-        private int port;
+        public string ip{ get; set; }
+        public int port{ get; set; }
 
-        private TcpClient tcpClient;
-        private StreamReader inputStream;
-        private StreamWriter outputStream;
+        public TcpClient tcpClient { get; set; }
+        public StreamReader inputStream { get; set; }
+        public StreamWriter outputStream { get; set; }
 
-        private Thread ircThread;
-        private Thread parseMessageThread;
-        private bool _ircrunning;
+        public Thread ircThread;
+        public Thread parseMessageThread;
+        public bool _ircrunning { get; set; }
 
-        private string motd = "placeholder";
-        private string streamInfo = "placeholder";
+        public string motd { get; set; }
+        public string streamInfo { get; set; }
 
-        private MainWindow main;
+        public MainWindow main { get; set; }
 
         IDictionary<string, Moderator> moderators;
         IDictionary<string, Commands> commands;
 
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
         {
-            ircThread = new Thread(new ThreadStart(IrcRun)) {
+            ircThread = new Thread(new ThreadStart(IrcRun))
+            {
                 IsBackground = true
             };
 
@@ -110,7 +101,7 @@ namespace ConfigurableIrcBotApp
                     message = new Message(  rawMessage.Substring(rawMessage.IndexOf(":")+1, rawMessage.IndexOf("!")-1),
                                             rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":")+1)+1)
                                         );
-                    if (message.getMessage().StartsWith("!"))
+                    if (message.message.StartsWith("!"))
                     {
                         parseMessageThread = new Thread(() => ParseMessageThread(message)) {
                             IsBackground = true
@@ -173,89 +164,42 @@ namespace ConfigurableIrcBotApp
         public void ParseMessageThread(Message message)
         {
 
-            if (moderators != null && moderators.Count > 0 && moderators.ContainsKey(message.getUserName()))
+            string commandParent = message.message.IndexOf(" ") > 0 ?
+                    message.message.Substring(0, message.message.IndexOf(" ")) : message.message;
+            if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
             {
-                parseAuthorizedCommand(message, moderators[message.getUserName()].authLevel);
+                //check for potential commands
+                parseCommand(message, commandParent);
             }
             else
             {
-                parseCommand(message);
+                //check for play bot input
             }
             return;
         }
-
-        public void parseAuthorizedCommand(Message message, int authorization)
+        
+        public void parseCommand(Message message, string commandParent)
         {
-            string commandParent = message.getMessage().IndexOf(" ") > 0 ?
-                    message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
-                    message.getMessage();
-
-            switch (commandParent)
-            {
-                //Todo add default authorized/complex commands
-                default:
-                    if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
-                    {
-                        Commands command = commands[commandParent];
-                        if(command.requiredAuthLevel <= authorization)
-                        {
-                            sendChatMessage(command.response);
-                        }
-                    }
-                    else
-                    {
-                        parseCommand(message);
-                    }
-                    break;
-            }
-        }
-
-        public void parseCommand(Message message)
-        {
-            string commandParent = message.getMessage().IndexOf(" ") > 0 ?
-                    message.getMessage().Substring(0, message.getMessage().IndexOf(" ")) :
-                    message.getMessage();
-
             main.Dispatcher.Invoke(() =>
             {
                 main.writeToChatBlock(message, true);
             });
-
-            switch (commandParent)
+            
+            Commands command = commands[commandParent];
+            if (command.requiredAuthLevel == 0)
             {
-                case "!hello":
-                    sendChatMessage("Hi there, " + message.getUserName() + "!");
-                    break;
-                case "!motd":
-                    sendChatMessage(motd);
-                    break;
-                case "!stream":
-                    sendChatMessage(streamInfo);
-                    break;
-                default:
-                    if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
+                sendChatMessage(command.response);
+            }
+            else
+            {
+                if (moderators != null && moderators.Count > 0 && moderators.ContainsKey(message.userName))
+                {
+                    if(moderators[message.userName].authLevel > command.requiredAuthLevel)
                     {
-                        Commands command = commands[commandParent];
                         sendChatMessage(command.response);
                     }
-                    break;
+                }
             }
         }
-
-        public Boolean isRunning()
-        {
-            return _ircrunning;
-        }
-
-        public void setMotd(String message)
-        {
-            this.motd = message;
-        }
-
-        public void setStreamInfo(string message)
-        {
-            this.streamInfo = message;
-        }
-
     }
 }

@@ -6,27 +6,26 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
 
-
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
     {
-        List<String> settingsKeys;
-        IDictionary<string, Moderator> moderators;
-        IDictionary<string, Commands> commands;
+        public List<String> settingsKeys { get; set; }
+        public IDictionary<string, Moderator> moderators { get; set; }
+        public IDictionary<string, Commands> commands { get; set; }
 
-        private IrcClient bot;
-        private PlayBot playBot;
-        private JsonFileHandler jsonFileHandler;
+        public IrcClient bot { get; set; }
+        public PlayBot playBot { get; set; }
+        public JsonFileHandler jsonFileHandler { get; set; }
 
         //Windows
-        private PopOutChat popOutChat;
-        private ConnectionSetup connectionSetup;
-        private CommandEditor commandEditor;
-        private BotChatControls botChatControls;
+        public PopOutChat popOutChat { get; set; }
+        public ConnectionSetup connectionSetup { get; set; }
+        public BotChatControls botChatControls { get; set; }
 
+        private CrossWindowController windowController { get; set; }
 
-        private bool chatPoppedOut;
+        public bool chatPoppedOut { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys, JsonFileHandler jsonFileHandler, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
         {
@@ -37,7 +36,7 @@ namespace ConfigurableIrcBotApp
 
             this.popOutChat = new PopOutChat(this);
             this.botChatControls = new BotChatControls(this, bot);
-            this.commandEditor = new CommandEditor(this, bot);
+          
 
             this.settingsKeys = settingsKeys;
             this.jsonFileHandler = jsonFileHandler;
@@ -56,12 +55,6 @@ namespace ConfigurableIrcBotApp
         public void write(string message)
         {
             System.Windows.MessageBox.Show(message);
-        }
-
-        private void disconnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            bot.sendChatMessage("Goodbye!");
-            bot.IrcStop();
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -91,26 +84,29 @@ namespace ConfigurableIrcBotApp
 
         public void writeToChatBlock(Message message, bool command)
         {
-            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd) {
-                Text = message.getUserName() + ": " + message.getMessage()
-            };
-            output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
-            if (command)
+            if (!chatPoppedOut)
             {
-                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd)
+                {
+                    Text = message.userName + ": " + message.message + "\r"
+                };
+                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
+                if (command)
+                {
+                    output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                }
+                chatTextBox.ScrollToEnd();
             }
-            chatTextBox.AppendText(Environment.NewLine);
-            chatTextBox.ScrollToEnd();
+            else
+            {
+                popOutChat.writeToChat(message);
+            }
         }
 
-        public IrcClient getCLient()
-        {
-            return this.bot;
-        }
-
-        public void setClient(IrcClient bot)
+        public void botSetup(IrcClient bot)
         {
             this.bot = bot;
+            botChatControls.bot = bot;
         }
 
         private void popoutChat_Click(object sender, RoutedEventArgs e)
@@ -118,23 +114,7 @@ namespace ConfigurableIrcBotApp
             this.popOutChat.Show();
             chatPoppedOut = true;
         }
-
-        public void setChatPoppedOut(bool popped)
-        {
-            this.chatPoppedOut = popped;
-        }
-
-        public IDictionary<string, Commands> getCommands()
-        {
-            return this.commands;
-        }
-
-        public IDictionary<string, Moderator> getModerators()
-        {
-            return this.moderators;
-        }
-
-
+        
         private void connectionConfig_Click(object sender, RoutedEventArgs e)
         {
             connectionSetup.Show();
@@ -144,10 +124,20 @@ namespace ConfigurableIrcBotApp
         {
             botChatControls.Show();
         }
-
-        private void commandConfig_Click(object sender, RoutedEventArgs e)
+        
+        private void start_Click(object sender, RoutedEventArgs e)
         {
-            commandEditor.Show();
+            popOutChat.startTimer();
+        }
+
+        private void pause_Click(object sender, RoutedEventArgs e)
+        {
+            popOutChat.pauseTimer();
+        }
+
+        private void stop_Click(object sender, RoutedEventArgs e)
+        {
+            popOutChat.stopTimer();
         }
     }
 }

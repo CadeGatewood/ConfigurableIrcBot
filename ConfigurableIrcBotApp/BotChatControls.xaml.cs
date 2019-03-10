@@ -13,17 +13,19 @@ namespace ConfigurableIrcBotApp
     public partial class BotChatControls : Window
     {
 
-        IDictionary<string, Moderator> moderators;
+        public IDictionary<string, Moderator> moderators { get; set; }
+        public IDictionary<string, Commands> commands { get; set; }
 
-        MainWindow main;
-        IrcClient bot;
+        private MainWindow main;
+        public IrcClient bot { get; set; }
 
         public BotChatControls(MainWindow main, IrcClient bot)
         {
             InitializeComponent();
             this.main = main;
             this.bot = bot;
-            this.moderators = main.getModerators();
+            this.moderators = main.moderators;
+            this.commands = main.commands;
         }
 
         private void chatBotControl_Closing(object sender, CancelEventArgs e)
@@ -50,24 +52,17 @@ namespace ConfigurableIrcBotApp
             bot.setModerators(this.moderators);
         }
 
-        private void motdButton_Click(object sender, RoutedEventArgs e)
+        private void commandButton_Click(object sender, RoutedEventArgs e)
         {
-            bot.setMotd(motdInput.Text);
+            this.commands["!" + commandInput.Text] = new Commands(commandInput.Text, responseInput.Text, Int32.Parse(authInput.Text));
+            bot.setCommands(this.commands);
         }
 
-        private void clearMotdButton_Click(object sender, RoutedEventArgs e)
+        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            bot.setMotd("");
+            this.commands.Remove("!" + commandInput.Text);
+            bot.setCommands(this.commands);
         }
 
-        private void streamInfoButton_Click(object sender, RoutedEventArgs e)
-        {
-            bot.setStreamInfo(streamInfoInput.Text);
-        }
-
-        private void clearStreamInfoButton_Click(object sender, RoutedEventArgs e)
-        {
-            bot.setStreamInfo("");
-        }
     }
 }

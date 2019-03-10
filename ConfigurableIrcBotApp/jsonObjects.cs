@@ -3,8 +3,8 @@
     public class Moderator
     {
 
-        public string userName;
-        public int authLevel;
+        public string userName { get; set; }
+        public int authLevel { get; set; }
 
         public Moderator(string userName, int authLevel)
         {
@@ -16,9 +16,9 @@
 
     public class Commands
     {
-        public string command;
-        public string response;
-        public int requiredAuthLevel;
+        public string command { get; set; }
+        public string response { get; set; }
+        public int requiredAuthLevel { get; set; } 
 
         public Commands(string command, string response, int requiredAuthLevel)
         {
