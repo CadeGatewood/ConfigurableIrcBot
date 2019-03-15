@@ -5,6 +5,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
+using System.IO;
 
 namespace ConfigurableIrcBotApp
 {
@@ -22,34 +23,49 @@ namespace ConfigurableIrcBotApp
         public PopOutChat popOutChat { get; set; }
         public ConnectionSetup connectionSetup { get; set; }
         public BotChatControls botChatControls { get; set; }
+        public ChatDisplaySettings chatDisplaySettings { get; set; }
 
         private CrossWindowController windowController { get; set; }
 
         public bool chatPoppedOut { get; set; }
 
-        public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys, JsonFileHandler jsonFileHandler, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
+        public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
             InitializeComponent();
             
+            buildFileStructure();
+            
+            jsonFileHandler = new JsonFileHandler();
+
+            this.moderators = jsonFileHandler.loadModerators();
+            if (moderators == null)
+                moderators = new Dictionary<string, Moderator>();
+            this.commands = jsonFileHandler.loadCommands();
+            if (commands == null)
+                commands = new Dictionary<string, Commands>();
+
             this.connectionSetup = connectionSetup;
             this.bot = bot;
 
             this.popOutChat = new PopOutChat(this);
-            this.botChatControls = new BotChatControls(this, bot);
-          
+            this.botChatControls = new BotChatControls(this);
+            this.chatDisplaySettings = new ChatDisplaySettings(this);         
 
             this.settingsKeys = settingsKeys;
-            this.jsonFileHandler = jsonFileHandler;
-
-            this.moderators = moderators;
-            this.commands = commands;
+            
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            jsonFileHandler.writeModerators(this.moderators, "moderators.JSON");
-            jsonFileHandler.writeCommands(this.commands, "commands.JSON");
+            jsonFileHandler.writeModerators(this.moderators);
+            jsonFileHandler.writeCommands(this.commands);
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void buildFileStructure()
+        {
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts");
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations");
         }
 
         public void write(string message)
@@ -138,6 +154,11 @@ namespace ConfigurableIrcBotApp
         private void stop_Click(object sender, RoutedEventArgs e)
         {
             popOutChat.stopTimer();
+        }
+
+        private void popOutChatConfig_Click(object sender, RoutedEventArgs e)
+        {
+            chatDisplaySettings.Show();
         }
     }
 }

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        ResizeMode="NoResize"
         Closing="MainWindow_Closing"
         mc:Ignorable="d"
         Title="Bot Configuration" Height="375" Width="628.814">
@@ -15,6 +16,9 @@
         </Button>
         <Button x:Name="channelConfig"   VerticalAlignment="Top" Width="150" Margin="10,78,457,0" Click="channelConfig_Click">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Channel Configurations</TextBlock>
+        </Button>
+        <Button x:Name="popOutChatConfig"   VerticalAlignment="Top" Width="150" Margin="10,103,457,0" Click="popOutChatConfig_Click" >
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Chat Display Settings</TextBlock>
         </Button>
         
         <Button x:Name="popoutChat" HorizontalAlignment="Left" Margin="490,39,0,0" VerticalAlignment="Top" Width="92" Click="popoutChat_Click" >

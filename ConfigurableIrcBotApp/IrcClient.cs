@@ -48,7 +48,7 @@ namespace ConfigurableIrcBotApp
         IDictionary<string, Moderator> moderators;
         IDictionary<string, Commands> commands;
 
-        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port, IDictionary<string, Moderator> moderators, IDictionary<string, Commands> commands)
+        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
             {
@@ -64,8 +64,8 @@ namespace ConfigurableIrcBotApp
 
             this.main = main;
           
-            this.moderators = moderators;
-            this.commands = commands;
+            this.moderators = main.moderators;
+            this.commands = main.commands;
         }
 
         public void setModerators(IDictionary<string, Moderator> moderators)

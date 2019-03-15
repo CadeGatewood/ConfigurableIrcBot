@@ -84,17 +84,7 @@ namespace ConfigurableIrcBotApp
                 _running = false;
             }
         }
-
-        public void setChatFont()
-        {
-
-        }
-
-        public void setChatColor()
-        {
-
-        }
-
+        
         public void writeToChat(Message message)
         {
             chatBlock.AppendText(message.userName + ": " + message.message + "\r");

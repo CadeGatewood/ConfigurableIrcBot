@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConfigurableIrcBotApp"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Closing="connectionSetup_Closing"
         Title="ConnectionSetup" Height="297.334" Width="223.333">
     <Grid x:Name="connectionGrid">

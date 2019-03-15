@@ -17,11 +17,6 @@ namespace ConfigurableIrcBotApp
     public partial class ConnectionSetup : Window
     {
         List<String> settingsKeys;
-        IDictionary<string, Moderator> moderators { get; set; }
-        IDictionary<string, Commands> commands { get; set; }
-
-        private JsonFileHandler jsonFileHandler;
-
         private IrcClient bot;
         private MainWindow main;
 
@@ -35,16 +30,8 @@ namespace ConfigurableIrcBotApp
                 ((TextBox)connectionGrid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
             
-            jsonFileHandler = new JsonFileHandler();
-
-            this.moderators = jsonFileHandler.loadModerators();
-            if (moderators == null)
-                moderators = new Dictionary<string, Moderator>();
-            this.commands = jsonFileHandler.loadCommands();
-            if (commands == null)
-                commands = new Dictionary<string, Commands>();
-
-            this.main = new MainWindow(this, this.bot, settingsKeys, jsonFileHandler, moderators, commands);
+            
+            this.main = new MainWindow(this, this.bot, settingsKeys);
         }
 
         private void connectionSetup_Closing(object sender, CancelEventArgs e)
@@ -70,7 +57,7 @@ namespace ConfigurableIrcBotApp
             {
                 if (bot == null || (bot != null && !bot._ircrunning))
                 {
-                    this.bot = new IrcClient(main, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
+                    this.bot = new IrcClient(main, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
                     bot.IrcStart();
 
                     main.botSetup(bot);

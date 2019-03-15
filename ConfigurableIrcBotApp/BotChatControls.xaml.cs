@@ -17,13 +17,15 @@ namespace ConfigurableIrcBotApp
         public IDictionary<string, Commands> commands { get; set; }
 
         private MainWindow main;
+        private JsonFileHandler jsonFileHandler;
         public IrcClient bot { get; set; }
 
-        public BotChatControls(MainWindow main, IrcClient bot)
+        public BotChatControls(MainWindow main)
         {
             InitializeComponent();
             this.main = main;
-            this.bot = bot;
+            this.jsonFileHandler = main.jsonFileHandler;
+            this.bot = main.bot;
             this.moderators = main.moderators;
             this.commands = main.commands;
         }
@@ -43,24 +45,28 @@ namespace ConfigurableIrcBotApp
         private void moderatorAdd_Click(object sender, RoutedEventArgs e)
         {
             this.moderators[moderatorInput.Text] = new Moderator(moderatorInput.Text, Int32.Parse(authLevelBox.Text));
+            jsonFileHandler.writeModerators(moderators);
             bot.setModerators(this.moderators);
         }
 
         private void moderatorRemove_Click(object sender, RoutedEventArgs e)
         {
             this.moderators.Remove(moderatorInput.Text);
+            jsonFileHandler.writeModerators(moderators);
             bot.setModerators(this.moderators);
         }
 
         private void commandButton_Click(object sender, RoutedEventArgs e)
         {
             this.commands["!" + commandInput.Text] = new Commands(commandInput.Text, responseInput.Text, Int32.Parse(authInput.Text));
+            jsonFileHandler.writeCommands(commands);
             bot.setCommands(this.commands);
         }
 
         private void clearCommandButton_Click(object sender, RoutedEventArgs e)
         {
             this.commands.Remove("!" + commandInput.Text);
+            jsonFileHandler.writeCommands(commands);
             bot.setCommands(this.commands);
         }
 

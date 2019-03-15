@@ -3,39 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        ResizeMode="NoResize"
+        Closing="chatDisplaySettings_Closing"
         mc:Ignorable="d"
-        Title="ChatDisplaySettings" Height="300" Width="300">
+        Title="ChatDisplaySettings" Height="375" Width="416.678" AllowDrop="True">
     <Grid>
 
+        <Label x:Name="selectLabel" Content="Select Section:"/>
 
-
-        <ComboBox x:Name="sectionSelection" Margin="10,10,182,239">
-            <ComboBoxItem Content="Title" ></ComboBoxItem>
+        <ComboBox x:Name="sectionSelection" Margin="10,26,0,288" SelectionChanged="sectionSelection_SelectionChanged" HorizontalAlignment="Left" Width="180">
+            <ComboBoxItem Content="Title" IsSelected="True"></ComboBoxItem>
             <ComboBoxItem Content="Chat"></ComboBoxItem>
             <ComboBoxItem Content="Timer"></ComboBoxItem>
         </ComboBox>
 
-        <DockPanel Width="130" Height="130" Margin="152,10,10,129">
-            <Border CornerRadius="2" BorderBrush="Gray" Background="White" BorderThickness="2" >
-                <StackPanel x:Name="fontPanel" Margin="0,0,0,0" Drop="fontFileDrop" AllowDrop="True">
-                    <TextBlock TextWrapping="Wrap" FontSize="6" TextAlignment="Center" Height="auto">
-                        <Run Foreground="LightGray" Text="Drop .tff file to add new font"></Run>
-                    </TextBlock>
+        <DockPanel Margin="0,155,0,10" >
+            <Border BorderBrush="DarkGray" Background="White" BorderThickness="2" CornerRadius="3" Width="383">
+                <StackPanel x:Name="fontPanel" DragDrop.Drop="fontFileDrop_DragDrop" DragEnter="fontFileDrop_DragEnter" AllowDrop="True" HorizontalAlignment="Left" Width="381">
+                    <TextBlock TextWrapping="Wrap" FontSize="10" TextAlignment="Center" Height="22" HorizontalAlignment="Left" Width="197"><Run Foreground="LightGray" Text="Drop .tff file to add new font"/></TextBlock>
                 </StackPanel>
             </Border>
         </DockPanel>
 
-        <ComboBox x:Name="fontSelection" Margin="10,55,182,194">
+        <Button x:Name="changeFont" Margin="9,63,0,246" Click="changeFont_Click" HorizontalAlignment="Left" Width="181" >
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font</TextBlock>
+        </Button>
+        <Button x:Name="changeFontColor" Margin="9,105,0,204" HorizontalAlignment="Left" Width="181" Click="changeFontColor_Click" >
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font Color</TextBlock>
+        </Button>
 
-        </ComboBox>
-        <Button x:Name="changeFont" Margin="10,80,203,166" Click="changeFont_Click" >Change Font</Button>
-
-        <TextBox x:Name="fontSizeEntry" Margin="10,113,150,129" PreviewTextInput="numberValidation"></TextBox>
-        <Button x:Name="changeFontSize" Margin="10,145,182,101" Click="changeFontSize_Click"  >Change Font Size</Button>
-
-        <TextBox x:Name="colorEntry" Margin="10,179,150,63"></TextBox>
-        <Button x:Name="changeColor" Margin="10,211,203,35" Click="changeColor_Click" >Change Color</Button>
+        <TextBox x:Name="titleChangeEntry" Margin="209,26,0,288"  HorizontalAlignment="Left" Width="181"/>
+        <Button x:Name="titleChangeButton" Margin="209,63,0,246"  HorizontalAlignment="Left" Width="181" Click="titleChangeButton_Click" >
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center"><Run Text="Change Title"/></TextBlock>
+        </Button>
     </Grid>
 </Window>
