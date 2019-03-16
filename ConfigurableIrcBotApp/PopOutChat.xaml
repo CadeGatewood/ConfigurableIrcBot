@@ -1,0 +1,23 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.PopOutChat"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="popoutChat_Closing"
+        Title="Chat" 
+        Background="#323232" Height="auto" MinHeight="670"  Width="380">
+
+    <Grid x:Name="chatMainGrid" Width="auto" Height="auto">
+
+        <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="3" Margin="10,4,0,0" Height="146" VerticalAlignment="Top" HorizontalAlignment="Left" Width="352">
+            <Label x:Name="titleBlock" Background="#323232" Margin="1,0,1,9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Height="126" VerticalAlignment="Bottom"/>
+        </Border>
+
+        <TextBox x:Name="clockTxt" Margin="10,0,10,396" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" Height="84" VerticalAlignment="Bottom"/>
+
+        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0" IsReadOnly="True" Height="396" VerticalAlignment="Bottom"/>
+
+    </Grid>
+</Window>

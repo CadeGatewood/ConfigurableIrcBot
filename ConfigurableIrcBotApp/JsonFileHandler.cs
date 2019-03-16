@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
+using System.IO;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+
 
 namespace ConfigurableIrcBotApp
 {
     public class JsonFileHandler
     {
-        string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+        string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations";
+        string moderatorFile = "moderators.json";
+        string commandsFile = "commands.json";
 
         IDictionary<string, Commands> resultCommands;
         IDictionary<string, Moderator> resultModerators;
@@ -88,14 +85,14 @@ namespace ConfigurableIrcBotApp
             return resultCommands;
         }
 
-        public void writeCommands(IDictionary<string, Commands> commands, string file)
+        public void writeCommands(IDictionary<string, Commands> commands)
         {
-            File.WriteAllText(filesBase + file, JsonConvert.SerializeObject(commands, Formatting.Indented));
+            File.WriteAllText(filesBase + commandsFile, JsonConvert.SerializeObject(commands, Formatting.Indented));
         }
 
-        public void writeModerators(IDictionary<string, Moderator> moderators, string file)
+        public void writeModerators(IDictionary<string, Moderator> moderators)
         {
-            File.WriteAllText(filesBase + file, JsonConvert.SerializeObject(moderators, Formatting.Indented));
+            File.WriteAllText(filesBase + moderatorFile, JsonConvert.SerializeObject(moderators, Formatting.Indented));
         }
     }
 }

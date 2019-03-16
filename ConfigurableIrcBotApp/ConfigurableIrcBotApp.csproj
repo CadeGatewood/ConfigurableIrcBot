@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,6 +60,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="BotChatControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChatDisplaySettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionSetup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +80,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BotChatControls.xaml.cs">
+      <DependentUpon>BotChatControls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatDisplaySettings.xaml.cs">
+      <DependentUpon>ChatDisplaySettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionSetup.xaml.cs">
+      <DependentUpon>ConnectionSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlayBot.cs" />
     <Compile Include="JsonFileHandler.cs" />
     <Compile Include="jsonObjects.cs" />
     <Compile Include="IrcClient.cs" />
@@ -74,8 +97,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PopOutChat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PopOutChat.xaml.cs">
+      <DependentUpon>PopOutChat.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

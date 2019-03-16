@@ -3,88 +3,71 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.ComponentModel;
-
-using System.Text.RegularExpressions;
-using System.Configuration;
+using System.IO;
 
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
     {
-        List<String> settingsKeys;
-        IDictionary<string, Moderator> moderators;
-        IDictionary<string, Commands> commands;
+        public List<String> settingsKeys { get; set; }
+        public IDictionary<string, Moderator> moderators { get; set; }
+        public IDictionary<string, Commands> commands { get; set; }
 
-        private IrcClient bot;
+        public IrcClient bot { get; set; }
+        public PlayBot playBot { get; set; }
+        public JsonFileHandler jsonFileHandler { get; set; }
 
-        private JsonFileHandler jsonFileHandler;
+        //Windows
+        public PopOutChat popOutChat { get; set; }
+        public ConnectionSetup connectionSetup { get; set; }
+        public BotChatControls botChatControls { get; set; }
+        public ChatDisplaySettings chatDisplaySettings { get; set; }
+        public bool chatPoppedOut { get; set; }
 
-        public MainWindow()
+        public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
             InitializeComponent();
-            this.settingsKeys = new List<String>(new string[] {"ip", "port", "channel", "userName", "password"});
-
-            foreach (string key in settingsKeys)
-            {
-                ((TextBox)grid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
-            }
-
+            
+            buildFileStructure();
+            
             jsonFileHandler = new JsonFileHandler();
 
             this.moderators = jsonFileHandler.loadModerators();
+            if (moderators == null)
+                moderators = new Dictionary<string, Moderator>();
             this.commands = jsonFileHandler.loadCommands();
+            if (commands == null)
+                commands = new Dictionary<string, Commands>();
+
+            this.connectionSetup = connectionSetup;
+            this.bot = bot;
+
+            this.popOutChat = new PopOutChat(this);
+            this.botChatControls = new BotChatControls(this);
+            this.chatDisplaySettings = new ChatDisplaySettings(this);         
+
+            this.settingsKeys = settingsKeys;
+            
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            jsonFileHandler.writeModerators(this.moderators, "moderators.JSON");
-            jsonFileHandler.writeCommands(this.commands, "commands.JSON");
+            jsonFileHandler.writeModerators(this.moderators);
+            jsonFileHandler.writeCommands(this.commands);
+            System.Windows.Application.Current.Shutdown();
         }
 
-        private void numberValidation(object sender, TextCompositionEventArgs e)
+        private void buildFileStructure()
         {
-            Regex regex = new Regex("[^0-9.]+");
-            e.Handled = regex.IsMatch(e.Text);
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts");
+            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations");
         }
 
         public void write(string message)
         {
             System.Windows.MessageBox.Show(message);
-        }
-
-        private void connectButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (userName.Text != "" &&
-                password.Text != "" &&
-                channel.Text != "" &&
-                ip.Text != "" &&
-                port.Text != "" 
-                )
-            {
-                if (bot == null || (bot != null && !bot.isRunning()))
-                {
-                    bot = new IrcClient(this, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text), this.moderators, this.commands);
-                    bot.IrcStart();
-                }
-                else if (bot.isRunning())
-                {
-                    System.Windows.MessageBox.Show("You already have a bot running, please disconnect the first before attempting a new connection");
-                }
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("Please enter the relevant information");
-            }
-            
-        }
-
-        private void disconnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            bot.sendChatMessage("Goodbye!");
-            bot.IrcStop();
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -114,79 +97,65 @@ namespace ConfigurableIrcBotApp
 
         public void writeToChatBlock(Message message, bool command)
         {
-            TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd) {
-                Text = message.getUserName() + ": " + message.getMessage()
-            };
-            output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
-            if (command)
+            if (!chatPoppedOut)
             {
-                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd)
+                {
+                    Text = message.userName + ": " + message.message + "\r"
+                };
+                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
+                if (command)
+                {
+                    output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                }
+                chatTextBox.ScrollToEnd();
             }
-            chatTextBox.AppendText(Environment.NewLine);
-            chatTextBox.ScrollToEnd();
-        }
-
-        private void saveSettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = configFile.AppSettings.Settings;
-            foreach (String key in this.settingsKeys)
+            else
             {
-                if (settings[key] != null)
-                {
-                    configFile.AppSettings.Settings[key].Value = ((TextBox)grid.FindName(key)).Text;
-                    configFile.Save();
-                }
-                else
-                {
-                    configFile.AppSettings.Settings.Add(key, ((TextBox)grid.FindName(key)).Text);
-                    configFile.Save();
-                }
+                popOutChat.writeToChat(message);
             }
         }
 
-        private void moderatorAdd_Click(object sender, RoutedEventArgs e)
+        public void botSetup(IrcClient bot)
         {
-            this.moderators[moderatorInput.Text] = new Moderator(moderatorInput.Text, Int32.Parse(authLevelBox.Text));
-            bot.setModerators(this.moderators);
+            this.bot = bot;
+            botChatControls.bot = bot;
         }
 
-        private void moderatorRemove_Click(object sender, RoutedEventArgs e)
+        private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
-            this.moderators.Remove(moderatorInput.Text);
-            bot.setModerators(this.moderators);
+            this.popOutChat.Show();
+            chatPoppedOut = true;
+        }
+        
+        private void connectionConfig_Click(object sender, RoutedEventArgs e)
+        {
+            connectionSetup.Show();
         }
 
-        private void motdButton_Click(object sender, RoutedEventArgs e)
+        private void channelConfig_Click(object sender, RoutedEventArgs e)
         {
-            bot.setMotd(motdInput.Text);
+            botChatControls.Show();
+        }
+        
+        private void start_Click(object sender, RoutedEventArgs e)
+        {
+            popOutChat.startTimer();
         }
 
-        private void clearMotdButton_Click(object sender, RoutedEventArgs e)
+        private void pause_Click(object sender, RoutedEventArgs e)
         {
-            bot.setMotd("");
+            popOutChat.pauseTimer();
         }
 
-        private void streamInfoButton_Click(object sender, RoutedEventArgs e)
+        private void stop_Click(object sender, RoutedEventArgs e)
         {
-            bot.setStreamInfo(streamInfoInput.Text);
+            popOutChat.stopTimer();
         }
 
-        private void clearStreamInfoButton_Click(object sender, RoutedEventArgs e)
+        private void popOutChatConfig_Click(object sender, RoutedEventArgs e)
         {
-            bot.setStreamInfo("");
-        }
-
-        private void commandButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.commands["!"+commandInput.Text] = new Commands(commandInput.Text, responseInput.Text, Int32.Parse(authInput.Text));
-            bot.setCommands(this.commands);
-        }
-
-        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.commands.Remove("!"+commandInput.Text);
-            bot.setCommands(this.commands);
+            chatDisplaySettings.Show();
         }
     }
 }
