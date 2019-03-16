@@ -24,9 +24,6 @@ namespace ConfigurableIrcBotApp
         public ConnectionSetup connectionSetup { get; set; }
         public BotChatControls botChatControls { get; set; }
         public ChatDisplaySettings chatDisplaySettings { get; set; }
-
-        private CrossWindowController windowController { get; set; }
-
         public bool chatPoppedOut { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)

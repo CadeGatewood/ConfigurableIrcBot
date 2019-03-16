@@ -89,7 +89,6 @@
     <Compile Include="ConnectionSetup.xaml.cs">
       <DependentUpon>ConnectionSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CrossWindowController.cs" />
     <Compile Include="PlayBot.cs" />
     <Compile Include="JsonFileHandler.cs" />
     <Compile Include="jsonObjects.cs" />

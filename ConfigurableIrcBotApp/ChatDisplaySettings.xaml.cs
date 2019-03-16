@@ -152,11 +152,11 @@ namespace ConfigurableIrcBotApp
             popOutChat.titleBlock.Content = titleChangeEntry.Text;
         }
 
-        private void sectionSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void titleChange_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            popOutChat.titleBlock.Content = titleChangeEntry.Text;
+            e.Handled = true;
         }
-
-        
     }
 }

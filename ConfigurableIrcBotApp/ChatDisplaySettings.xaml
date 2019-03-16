@@ -12,7 +12,7 @@
 
         <Label x:Name="selectLabel" Content="Select Section:"/>
 
-        <ComboBox x:Name="sectionSelection" Margin="10,26,0,288" SelectionChanged="sectionSelection_SelectionChanged" HorizontalAlignment="Left" Width="180">
+        <ComboBox x:Name="sectionSelection" Margin="10,26,0,288" HorizontalAlignment="Left" Width="180">
             <ComboBoxItem Content="Title" IsSelected="True"></ComboBoxItem>
             <ComboBoxItem Content="Chat"></ComboBoxItem>
             <ComboBoxItem Content="Timer"></ComboBoxItem>
@@ -33,7 +33,7 @@
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font Color</TextBlock>
         </Button>
 
-        <TextBox x:Name="titleChangeEntry" Margin="209,26,0,288"  HorizontalAlignment="Left" Width="181"/>
+        <TextBox x:Name="titleChangeEntry" Margin="209,26,0,288"  HorizontalAlignment="Left" Width="181" KeyUp="titleChange_KeyUp"/>
         <Button x:Name="titleChangeButton" Margin="209,63,0,246"  HorizontalAlignment="Left" Width="181" Click="titleChangeButton_Click" >
             <TextBlock TextWrapping="Wrap" TextAlignment="Center"><Run Text="Change Title"/></TextBlock>
         </Button>
