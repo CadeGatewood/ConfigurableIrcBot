@@ -20,6 +20,7 @@ namespace ConfigurableIrcBotApp
         private IrcClient bot;
         private MainWindow main;
 
+        private bool initialConnectionAttempted;
         public ConnectionSetup()
         {
             InitializeComponent();
@@ -36,8 +37,15 @@ namespace ConfigurableIrcBotApp
 
         private void connectionSetup_Closing(object sender, CancelEventArgs e)
         {
+            if (initialConnectionAttempted)
+            { 
             e.Cancel = true;
             Hide();
+            }
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         private void numberValidation(object sender, TextCompositionEventArgs e)
@@ -48,6 +56,8 @@ namespace ConfigurableIrcBotApp
 
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
+            initialConnectionAttempted = true;
+
             if (userName.Text != "" &&
                 password.Text != "" &&
                 channel.Text != "" &&

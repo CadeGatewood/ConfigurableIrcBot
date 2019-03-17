@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.IO;
+using ConfigurableIrcBotApp.tabManagers;
+using System.Text.RegularExpressions;
 
 namespace ConfigurableIrcBotApp
 {
@@ -17,13 +19,13 @@ namespace ConfigurableIrcBotApp
 
         public IrcClient bot { get; set; }
         public PlayBot playBot { get; set; }
-        public JsonFileHandler jsonFileHandler { get; set; }
+
+        private PopoutChatSettingsManager chatSettingsManager { get; set; }
+        private BotChatActivitySettings botChatActivity { get; set; }
 
         //Windows
         public PopOutChat popOutChat { get; set; }
         public ConnectionSetup connectionSetup { get; set; }
-        public BotChatControls botChatControls { get; set; }
-        public ChatDisplaySettings chatDisplaySettings { get; set; }
         public bool chatPoppedOut { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
@@ -31,31 +33,24 @@ namespace ConfigurableIrcBotApp
             InitializeComponent();
             
             buildFileStructure();
-            
-            jsonFileHandler = new JsonFileHandler();
 
-            this.moderators = jsonFileHandler.loadModerators();
-            if (moderators == null)
-                moderators = new Dictionary<string, Moderator>();
-            this.commands = jsonFileHandler.loadCommands();
-            if (commands == null)
-                commands = new Dictionary<string, Commands>();
+            this.chatSettingsManager = new PopoutChatSettingsManager(this);
+            this.botChatActivity = new BotChatActivitySettings(this);
 
             this.connectionSetup = connectionSetup;
             this.bot = bot;
 
-            this.popOutChat = new PopOutChat(this);
-            this.botChatControls = new BotChatControls(this);
-            this.chatDisplaySettings = new ChatDisplaySettings(this);         
+            this.popOutChat = new PopOutChat(this);   
 
             this.settingsKeys = settingsKeys;
-            
+
+            this.DragEnter += new System.Windows.DragEventHandler(fontFileDrop_DragEnter);
+            this.Drop += new System.Windows.DragEventHandler(fontFileDrop_DragDrop);
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            jsonFileHandler.writeModerators(this.moderators);
-            jsonFileHandler.writeCommands(this.commands);
+            botChatActivity.saveDataOnClose();
             System.Windows.Application.Current.Shutdown();
         }
 
@@ -64,7 +59,11 @@ namespace ConfigurableIrcBotApp
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts");
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations");
         }
-
+        private void numberValidation(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
         public void write(string message)
         {
             System.Windows.MessageBox.Show(message);
@@ -119,9 +118,12 @@ namespace ConfigurableIrcBotApp
         public void botSetup(IrcClient bot)
         {
             this.bot = bot;
-            botChatControls.bot = bot;
         }
 
+        private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
+        {
+            connectionSetup.Show();
+        }
         private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
             this.popOutChat.Show();
@@ -131,11 +133,6 @@ namespace ConfigurableIrcBotApp
         private void connectionConfig_Click(object sender, RoutedEventArgs e)
         {
             connectionSetup.Show();
-        }
-
-        private void channelConfig_Click(object sender, RoutedEventArgs e)
-        {
-            botChatControls.Show();
         }
         
         private void start_Click(object sender, RoutedEventArgs e)
@@ -153,9 +150,59 @@ namespace ConfigurableIrcBotApp
             popOutChat.stopTimer();
         }
 
-        private void popOutChatConfig_Click(object sender, RoutedEventArgs e)
+        private void changeFont_Click(object sender, RoutedEventArgs e)
         {
-            chatDisplaySettings.Show();
+            this.chatSettingsManager.changeFont();
         }
+
+        private void changeFontColor_Click(object sender, RoutedEventArgs e)
+        {
+            this.chatSettingsManager.changeFontColor();
+        }
+
+        public void fontFileDrop_DragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)) e.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+
+        }
+
+        private void titleChangeButton_Click(object sender, RoutedEventArgs e)
+        {
+            popOutChat.titleBlock.Content = titleChangeEntry.Text;
+        }
+
+        private void titleChange_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            popOutChat.titleBlock.Content = titleChangeEntry.Text;
+            e.Handled = true;
+        }
+
+        private void commandButton_Click(object sender, RoutedEventArgs e)
+        {
+            botChatActivity.addComand();
+        }
+
+        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            botChatActivity.clearCommand();
+        }
+
+        private void moderatorAdd_Click(object sender, RoutedEventArgs e)
+        {
+            botChatActivity.addModerator();
+        }
+
+        private void moderatorRemove_Click(object sender, RoutedEventArgs e)
+        {
+            botChatActivity.removeModerator();
+        }
+
+        
     }
 }

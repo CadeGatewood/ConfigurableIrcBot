@@ -82,7 +82,15 @@ namespace ConfigurableIrcBotApp
         {
             this._ircrunning = true;
 
-            tcpClient = new TcpClient(ip, port);
+            try
+            {
+                tcpClient = new TcpClient(ip, port);
+            }
+            catch (Exception e)
+            {
+                main.write("The described irc channel connection has resulted in a time out, please confirm details and reconnect");
+                return;
+            }
             inputStream = new StreamReader(tcpClient.GetStream());
             outputStream = new StreamWriter(tcpClient.GetStream()) { NewLine = "\r\n", AutoFlush = true };
 
