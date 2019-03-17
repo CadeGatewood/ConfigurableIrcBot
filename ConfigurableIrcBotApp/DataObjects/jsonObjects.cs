@@ -1,4 +1,7 @@
-﻿namespace ConfigurableIrcBotApp
+﻿using System;
+using System.Windows.Forms;
+
+namespace ConfigurableIrcBotApp
 {
     public class Moderator
     {
@@ -26,5 +29,15 @@
             this.response = response;
             this.requiredAuthLevel = requiredAuthLevel;
         }
+    }
+
+    public class PlayBotAction
+    {
+        public string command { get; set; }
+        public string output { get; set; }
+        public string description { get; set; }
+
+        public Keys keyPress { get; set; }
+        public TimeSpan duration { get; set; }
     }
 }

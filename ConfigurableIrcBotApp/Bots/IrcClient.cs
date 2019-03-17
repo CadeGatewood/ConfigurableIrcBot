@@ -45,8 +45,8 @@ namespace ConfigurableIrcBotApp
 
         public MainWindow main { get; set; }
 
-        IDictionary<string, Moderator> moderators;
-        IDictionary<string, Commands> commands;
+        public IDictionary<string, Moderator> moderators { get; set; }
+        public IDictionary<string, Commands> commands { get; set; }
 
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
@@ -63,19 +63,9 @@ namespace ConfigurableIrcBotApp
             this.channel = channel.ToLower();
 
             this.main = main;
-          
-            this.moderators = main.moderators;
-            this.commands = main.commands;
-        }
 
-        public void setModerators(IDictionary<string, Moderator> moderators)
-        {
-            this.moderators = moderators;
-        }
-
-        public void setCommands(IDictionary<string, Commands> commands)
-        {
-            this.commands = commands;
+            this.moderators = new Dictionary<string, Moderator>();
+            this.commands = new Dictionary<string, Commands>();
         }
 
         public void IrcRun()

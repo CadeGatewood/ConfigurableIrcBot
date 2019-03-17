@@ -39,8 +39,8 @@ namespace ConfigurableIrcBotApp
         {
             if (initialConnectionAttempted)
             { 
-            e.Cancel = true;
-            Hide();
+                e.Cancel = true;
+                Hide();
             }
             else
             {
@@ -108,6 +108,10 @@ namespace ConfigurableIrcBotApp
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
             bot.IrcStop();
+            
+            bot = null;
+            main.botSetup(null);
         }
+
     }
 }

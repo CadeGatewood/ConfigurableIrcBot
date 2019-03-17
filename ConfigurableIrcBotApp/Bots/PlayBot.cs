@@ -8,7 +8,7 @@ namespace ConfigurableIrcBotApp
 {
     public class PlayBot
     {
-        
+        public IDictionary<string, PlayBotAction> actions { get; set; }
         public void playBotSetup()
         {
 

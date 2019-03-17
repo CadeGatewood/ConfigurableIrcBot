@@ -7,7 +7,7 @@
         ResizeMode="NoResize"
         Closing="MainWindow_Closing"
         mc:Ignorable="d"
-        Title="Bot Configuration" Height="446.995" Width="410.951">
+        Title="Bot Configuration" Height="475" Width="475" >
 
 
     <TabControl>
@@ -37,7 +37,7 @@
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Pop Out Chat</TextBlock>
                 </Button>
                 <TextBox x:Name="sendMessageBox" HorizontalAlignment="Left" Height="23" Margin="10,323,0,-40" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" KeyDown="enterSendMessage"/>
-                <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="214,323,0,-37" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
+                <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="214,326,0,-40" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
 
                 <Button x:Name="startTimer" Content="Start Timer" HorizontalAlignment="Left" Margin="214,99,0,0" VerticalAlignment="Top" Width="92" Click="start_Click" />
                 <Button x:Name="stopTimer" Content="Stop Timer" HorizontalAlignment="Left" Margin="214,149,0,0" VerticalAlignment="Top" Width="92" Click="stop_Click"/>
@@ -80,6 +80,14 @@
                 <Button x:Name="titleChangeButton"  HorizontalAlignment="Left" Width="96" Click="titleChangeButton_Click" Margin="110,73,0,0" Height="32" VerticalAlignment="Top" >
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center"><Run Text="Change Title"/></TextBlock>
                 </Button>
+
+                <Label x:Name="selectActiveLabel" Content="Active Sections:" Margin="263,0,31,355"/>
+
+                <CheckBox x:Name="titleActiveBox" Margin="263,25,10,355">Title</CheckBox>
+                <CheckBox x:Name="controlsActiveBox" Margin="263,47,10,315">Play Bot Controls</CheckBox>
+                <CheckBox x:Name="clockActiveBox" Margin="263,92,10,270">Chat</CheckBox>
+                <CheckBox x:Name="chatActiveBox" Margin="263,70,10,293">Timer</CheckBox>
+
             </Grid>
         </TabItem>
         <TabItem>
@@ -89,26 +97,18 @@
                 </StackPanel>
             </TabItem.Header>
 
-            <Grid>
-                <Label Content="Edit Moderators:" Margin="10,228,6,44"/>
-                <TextBox x:Name="moderatorInput" HorizontalAlignment="Left" Height="23" Margin="16,272,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
-                <Button x:Name="moderatorAdd" Content="Add mod" HorizontalAlignment="Left" Margin="16,306,0,0" VerticalAlignment="Top" Width="75" Click="moderatorAdd_Click"/>
-                <Button x:Name="moderatorRemove" Content="Remove mod" HorizontalAlignment="Left" Margin="107,306,0,0" VerticalAlignment="Top" Width="75" Click="moderatorRemove_Click"/>
-                <TextBox x:Name="authLevelBox" HorizontalAlignment="Left" Height="23" Margin="107,272,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" PreviewTextInput="numberValidation"/>
-                <Label x:Name="moderatorUserNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="16,246,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="moderatorAuthLabel" Content="Auth Level:" HorizontalAlignment="Left" Margin="107,246,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.538"/>
-
-                <Label x:Name="commandLabel" Content="Command:" HorizontalAlignment="Left" Margin="35,8,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="responseLabel" Content="Response:" HorizontalAlignment="Left" Margin="40,61,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="authLabel" Content="Authorization:" HorizontalAlignment="Left" Margin="19,36,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="commandInput" HorizontalAlignment="Left" Height="23" Margin="107,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
-                <TextBox x:Name="authInput" HorizontalAlignment="Left" Height="23" Margin="107,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" PreviewTextInput="numberValidation"/>
-                <TextBox x:Name="responseInput" HorizontalAlignment="Left" Height="79" Margin="107,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
-                <Button x:Name="commandButton" Content="Add Command" HorizontalAlignment="Left" Margin="107,150,0,0" VerticalAlignment="Top" Width="92" Click="commandButton_Click"/>
-                <Button x:Name="clearCommandButton" HorizontalAlignment="Left" Margin="214,150,0,0" VerticalAlignment="Top" Width="92" Click="clearCommandButton_Click">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remove Command</TextBlock>
-                </Button>
+            <Grid Margin="0,-2,0,2">
+                <Button x:Name="commndsEditButton" Content="Edit Commands" Margin="10,10,267,360" Click="CommndsEditButton_Click"/>
+                <Button x:Name="moderatorsEditButton" Content="Edit Moderators" Margin="10,53,267,317"/>
             </Grid>
+
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="PlayBot Settings"></Label>
+                </StackPanel>
+            </TabItem.Header>
 
         </TabItem>
     </TabControl>

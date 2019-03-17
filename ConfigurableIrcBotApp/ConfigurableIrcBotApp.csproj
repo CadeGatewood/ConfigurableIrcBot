@@ -57,9 +57,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="tabManagers\BotChatActivitySettings.cs" />
+    <Compile Include="EditCommands.xaml.cs">
+      <DependentUpon>EditCommands.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="tabManagers\BotChatActivitySettingsManager.cs" />
+    <Compile Include="tabManagers\PlayBotSettingsManager.cs" />
     <Compile Include="tabManagers\PopoutChatSettingsManager.cs" />
     <Page Include="ConnectionSetup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditCommands.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -76,7 +84,7 @@
     </Compile>
     <Compile Include="Bots\PlayBot.cs" />
     <Compile Include="fileManagers\JsonFileHandler.cs" />
-    <Compile Include="fileManagers\jsonObjects.cs" />
+    <Compile Include="DataObjects\jsonObjects.cs" />
     <Compile Include="Bots\IrcClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

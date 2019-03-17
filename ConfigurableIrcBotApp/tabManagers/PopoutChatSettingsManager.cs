@@ -11,7 +11,7 @@ using System.Windows.Media;
 namespace ConfigurableIrcBotApp.tabManagers
 {
     
-    class PopoutChatSettingsManager
+    public class PopoutChatSettingsManager
     {
         private MainWindow main;
 

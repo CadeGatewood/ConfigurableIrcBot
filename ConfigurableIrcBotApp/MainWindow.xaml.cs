@@ -16,31 +16,40 @@ namespace ConfigurableIrcBotApp
         public List<String> settingsKeys { get; set; }
         public IDictionary<string, Moderator> moderators { get; set; }
         public IDictionary<string, Commands> commands { get; set; }
+        public IDictionary<string, PlayBotAction> playBotActions { get; set; }
 
         public IrcClient bot { get; set; }
         public PlayBot playBot { get; set; }
 
-        private PopoutChatSettingsManager chatSettingsManager { get; set; }
-        private BotChatActivitySettings botChatActivity { get; set; }
+        public PopoutChatSettingsManager chatSettingsManager { get; set; }
+        public BotChatActivitySettingsManager botChatActivity { get; set; }
+        public PlayBotSettingsManager playBotSettingsManager { get; set; }
 
         //Windows
         public PopOutChat popOutChat { get; set; }
-        public ConnectionSetup connectionSetup { get; set; }
         public bool chatPoppedOut { get; set; }
+        public ConnectionSetup connectionSetup { get; set; }
+        
+        public EditCommands editCommands { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
             InitializeComponent();
-            
             buildFileStructure();
 
             this.chatSettingsManager = new PopoutChatSettingsManager(this);
-            this.botChatActivity = new BotChatActivitySettings(this);
+            this.botChatActivity = new BotChatActivitySettingsManager(this);
+            this.playBotSettingsManager = new PlayBotSettingsManager(this);
+
+            this.moderators = botChatActivity.moderators;
+            this.commands = botChatActivity.commands;
+            this.playBotActions = playBotSettingsManager.playBotActions;
 
             this.connectionSetup = connectionSetup;
             this.bot = bot;
 
-            this.popOutChat = new PopOutChat(this);   
+            this.popOutChat = new PopOutChat(this);
+            this.editCommands = new EditCommands(this);
 
             this.settingsKeys = settingsKeys;
 
@@ -51,12 +60,12 @@ namespace ConfigurableIrcBotApp
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             botChatActivity.saveDataOnClose();
+            playBotSettingsManager.saveDataOnClose();
             System.Windows.Application.Current.Shutdown();
         }
 
         private void buildFileStructure()
         {
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts");
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations");
         }
         private void numberValidation(object sender, TextCompositionEventArgs e)
@@ -118,6 +127,7 @@ namespace ConfigurableIrcBotApp
         public void botSetup(IrcClient bot)
         {
             this.bot = bot;
+            botChatActivity.setupBot(bot);
         }
 
         private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
@@ -168,7 +178,6 @@ namespace ConfigurableIrcBotApp
         public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
-
         }
 
         private void titleChangeButton_Click(object sender, RoutedEventArgs e)
@@ -183,26 +192,9 @@ namespace ConfigurableIrcBotApp
             e.Handled = true;
         }
 
-        private void commandButton_Click(object sender, RoutedEventArgs e)
+        private void CommndsEditButton_Click(object sender, RoutedEventArgs e)
         {
-            botChatActivity.addComand();
+            this.editCommands.Show();
         }
-
-        private void clearCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            botChatActivity.clearCommand();
-        }
-
-        private void moderatorAdd_Click(object sender, RoutedEventArgs e)
-        {
-            botChatActivity.addModerator();
-        }
-
-        private void moderatorRemove_Click(object sender, RoutedEventArgs e)
-        {
-            botChatActivity.removeModerator();
-        }
-
-        
     }
 }
