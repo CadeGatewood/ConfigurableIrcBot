@@ -40,9 +40,9 @@ namespace ConfigurableIrcBotApp.tabManagers
             bot.moderators = moderators;
         }
 
-        public void removeModerator(string moderator)
+        public void removeModerator(Moderator moderator)
         {
-            this.moderators.Remove(moderator);
+            this.moderators.Remove(moderator.userName);
             jsonFileHandler.writeModerators(moderators);
             bot.moderators = moderators;
         }

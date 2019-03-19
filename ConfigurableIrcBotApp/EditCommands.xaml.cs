@@ -3,18 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ConfigurableIrcBotApp
 {
@@ -47,14 +38,14 @@ namespace ConfigurableIrcBotApp
         {
             try
             {
-                Commands newCommand = new Commands(main.editCommands.commadnInput.Text, main.editCommands.responseInput.Text, Int32.Parse(main.editCommands.authorizationInput.Text));
+                Commands newCommand = new Commands(commadnInput.Text, responseInput.Text, Int32.Parse(authorizationInput.Text));
                 botChatActivityManager.addComand(newCommand);
                 commandsList.Add(newCommand);
                 commandsGrid.Items.Refresh();
             }
             catch(Exception newCommandException)
             {
-                main.write("Please enter all information for a command");
+                main.writeError("Please enter all information for a command", newCommandException);
             }
         }
 
@@ -63,7 +54,7 @@ namespace ConfigurableIrcBotApp
             var command = (Commands)commandsGrid.SelectedItem;
             botChatActivityManager.removeCommand(command);
             commandsList.Remove(command);
-            this.commandsGrid.Items.Refresh();
+            commandsGrid.Items.Refresh();
         }
     }
 }

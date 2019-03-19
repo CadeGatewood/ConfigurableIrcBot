@@ -1,0 +1,33 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.EditModerators"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="editModerators_Closing"
+        Title="EditModerators" Height="278.667" Width="379.333">
+    <Grid>
+        <Label Content="Add Moderator:" HorizontalAlignment="Left" Width="101" Height="32" VerticalAlignment="Top"/>
+        <Label Content="Username:" Margin="10,37,0,0" HorizontalAlignment="Left" Width="130" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="moderatorUserName" Margin="10,62,0,0" HorizontalAlignment="Left" Width="130" Height="30" VerticalAlignment="Top"></TextBox>
+        <Label Content="Authorization Level:" Margin="10,98,0,0" HorizontalAlignment="Left" Width="130" Height="25" VerticalAlignment="Top"/>
+        <TextBox x:Name="moderatorAuthLevel" Margin="10,123,0,0" HorizontalAlignment="Left" Width="130" Height="30" VerticalAlignment="Top" PreviewTextInput="numberValidation"></TextBox>
+        <Button x:Name="addModerator" Content="Add Moderator" Margin="10,168,0,0" HorizontalAlignment="Left" Width="130" Height="29" VerticalAlignment="Top" Click="AddModerator_Click"></Button>
+        <DataGrid x:Name="moderatorGrid" Margin="145,0,0,0" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Moderator" Binding="{Binding userName}" Width="40*">
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="AuthLevel" Binding="{Binding authLevel}" MinWidth="70">
+                </DataGridTextColumn>
+                <DataGridTemplateColumn MinWidth="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="removeModerator_Click" Height="30" Width="50" >Remove</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

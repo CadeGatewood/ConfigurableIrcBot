@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Sockets;
 
 using System.Threading;
+using System.Windows;
 
 namespace ConfigurableIrcBotApp
 {
@@ -47,7 +48,7 @@ namespace ConfigurableIrcBotApp
 
         public IDictionary<string, Moderator> moderators { get; set; }
         public IDictionary<string, Commands> commands { get; set; }
-
+        public IDictionary<string, PlayBotAction> playBotActions { get; set; }
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
@@ -78,7 +79,7 @@ namespace ConfigurableIrcBotApp
             }
             catch (Exception e)
             {
-                main.write("The described irc channel connection has resulted in a time out, please confirm details and reconnect");
+                main.writeError("There was a problem connecting to the described server: ", e);
                 return;
             }
             inputStream = new StreamReader(tcpClient.GetStream());

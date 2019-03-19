@@ -60,6 +60,9 @@
     <Compile Include="EditCommands.xaml.cs">
       <DependentUpon>EditCommands.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditModerators.xaml.cs">
+      <DependentUpon>EditModerators.xaml</DependentUpon>
+    </Compile>
     <Compile Include="tabManagers\BotChatActivitySettingsManager.cs" />
     <Compile Include="tabManagers\PlayBotSettingsManager.cs" />
     <Compile Include="tabManagers\PopoutChatSettingsManager.cs" />
@@ -68,6 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditCommands.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditModerators.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

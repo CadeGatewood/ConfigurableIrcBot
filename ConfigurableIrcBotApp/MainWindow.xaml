@@ -99,7 +99,7 @@
 
             <Grid Margin="0,-2,0,2">
                 <Button x:Name="commndsEditButton" Content="Edit Commands" Margin="10,10,267,360" Click="CommndsEditButton_Click"/>
-                <Button x:Name="moderatorsEditButton" Content="Edit Moderators" Margin="10,53,267,317"/>
+                <Button x:Name="moderatorsEditButton" Content="Edit Moderators" Margin="10,53,267,317" Click="ModeratorsEditButton_Click"/>
             </Grid>
 
         </TabItem>

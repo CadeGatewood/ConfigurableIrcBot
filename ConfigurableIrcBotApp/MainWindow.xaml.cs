@@ -31,6 +31,7 @@ namespace ConfigurableIrcBotApp
         public ConnectionSetup connectionSetup { get; set; }
         
         public EditCommands editCommands { get; set; }
+        public EditModerators editModerators { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
@@ -50,6 +51,7 @@ namespace ConfigurableIrcBotApp
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
+            this.editModerators = new EditModerators(this);
 
             this.settingsKeys = settingsKeys;
 
@@ -76,6 +78,11 @@ namespace ConfigurableIrcBotApp
         public void write(string message)
         {
             System.Windows.MessageBox.Show(message);
+        }
+
+        public void writeError(string message, Exception e)
+        {
+            MessageBox.Show( message + e.Message, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -195,6 +202,11 @@ namespace ConfigurableIrcBotApp
         private void CommndsEditButton_Click(object sender, RoutedEventArgs e)
         {
             this.editCommands.Show();
+        }
+
+        private void ModeratorsEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.editModerators.Show();
         }
     }
 }
