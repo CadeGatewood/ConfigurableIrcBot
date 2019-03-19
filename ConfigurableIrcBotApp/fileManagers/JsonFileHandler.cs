@@ -11,9 +11,11 @@ namespace ConfigurableIrcBotApp
         string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations";
         string moderatorFile = "moderators.json";
         string commandsFile = "commands.json";
+        string playBotActionFile = "playBotActions.json";
 
         IDictionary<string, Commands> resultCommands;
         IDictionary<string, Moderator> resultModerators;
+        IDictionary<string, PlayBotAction> resultActions;
 
         public void loadStoredDictionary(string file, string callingType)
         {
@@ -22,7 +24,7 @@ namespace ConfigurableIrcBotApp
 
             IDictionary<string, Commands> resultingCommands = new Dictionary<string, Commands>();
             IDictionary<string, Moderator> resultingModerators = new Dictionary<string, Moderator>();
-
+            IDictionary<string, PlayBotAction> resultingActions = new Dictionary<string, PlayBotAction>();
 
             try
             {
@@ -66,6 +68,19 @@ namespace ConfigurableIrcBotApp
                     jsonReader.Close();
                     this.resultModerators = resultingModerators;
                     break;
+                case "playBotAction":
+                    IDictionary<string, PlayBotAction> savedPlayBotActions = (Dictionary<string, PlayBotAction>)serializer.Deserialize(jsonReader, typeof(Dictionary<string, PlayBotAction>));
+                    if (savedPlayBotActions != null)
+                    {
+                        foreach (string action in savedPlayBotActions.Keys)
+                        {
+                            resultingActions[action] = savedPlayBotActions[action];
+                        }
+                    }
+                    fileRead.Close();
+                    jsonReader.Close();
+                    this.resultActions = resultingActions;
+                    break;
                 default:
                     break;
             }
@@ -73,16 +88,20 @@ namespace ConfigurableIrcBotApp
 
         public IDictionary<string, Moderator> loadModerators()
         {
-            string file = "moderators.JSON";
-            loadStoredDictionary(file, "moderator");
+            loadStoredDictionary(moderatorFile, "moderator");
             return resultModerators;
         }
 
         public IDictionary<string, Commands> loadCommands()
         {
-            string file = "commands.JSON";
-            loadStoredDictionary(file, "command");
+            loadStoredDictionary(commandsFile, "command");
             return resultCommands;
+        }
+
+        public IDictionary<string, PlayBotAction> loadPlayBotActions()
+        {
+            loadStoredDictionary(playBotActionFile, "playBotAction");
+            return resultActions;
         }
 
         public void writeCommands(IDictionary<string, Commands> commands)
@@ -93,6 +112,11 @@ namespace ConfigurableIrcBotApp
         public void writeModerators(IDictionary<string, Moderator> moderators)
         {
             File.WriteAllText(filesBase + moderatorFile, JsonConvert.SerializeObject(moderators, Formatting.Indented));
+        }
+
+        public void writePlayBotActions(IDictionary<string, PlayBotAction> playBotActions)
+        {
+            File.WriteAllText(filesBase + playBotActionFile, JsonConvert.SerializeObject(playBotActions, Formatting.Indented));
         }
     }
 }

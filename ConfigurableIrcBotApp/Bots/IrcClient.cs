@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Sockets;
 
 using System.Threading;
+using System.Windows;
 
 namespace ConfigurableIrcBotApp
 {
@@ -45,9 +46,9 @@ namespace ConfigurableIrcBotApp
 
         public MainWindow main { get; set; }
 
-        IDictionary<string, Moderator> moderators;
-        IDictionary<string, Commands> commands;
-
+        public IDictionary<string, Moderator> moderators { get; set; }
+        public IDictionary<string, Commands> commands { get; set; }
+        public IDictionary<string, PlayBotAction> playBotActions { get; set; }
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
@@ -63,26 +64,24 @@ namespace ConfigurableIrcBotApp
             this.channel = channel.ToLower();
 
             this.main = main;
-          
-            this.moderators = main.moderators;
-            this.commands = main.commands;
-        }
 
-        public void setModerators(IDictionary<string, Moderator> moderators)
-        {
-            this.moderators = moderators;
-        }
-
-        public void setCommands(IDictionary<string, Commands> commands)
-        {
-            this.commands = commands;
+            this.moderators = new Dictionary<string, Moderator>();
+            this.commands = new Dictionary<string, Commands>();
         }
 
         public void IrcRun()
         {
             this._ircrunning = true;
 
-            tcpClient = new TcpClient(ip, port);
+            try
+            {
+                tcpClient = new TcpClient(ip, port);
+            }
+            catch (Exception e)
+            {
+                main.writeError("There was a problem connecting to the described server: ", e);
+                return;
+            }
             inputStream = new StreamReader(tcpClient.GetStream());
             outputStream = new StreamWriter(tcpClient.GetStream()) { NewLine = "\r\n", AutoFlush = true };
 

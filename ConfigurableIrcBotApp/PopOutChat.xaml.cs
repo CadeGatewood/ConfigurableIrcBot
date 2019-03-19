@@ -34,8 +34,6 @@ namespace ConfigurableIrcBotApp
             Hide();
         }
 
-       
-
         void timer_Tick(object sender, EventArgs e)
         {
 

@@ -1,0 +1,57 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.EditCommands"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="editCommands_Closing"
+        Title="EditCommands" Height="450" Width="540.067">
+    <Grid>
+
+        <Label Content="Command Value:" Margin="10,13,290,371"/>
+        <TextBox x:Name="commadnInput" Margin="10,53,0,336" HorizontalAlignment="Left" Width="172" Text="!"/>
+        <Label Content="Response:" Margin="10,88,290,296"/>
+        <TextBox x:Name="responseInput" Margin="10,128,0,262" HorizontalAlignment="Left" Width="172"/>
+        <Label Content="Required Authorization:" Margin="10,162,277,222"/>
+        <TextBox x:Name="authorizationInput" Margin="10,202,0,188" PreviewTextInput="numberValidation" HorizontalAlignment="Left" Width="172"/>
+        <Button x:Name="addCommand" Content="Add Command" Margin="10,236,0,148" Click="AddCommand_Click" HorizontalAlignment="Left" Width="130"/>
+
+        <DataGrid AutoGenerateColumns="False" Name="commandsGrid" ItemsSource="{Binding}" Margin="187,10,10,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Command" Binding="{Binding Path=command}" MinWidth="60" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Response" Binding="{Binding Path=response}" Width="60*" MinWidth="50" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Auth Level" Binding="{Binding Path=requiredAuthLevel}" MinWidth="60" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn MinWidth="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="removeCommand_Click" Height="30" Width="50" >Remove</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Window>

@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.IO;
+using ConfigurableIrcBotApp.tabManagers;
+using System.Text.RegularExpressions;
 
 namespace ConfigurableIrcBotApp
 {
@@ -14,60 +16,73 @@ namespace ConfigurableIrcBotApp
         public List<String> settingsKeys { get; set; }
         public IDictionary<string, Moderator> moderators { get; set; }
         public IDictionary<string, Commands> commands { get; set; }
+        public IDictionary<string, PlayBotAction> playBotActions { get; set; }
 
         public IrcClient bot { get; set; }
         public PlayBot playBot { get; set; }
-        public JsonFileHandler jsonFileHandler { get; set; }
+
+        public PopoutChatSettingsManager chatSettingsManager { get; set; }
+        public BotChatActivitySettingsManager botChatActivity { get; set; }
+        public PlayBotSettingsManager playBotSettingsManager { get; set; }
 
         //Windows
         public PopOutChat popOutChat { get; set; }
-        public ConnectionSetup connectionSetup { get; set; }
-        public BotChatControls botChatControls { get; set; }
-        public ChatDisplaySettings chatDisplaySettings { get; set; }
         public bool chatPoppedOut { get; set; }
+        public ConnectionSetup connectionSetup { get; set; }
+        
+        public EditCommands editCommands { get; set; }
+        public EditModerators editModerators { get; set; }
 
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
             InitializeComponent();
-            
             buildFileStructure();
-            
-            jsonFileHandler = new JsonFileHandler();
 
-            this.moderators = jsonFileHandler.loadModerators();
-            if (moderators == null)
-                moderators = new Dictionary<string, Moderator>();
-            this.commands = jsonFileHandler.loadCommands();
-            if (commands == null)
-                commands = new Dictionary<string, Commands>();
+            this.chatSettingsManager = new PopoutChatSettingsManager(this);
+            this.botChatActivity = new BotChatActivitySettingsManager(this);
+            this.playBotSettingsManager = new PlayBotSettingsManager(this);
+
+            this.moderators = botChatActivity.moderators;
+            this.commands = botChatActivity.commands;
+            this.playBotActions = playBotSettingsManager.playBotActions;
 
             this.connectionSetup = connectionSetup;
             this.bot = bot;
 
             this.popOutChat = new PopOutChat(this);
-            this.botChatControls = new BotChatControls(this);
-            this.chatDisplaySettings = new ChatDisplaySettings(this);         
+            this.editCommands = new EditCommands(this);
+            this.editModerators = new EditModerators(this);
 
             this.settingsKeys = settingsKeys;
-            
+
+            this.DragEnter += new System.Windows.DragEventHandler(fontFileDrop_DragEnter);
+            this.Drop += new System.Windows.DragEventHandler(fontFileDrop_DragDrop);
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            jsonFileHandler.writeModerators(this.moderators);
-            jsonFileHandler.writeCommands(this.commands);
+            botChatActivity.saveDataOnClose();
+            playBotSettingsManager.saveDataOnClose();
             System.Windows.Application.Current.Shutdown();
         }
 
         private void buildFileStructure()
         {
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts");
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations");
         }
-
+        private void numberValidation(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
         public void write(string message)
         {
             System.Windows.MessageBox.Show(message);
+        }
+
+        public void writeError(string message, Exception e)
+        {
+            MessageBox.Show( message + e.Message, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -119,9 +134,13 @@ namespace ConfigurableIrcBotApp
         public void botSetup(IrcClient bot)
         {
             this.bot = bot;
-            botChatControls.bot = bot;
+            botChatActivity.setupBot(bot);
         }
 
+        private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
+        {
+            connectionSetup.Show();
+        }
         private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
             this.popOutChat.Show();
@@ -131,11 +150,6 @@ namespace ConfigurableIrcBotApp
         private void connectionConfig_Click(object sender, RoutedEventArgs e)
         {
             connectionSetup.Show();
-        }
-
-        private void channelConfig_Click(object sender, RoutedEventArgs e)
-        {
-            botChatControls.Show();
         }
         
         private void start_Click(object sender, RoutedEventArgs e)
@@ -153,9 +167,46 @@ namespace ConfigurableIrcBotApp
             popOutChat.stopTimer();
         }
 
-        private void popOutChatConfig_Click(object sender, RoutedEventArgs e)
+        private void changeFont_Click(object sender, RoutedEventArgs e)
         {
-            chatDisplaySettings.Show();
+            this.chatSettingsManager.changeFont();
+        }
+
+        private void changeFontColor_Click(object sender, RoutedEventArgs e)
+        {
+            this.chatSettingsManager.changeFontColor();
+        }
+
+        public void fontFileDrop_DragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)) e.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+        }
+
+        private void titleChangeButton_Click(object sender, RoutedEventArgs e)
+        {
+            popOutChat.titleBlock.Content = titleChangeEntry.Text;
+        }
+
+        private void titleChange_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            popOutChat.titleBlock.Content = titleChangeEntry.Text;
+            e.Handled = true;
+        }
+
+        private void CommndsEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.editCommands.Show();
+        }
+
+        private void ModeratorsEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.editModerators.Show();
         }
     }
 }
