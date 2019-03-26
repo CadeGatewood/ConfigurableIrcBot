@@ -22,10 +22,13 @@ namespace ConfigurableIrcBotApp
         bool _running;
         bool _wasPaused;
 
+        public string titleType { get; set; }
         public PopOutChat(MainWindow main)
         {
             InitializeComponent();
             this.main = main;
+
+            titleType = "Text";
         }
 
         private void popoutChat_Closing(object sender, CancelEventArgs e)

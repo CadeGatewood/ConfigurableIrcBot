@@ -7,6 +7,7 @@
         ResizeMode="NoResize"
         Closing="MainWindow_Closing"
         mc:Ignorable="d"
+        AllowDrop="True"
         Title="Bot Configuration" Height="475" Width="475" >
 
 
@@ -61,10 +62,10 @@
                     <ComboBoxItem Content="Timer"></ComboBoxItem>
                 </ComboBox>
 
-                <DockPanel Margin="0,182,0,10" >
+                <DockPanel Margin="0,218,0,10" >
                     <Border BorderBrush="DarkGray" Background="White" BorderThickness="2" CornerRadius="3" Width="383">
                         <StackPanel x:Name="fontPanel" DragDrop.Drop="fontFileDrop_DragDrop" DragEnter="fontFileDrop_DragEnter" AllowDrop="True" HorizontalAlignment="Left" Width="381">
-                            <TextBlock TextWrapping="Wrap" FontSize="10" TextAlignment="Center" Height="22" HorizontalAlignment="Left" Width="197"><Run Foreground="LightGray" Text="Drop .tff file to add new font"/></TextBlock>
+                            <TextBlock TextWrapping="Wrap" FontSize="10" TextAlignment="Center" Height="22" HorizontalAlignment="Left" Width="197"><Run Foreground="LightGray" Text="Drop font or image file"/></TextBlock>
                         </StackPanel>
                     </Border>
                 </DockPanel>
@@ -75,19 +76,28 @@
                 <Button x:Name="changeFontColor" Margin="10,113,0,0" HorizontalAlignment="Left" Width="90" Click="changeFontColor_Click" Height="55" VerticalAlignment="Top" >
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font Color</TextBlock>
                 </Button>
+                <Button x:Name="changeBackGroundColor" Margin="110,113,0,0" HorizontalAlignment="Left" Width="90"  Height="55" VerticalAlignment="Top" Click="ChangeBackGroundColor_Click" >
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change BackGround Color</TextBlock>
+                </Button>
 
                 <TextBox x:Name="titleChangeEntry" Margin="110,26,0,0"  HorizontalAlignment="Left" Width="140" KeyUp="titleChange_KeyUp" Height="39" VerticalAlignment="Top"/>
-                <Button x:Name="titleChangeButton"  HorizontalAlignment="Left" Width="96" Click="titleChangeButton_Click" Margin="110,73,0,0" Height="32" VerticalAlignment="Top" >
+                <Button x:Name="titleChangeButton"  HorizontalAlignment="Left" Width="96" Click="titleChangeButton_Click" Margin="131,70,0,0" Height="32" VerticalAlignment="Top" >
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center"><Run Text="Change Title"/></TextBlock>
                 </Button>
 
                 <Label x:Name="selectActiveLabel" Content="Active Sections:" Margin="263,0,31,355"/>
 
-                <CheckBox x:Name="titleActiveBox" Margin="263,25,10,355">Title</CheckBox>
-                <CheckBox x:Name="controlsActiveBox" Margin="263,47,10,315">Play Bot Controls</CheckBox>
-                <CheckBox x:Name="clockActiveBox" Margin="263,92,10,270">Chat</CheckBox>
-                <CheckBox x:Name="chatActiveBox" Margin="263,70,10,293">Timer</CheckBox>
+                <CheckBox x:Name="titleActiveBox" Margin="263,25,84,355" Height="30" Checked="titleActiveBox_Checked" Unchecked="titleActiveBox_Checked" IsChecked="True">Title</CheckBox>
+                <CheckBox x:Name="controlsActiveBox" Margin="263,55,84,323" Height="30" Checked="controlsActiveBox_Checked" Unchecked="controlsActiveBox_Checked" IsChecked="True">Play Bot Controls</CheckBox>
+                <CheckBox x:Name="chatActiveBox" Margin="263,85,84,293" Height="30" Checked="chatActiveBox_Checked" Unchecked="chatActiveBox_Checked" IsChecked="True">Chat</CheckBox>
+                <CheckBox x:Name="clockActiveBox" Margin="263,113,84,265" Height="30" Checked="clockActiveBox_Checked" Unchecked="clockActiveBox_Checked" IsChecked="True">Timer</CheckBox>
 
+                <Label Content="Title Type:" Margin="10,173,383,195"></Label>
+                <StackPanel x:Name="titleType" Orientation="Horizontal" Height="30" Margin="85,179,263,199">
+                    <RadioButton x:Name="titleIsImage" Content="Text   " IsChecked="True" Checked="TitleIsImage_Checked"/>
+
+                    <RadioButton x:Name="titleIsText" Content="Image" Checked="TitleIsText_Checked"/>
+                </StackPanel>
             </Grid>
         </TabItem>
         <TabItem>
@@ -109,7 +119,9 @@
                     <Label Content="PlayBot Settings"></Label>
                 </StackPanel>
             </TabItem.Header>
-
+            <Grid>
+                <CheckBox x:Name="playBotActive" Content="PlayBot Active" Height="30" Width="110" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            </Grid>
         </TabItem>
     </TabControl>
 

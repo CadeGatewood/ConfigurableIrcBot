@@ -7,26 +7,29 @@
         mc:Ignorable="d"
         Closing="popoutChat_Closing"
         Title="Chat" 
-        Background="#323232" Height="826" MinWidth="380" Width="380">
+        Background="#323232" MinHeight="830" Height="830" MinWidth="380" Width="380">
 
-    <Grid x:Name="chatMainGrid" Width="auto" Height="auto">
+    <Grid x:Name="chatMainGrid" Width="auto" Margin="0,0,0,3">
 
-        <DockPanel x:Name="titleDock" Margin="10,10,10,665">
+        <DockPanel x:Name="titleTextDock" MinHeight="120" Margin="10,10,10,655">
             <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="3">
-                <Label x:Name="titleBlock" Background="#323232" Margin="1,0,1,9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Height="126" VerticalAlignment="Bottom"/>
+                <Label x:Name="titleBlock" Background="#323232" Margin="1,0,1,9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Height="101" VerticalAlignment="Bottom"/>
+            </Border>
+        </DockPanel>
+        <DockPanel x:Name="titleImageDock" MinHeight="120" Margin="10,10,10,655" Visibility="Collapsed">
+            <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="3">
+                <Image x:Name="titleImage"/>
             </Border>
         </DockPanel>
 
-        <DockPanel x:Name="controlsDock" Margin="0,135,0,485">
-            <DataGrid Background="#323232" Height="175" VerticalAlignment="Bottom">
-                
-            </DataGrid>
+        <DockPanel x:Name="controlsDock" Margin="10,146,10,499">
+            <DataGrid x:Name="controlsGrid" Background="#323232" HeadersVisibility="None" Width="341" BorderThickness="0"/>
         </DockPanel>
-        <DockPanel x:Name="timerDock" Margin="0,315,0,396">
-            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" Height="84" VerticalAlignment="Bottom"/>
+        <DockPanel x:Name="timerDock" Margin="10,302,10,396" >
+            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" MinHeight="84" VerticalAlignment="Bottom" Width="344" Height="88" BorderThickness="0"/>
         </DockPanel>
 
-        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0" IsReadOnly="True" Height="396" VerticalAlignment="Bottom"/>
+        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="0"/>
 
     </Grid>
 </Window>
