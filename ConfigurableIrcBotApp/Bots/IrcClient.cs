@@ -65,8 +65,9 @@ namespace ConfigurableIrcBotApp
 
             this.main = main;
 
-            this.moderators = new Dictionary<string, Moderator>();
-            this.commands = new Dictionary<string, Commands>();
+            this.moderators = main.moderators;
+            this.commands = main.commands;
+            this.playBotActions = main.playBotActions;
         }
 
         public void IrcRun()

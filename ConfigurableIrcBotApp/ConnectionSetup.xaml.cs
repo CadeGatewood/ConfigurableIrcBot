@@ -31,7 +31,6 @@ namespace ConfigurableIrcBotApp
                 ((TextBox)connectionGrid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
             }
             
-            
             this.main = new MainWindow(this, this.bot, settingsKeys);
         }
 

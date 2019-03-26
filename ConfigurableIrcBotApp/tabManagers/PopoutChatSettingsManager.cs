@@ -80,5 +80,19 @@ namespace ConfigurableIrcBotApp.tabManagers
             }
         }
 
+        public void changeBackGroundColors()
+        {
+            ColorDialog cd = new ColorDialog();
+            var result = cd.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                var color = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
+                main.popOutChat.titleBlock.Background = color;
+                main.popOutChat.controlsGrid.Background = color;
+                main.popOutChat.clockTxt.Background = color;
+                main.popOutChat.chatBlock.Background = color;
+                main.popOutChat.Background = color;
+            }
+        }
     }
 }

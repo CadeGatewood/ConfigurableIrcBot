@@ -8,6 +8,9 @@ using System.ComponentModel;
 using System.IO;
 using ConfigurableIrcBotApp.tabManagers;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Runtime.InteropServices;
+using System.Windows.Media.Imaging;
 
 namespace ConfigurableIrcBotApp
 {
@@ -33,9 +36,15 @@ namespace ConfigurableIrcBotApp
         public EditCommands editCommands { get; set; }
         public EditModerators editModerators { get; set; }
 
+
+        readonly List<string> fontFormats = new List<string> { ".ttf", ".ttc", ".fnt", ".fon", ".otf" };
+        List<String> imgFormats = new List<string> {".jpg",".jpeg",".png", ".gif", ".bmp"};
+
+        [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
+        public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
+                                         string lpFileName);
         public MainWindow(ConnectionSetup connectionSetup, IrcClient bot, List<String> settingsKeys)
         {
-            InitializeComponent();
             buildFileStructure();
 
             this.chatSettingsManager = new PopoutChatSettingsManager(this);
@@ -52,6 +61,10 @@ namespace ConfigurableIrcBotApp
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
             this.editModerators = new EditModerators(this);
+
+            InitializeComponent();
+            
+            
 
             this.settingsKeys = settingsKeys;
 
@@ -82,7 +95,7 @@ namespace ConfigurableIrcBotApp
 
         public void writeError(string message, Exception e)
         {
-            MessageBox.Show( message + e.Message, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(e.Message + message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void enterSendMessage(object sender, KeyEventArgs e)
@@ -137,6 +150,25 @@ namespace ConfigurableIrcBotApp
             botChatActivity.setupBot(bot);
         }
 
+        public void installFont(string newFontFileLocation)
+        {
+            int result = -1;
+            int error = 0;
+
+            result = AddFontResource(@"" + newFontFileLocation);
+            error = Marshal.GetLastWin32Error();
+            if (error != 0)
+            {
+                writeError("Error installing font: ", new Win32Exception(error));
+            }
+            else
+            {
+                write((result == 0) ? "Font is already installed." :
+                                                  "Font installed successfully.  Restarting the Application may be required");
+            }
+
+        }
+
         private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
         {
             connectionSetup.Show();
@@ -177,6 +209,11 @@ namespace ConfigurableIrcBotApp
             this.chatSettingsManager.changeFontColor();
         }
 
+        private void ChangeBackGroundColor_Click(object sender, RoutedEventArgs e)
+        {
+            this.chatSettingsManager.changeBackGroundColors();
+        }
+
         public void fontFileDrop_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
             if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)) e.Effects = System.Windows.DragDropEffects.Copy;
@@ -184,7 +221,35 @@ namespace ConfigurableIrcBotApp
 
         public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+            try
+            {
+                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+                foreach (string file in files)
+                {
+                    if (fontFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
+                    {
+                        installFont(file);
+                    }
+                    else if (imgFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
+                    {
+                        popOutChat.titleImage.Source = new BitmapImage(new Uri(file));
+                    }
+                    else
+                    {
+                        throw new FileFormatException("Unaccepted file format");
+                    }
+                }
+            }
+            catch(FileFormatException fException)
+            {
+                string fileExceptionMessage = "";
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "For fonts, accepted formats include: " + string.Join(", ", fontFormats.ToArray());
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "For images, accepted formats include: " + string.Join(", ", imgFormats.ToArray());
+                writeError(fileExceptionMessage, fException);
+            }
         }
 
         private void titleChangeButton_Click(object sender, RoutedEventArgs e)
@@ -207,6 +272,72 @@ namespace ConfigurableIrcBotApp
         private void ModeratorsEditButton_Click(object sender, RoutedEventArgs e)
         {
             this.editModerators.Show();
+        }
+
+        private void titleActiveBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)titleActiveBox.IsChecked)
+            {
+                if(popOutChat.titleType.Trim().Equals("Text"))
+                    popOutChat.titleTextDock.Visibility = Visibility.Visible;
+                if(popOutChat.titleType.Equals("Image"))
+                    popOutChat.titleImageDock.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                popOutChat.titleTextDock.Visibility = Visibility.Collapsed;
+                popOutChat.titleImageDock.Visibility = Visibility.Collapsed;
+            }
+        }
+        private void controlsActiveBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)controlsActiveBox.IsChecked)
+            {
+                popOutChat.controlsDock.Visibility = Visibility.Visible;
+
+            }
+            else
+            {
+                popOutChat.controlsDock.Visibility = Visibility.Collapsed;
+            }
+        }
+        private void clockActiveBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)clockActiveBox.IsChecked)
+            {
+                popOutChat.timerDock.Visibility = Visibility.Visible;
+
+            }
+            else
+            {
+                popOutChat.timerDock.Visibility = Visibility.Collapsed;
+            }
+        }
+        private void chatActiveBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)((CheckBox)sender).IsChecked)
+            {
+                popOutChat.chatBlock.Visibility = Visibility.Visible;
+
+            }
+            else
+            {
+                popOutChat.chatBlock.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void TitleIsText_Checked(object sender, RoutedEventArgs e)
+        {
+            popOutChat.titleType = "Text";
+            popOutChat.titleImageDock.Visibility = Visibility.Collapsed;
+            popOutChat.titleTextDock.Visibility = Visibility.Visible;
+        }
+        
+        private void TitleIsImage_Checked(object sender, RoutedEventArgs e)
+        {
+            popOutChat.titleType = "Image";
+            popOutChat.titleTextDock.Visibility = Visibility.Collapsed;
+            popOutChat.titleImageDock.Visibility = Visibility.Visible;
         }
     }
 }
