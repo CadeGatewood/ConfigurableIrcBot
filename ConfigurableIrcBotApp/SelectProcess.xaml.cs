@@ -91,7 +91,7 @@ namespace ConfigurableIrcBotApp
         private void ProcessListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             processDisplay selection = ((sender as ListBox).SelectedItem as processDisplay);
-            main.playBot.emulationProcess = selection.processName;
+            main.emulationProcessName = selection.processName;
             System.Threading.Thread.Sleep(1000);
             Hide();
         }

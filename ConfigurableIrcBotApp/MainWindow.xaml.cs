@@ -27,6 +27,9 @@ namespace ConfigurableIrcBotApp
         public IrcClient bot { get; set; }
         public PlayBot playBot { get; set; }
 
+        public bool playBotIsActive { get; set; }
+        public string emulationProcessName { get; set; }
+
         public PopoutChatSettingsManager chatSettingsManager { get; set; }
         public BotChatActivitySettingsManager botChatActivity { get; set; }
         public PlayBotSettingsManager playBotSettingsManager { get; set; }
@@ -373,9 +376,14 @@ namespace ConfigurableIrcBotApp
             try
             {
                 VirtualKeyCode code;
-                if (Enum.TryParse<VirtualKeyCode>("VK_" + playKey.Text.ToUpper(), out code))
+
+                string enumKeyString;
+                
+                if (Enum.TryParse<VirtualKeyCode>(convertKeyInputToEnumValue(playKey.Text.ToUpper()), out code))
                 {
-                    PlayBotAction newAction = new PlayBotAction(playCommand.Text, code, TimeSpan.Parse(playDuration.Text));
+                    var durationCalculation = Math.Floor(Double.Parse(playDuration.Text) * 1000);
+
+                    PlayBotAction newAction = new PlayBotAction(playCommand.Text, code, new TimeSpan(0,0,0,0, (int)durationCalculation));
 
                     playBotSettingsManager.addPlayBotAction(newAction);
                     playActionsList.Add(newAction);
@@ -392,9 +400,22 @@ namespace ConfigurableIrcBotApp
             }
         }
 
-        private void PlayKey_TextChanged(object sender, TextChangedEventArgs e)
+        public string convertKeyInputToEnumValue(string input)
         {
+            List<string> possibleEntries = new List<string>(Enum.GetNames(typeof(VirtualKeyCode)));
+            if (possibleEntries.Contains("VK_" + input))
+            {
+                return "VK_" + input;
+            }
+            else
+            {
+                return input;
+            }
+        }
 
+        private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
+        {
+            playBotIsActive = (bool)playBotActive.IsChecked;
         }
     }
 }

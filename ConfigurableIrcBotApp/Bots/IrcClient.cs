@@ -45,10 +45,6 @@ namespace ConfigurableIrcBotApp
         public string streamInfo { get; set; }
 
         public MainWindow main { get; set; }
-
-        public IDictionary<string, Moderator> moderators { get; set; }
-        public IDictionary<string, Commands> commands { get; set; }
-        public IDictionary<string, PlayBotAction> playBotActions { get; set; }
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
@@ -64,10 +60,6 @@ namespace ConfigurableIrcBotApp
             this.channel = channel.ToLower();
 
             this.main = main;
-
-            this.moderators = main.moderators;
-            this.commands = main.commands;
-            this.playBotActions = main.playBotActions;
         }
 
         public void IrcRun()
@@ -103,21 +95,17 @@ namespace ConfigurableIrcBotApp
                         message = new Message(rawMessage.Substring(rawMessage.IndexOf(":") + 1, rawMessage.IndexOf("!") - 1),
                                                 rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":") + 1) + 1)
                                             );
-                        if (message.message.StartsWith("!"))
+                        
+                        parseMessageThread = new Thread(() => ParseMessageThread(message))
                         {
-                            parseMessageThread = new Thread(() => ParseMessageThread(message))
-                            {
-                                IsBackground = true
-                            };
-                            parseMessageThread.Start();
-                        }
-                        else
+                            IsBackground = true
+                        };
+                        parseMessageThread.Start();
+                        
+                        main.Dispatcher.Invoke(() =>
                         {
-                            main.Dispatcher.Invoke(() =>
-                            {
-                                main.writeToChatBlock(message, false);
-                            });
-                        }
+                            main.writeToChatBlock(message, false);
+                        });
                     }
                 }
                 catch(Exception e)
@@ -179,14 +167,23 @@ namespace ConfigurableIrcBotApp
 
             string commandParent = message.message.IndexOf(" ") > 0 ?
                     message.message.Substring(0, message.message.IndexOf(" ")) : message.message;
-            if (commands != null && commands.Count > 0 && commands.ContainsKey(commandParent))
+            if (message.message.StartsWith("!") 
+                && main.commands != null 
+                && main.commands.Count > 0 
+                && main.commands.ContainsKey(commandParent))
             {
                 //check for potential commands
                 parseCommand(message, commandParent);
             }
-            else
+            else if (main.playBotActions != null 
+                    && main.playBotActions.Count > 0 
+                    && main.playBotActions.ContainsKey(message.message))
             {
                 //check for play bot input
+                if (main.playBotIsActive)
+                {
+                    main.playBot.controlEmulator(main.playBotActions[message.message], main.emulationProcessName);
+                }
             }
             return;
         }
@@ -198,16 +195,16 @@ namespace ConfigurableIrcBotApp
                 main.writeToChatBlock(message, true);
             });
             
-            Commands command = commands[commandParent];
+            Commands command = main.commands[commandParent];
             if (command.requiredAuthLevel == 0)
             {
                 sendChatMessage(command.response);
             }
             else
             {
-                if (moderators != null && moderators.Count > 0 && moderators.ContainsKey(message.userName))
+                if (main.moderators != null && main.moderators.Count > 0 && main.moderators.ContainsKey(message.userName))
                 {
-                    if(moderators[message.userName].authLevel > command.requiredAuthLevel)
+                    if(main.moderators[message.userName].authLevel > command.requiredAuthLevel)
                     {
                         sendChatMessage(command.response);
                     }

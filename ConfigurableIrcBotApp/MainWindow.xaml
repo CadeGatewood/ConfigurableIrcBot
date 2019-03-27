@@ -120,19 +120,26 @@
                 </StackPanel>
             </TabItem.Header>
             <Grid>
-                <CheckBox x:Name="playBotActive" Content="PlayBot Active" Height="30" Width="110" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="playBotActive" 
+                          Content="PlayBot Active" 
+                          Height="30" Width="110" 
+                          HorizontalAlignment="Left" 
+                          Margin="10,10,0,0" 
+                          VerticalAlignment="Top" 
+                          Checked="PlayBotActive_Checked"
+                          Unchecked="PlayBotActive_Checked"/>
 
                 <Label Content="Command:" Height="30" Margin="10,40,306,338"/>
                 <TextBox x:Name="playCommand"  Margin="10,70,306,303"/>
                 <Label Content="KeyPress Output:" Height="30" Margin="10,110,306,268" RenderTransformOrigin="-0.836,-2.767"/>
-                <TextBox x:Name="playKey"  Margin="10,140,306,233" TextChanged="PlayKey_TextChanged"/>
+                <TextBox x:Name="playKey"  Margin="10,140,306,233"/>
                 <Label Content="Duration (seconds):" Height="30" Margin="10,180,306,198"/>
                 <TextBox x:Name="playDuration"  Margin="10,210,306,163" PreviewTextInput="secondsValidation"/>
                 <Button x:Name="addPlayAction" Content="Add Action" Margin="10,250,343,123" Click="AddPlayAction_Click"/>
                 <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,307,343,66" Click="SelectEmulatorWindow_Click" />
                 <DataGrid x:Name="currentPlayActionsGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" Margin="162,0,0,0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Command" MinWidth="75">
+                        <DataGridTextColumn Header="Command" MinWidth="50" Binding="{Binding Path=command}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -140,7 +147,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Key Press" MinWidth="75">
+                        <DataGridTextColumn Header="Key Press" MinWidth="50" Binding="{Binding Path=keyPress}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -148,7 +155,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Duration" MinWidth="75">
+                        <DataGridTextColumn Header="Duration" MinWidth="50" Binding="{Binding Path=duration}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

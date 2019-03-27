@@ -37,28 +37,28 @@ namespace ConfigurableIrcBotApp.tabManagers
         {
             this.moderators[moderator.userName] = moderator;
             jsonFileHandler.writeModerators(moderators);
-            bot.moderators = moderators;
+            main.moderators = moderators;
         }
 
         public void removeModerator(Moderator moderator)
         {
             this.moderators.Remove(moderator.userName);
             jsonFileHandler.writeModerators(moderators);
-            bot.moderators = moderators;
+            main.moderators = moderators;
         }
 
         public void addComand(Commands command)
         {
             this.commands[command.command] = command;
             jsonFileHandler.writeCommands(commands);
-            bot.commands = commands;
+            main.commands = commands;
         }
 
         public void removeCommand(Commands command)
         {
             this.commands.Remove(command.command);
             jsonFileHandler.writeCommands(commands);
-            bot.commands = commands;
+            main.commands = commands;
         }
 
         public void saveDataOnClose()
