@@ -1,0 +1,23 @@
+﻿<Window x:Class="ConfigurableIrcBotApp.SelectProcess"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableIrcBotApp"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        Title="Select Emulator Process" Height="450" Width="437.145">
+    <Grid>
+        <ListBox x:Name="processListBox" ItemsSource="{Binding}" Margin="71,10,71,46" SelectionChanged="ProcessListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate >
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="processIcon" Margin="3" Source="{Binding Path=imageSource}"/>
+                        <TextBlock x:Name="processName" Margin="3" Text="{Binding Path=processName}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="refreshProcess" Content="Refresh" Margin="105,378,104,10" Click="RefreshProcess_Click"/>
+    </Grid>
+</Window>

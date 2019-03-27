@@ -96,27 +96,40 @@ namespace ConfigurableIrcBotApp
             {
                 string rawMessage = inputStream.ReadLine();
                 Message message = new Message();
-                if (rawMessage.StartsWith(":") && rawMessage.Contains("!"))
+                try
                 {
-                    message = new Message(  rawMessage.Substring(rawMessage.IndexOf(":")+1, rawMessage.IndexOf("!")-1),
-                                            rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":")+1)+1)
-                                        );
-                    if (message.message.StartsWith("!"))
+                    if (rawMessage.StartsWith(":") && rawMessage.Contains("!"))
                     {
-                        parseMessageThread = new Thread(() => ParseMessageThread(message)) {
-                            IsBackground = true
-                    };
-                        parseMessageThread.Start();
-                    }
-                    else
-                    {
-                        main.Dispatcher.Invoke(() =>
+                        message = new Message(rawMessage.Substring(rawMessage.IndexOf(":") + 1, rawMessage.IndexOf("!") - 1),
+                                                rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":") + 1) + 1)
+                                            );
+                        if (message.message.StartsWith("!"))
                         {
-                            main.writeToChatBlock(message, false);
-                        });
+                            parseMessageThread = new Thread(() => ParseMessageThread(message))
+                            {
+                                IsBackground = true
+                            };
+                            parseMessageThread.Start();
+                        }
+                        else
+                        {
+                            main.Dispatcher.Invoke(() =>
+                            {
+                                main.writeToChatBlock(message, false);
+                            });
+                        }
                     }
                 }
-                
+                catch(Exception e)
+                {
+                    //this is a dead catch, the app seems to
+                    //just randomly end up here from irc activity
+                    //despite nothing occuring in the chat
+                    //usually resulting in null objects
+                    //Either way I'm catching nothing to avoid a crash
+                    //hopefully I'll find a cause
+                    //  ¯\_(ツ)_/¯
+                }
             }
         }
 
