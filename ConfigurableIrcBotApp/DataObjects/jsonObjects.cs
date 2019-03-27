@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using WindowsInput.Native;
 
 namespace ConfigurableIrcBotApp
 {
@@ -34,10 +35,14 @@ namespace ConfigurableIrcBotApp
     public class PlayBotAction
     {
         public string command { get; set; }
-        public string output { get; set; }
-        public string description { get; set; }
-
-        public Keys keyPress { get; set; }
+        public VirtualKeyCode keyPress { get; set; }
         public TimeSpan duration { get; set; }
+
+        public PlayBotAction(string command, VirtualKeyCode keyPress, TimeSpan duration)
+        {
+            this.command = command;
+            this.keyPress = keyPress;
+            this.duration = duration;
+        }
     }
 }

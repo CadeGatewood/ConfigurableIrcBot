@@ -11,6 +11,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
+using System.Linq;
+
+using WindowsInput.Native;
 
 namespace ConfigurableIrcBotApp
 {
@@ -35,10 +38,12 @@ namespace ConfigurableIrcBotApp
         
         public EditCommands editCommands { get; set; }
         public EditModerators editModerators { get; set; }
+        public SelectProcess selectProcess { get; set; }
 
+        public List<PlayBotAction> playActionsList { get; set; }
 
         readonly List<string> fontFormats = new List<string> { ".ttf", ".ttc", ".fnt", ".fon", ".otf" };
-        List<String> imgFormats = new List<string> {".jpg",".jpeg",".png", ".gif", ".bmp"};
+        readonly List<String> imgFormats = new List<string> {".jpg",".jpeg",".png", ".gif", ".bmp"};
 
         [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
         public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
@@ -50,6 +55,7 @@ namespace ConfigurableIrcBotApp
             this.chatSettingsManager = new PopoutChatSettingsManager(this);
             this.botChatActivity = new BotChatActivitySettingsManager(this);
             this.playBotSettingsManager = new PlayBotSettingsManager(this);
+             
 
             this.moderators = botChatActivity.moderators;
             this.commands = botChatActivity.commands;
@@ -57,14 +63,17 @@ namespace ConfigurableIrcBotApp
 
             this.connectionSetup = connectionSetup;
             this.bot = bot;
+            this.playBot = new PlayBot();
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
             this.editModerators = new EditModerators(this);
+            this.selectProcess = new SelectProcess(this);
 
             InitializeComponent();
-            
-            
+
+            this.playActionsList = this.playBotActions.Values.ToList();
+            currentPlayActionsGrid.ItemsSource = playActionsList;
 
             this.settingsKeys = settingsKeys;
 
@@ -85,7 +94,13 @@ namespace ConfigurableIrcBotApp
         }
         private void numberValidation(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9.]+");
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void secondsValidation(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[0-9]+(.[0-9][0-9][0-9]?)");
             e.Handled = regex.IsMatch(e.Text);
         }
         public void write(string message)
@@ -183,7 +198,12 @@ namespace ConfigurableIrcBotApp
         {
             connectionSetup.Show();
         }
-        
+
+        private void SelectEmulatorWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.selectProcess.Show();
+        }
+
         private void start_Click(object sender, RoutedEventArgs e)
         {
             popOutChat.startTimer();
@@ -338,6 +358,43 @@ namespace ConfigurableIrcBotApp
             popOutChat.titleType = "Image";
             popOutChat.titleTextDock.Visibility = Visibility.Collapsed;
             popOutChat.titleImageDock.Visibility = Visibility.Visible;
+        }
+
+        private void removePlayAction_Click(object sender, RoutedEventArgs e)
+        {
+            var action = (PlayBotAction)currentPlayActionsGrid.SelectedItem;
+            playBotSettingsManager.removePlayBotAction(action);
+            playActionsList.Remove(action);
+            currentPlayActionsGrid.Items.Refresh();
+        }
+
+        private void AddPlayAction_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                VirtualKeyCode code;
+                if (Enum.TryParse<VirtualKeyCode>("VK_" + playKey.Text.ToUpper(), out code))
+                {
+                    PlayBotAction newAction = new PlayBotAction(playCommand.Text, code, TimeSpan.Parse(playDuration.Text));
+
+                    playBotSettingsManager.addPlayBotAction(newAction);
+                    playActionsList.Add(newAction);
+                    currentPlayActionsGrid.Items.Refresh();
+                }
+                else
+                {
+                    writeError("\n\n" + playKey.Text + " is not accepted as a key event", new Exception("Invalid Key Entry"));
+                }
+            }
+            catch (Exception newCommandException)
+            {
+                writeError("Please enter all information for a playBot action", newCommandException);
+            }
+        }
+
+        private void PlayKey_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
