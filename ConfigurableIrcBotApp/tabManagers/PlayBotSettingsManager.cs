@@ -27,7 +27,7 @@ namespace ConfigurableIrcBotApp.tabManagers
             jsonFileHandler.writePlayBotActions(this.playBotActions);
             if (main.playBot != null)
             {
-                main.playBot.actions = this.playBotActions;
+                main.playBotActions = this.playBotActions;
             }
         }
 
@@ -37,7 +37,7 @@ namespace ConfigurableIrcBotApp.tabManagers
             jsonFileHandler.writePlayBotActions(this.playBotActions);
             if (main.playBot != null)
             {
-                main.playBot.actions = this.playBotActions;
+                main.playBotActions = this.playBotActions;
             }
         }
 
