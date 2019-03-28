@@ -376,8 +376,6 @@ namespace ConfigurableIrcBotApp
             try
             {
                 VirtualKeyCode code;
-
-                string enumKeyString;
                 
                 if (Enum.TryParse<VirtualKeyCode>(convertKeyInputToEnumValue(playKey.Text.ToUpper()), out code))
                 {
