@@ -11,7 +11,7 @@ namespace ConfigurableIrcBotApp
 {
     public class PlayBot
     {
-        InputSimulator sim;
+        readonly InputSimulator sim;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         internal static extern IntPtr SetForegroundWindow(IntPtr hWnd);
