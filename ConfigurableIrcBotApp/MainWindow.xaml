@@ -60,6 +60,7 @@
                     <ComboBoxItem Content="Title" IsSelected="True"></ComboBoxItem>
                     <ComboBoxItem Content="Chat"></ComboBoxItem>
                     <ComboBoxItem Content="Timer"></ComboBoxItem>
+                    <ComboBoxItem Content="Play Bot Controls"></ComboBoxItem>
                 </ComboBox>
 
                 <DockPanel Margin="0,218,0,10" >
@@ -94,9 +95,9 @@
 
                 <Label Content="Title Type:" Margin="10,173,383,195"></Label>
                 <StackPanel x:Name="titleType" Orientation="Horizontal" Height="30" Margin="85,179,263,199">
-                    <RadioButton x:Name="titleIsImage" Content="Text   " IsChecked="True" Checked="TitleIsImage_Checked"/>
+                    <RadioButton x:Name="titleIsText" Content="Text" Margin="0,0,8,0" IsChecked="True" Checked="TitleIsText_Checked"/>
 
-                    <RadioButton x:Name="titleIsText" Content="Image" Checked="TitleIsText_Checked"/>
+                    <RadioButton x:Name="titleIsImage" Content="Image" Checked="TitleIsImage_Checked"/>
                 </StackPanel>
             </Grid>
         </TabItem>

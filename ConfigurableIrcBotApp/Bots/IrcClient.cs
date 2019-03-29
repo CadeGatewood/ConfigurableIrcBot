@@ -45,6 +45,9 @@ namespace ConfigurableIrcBotApp
         public string streamInfo { get; set; }
 
         public MainWindow main { get; set; }
+
+        public PingSender pingSender { get; set; }
+
         public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
@@ -60,6 +63,8 @@ namespace ConfigurableIrcBotApp
             this.channel = channel.ToLower();
 
             this.main = main;
+
+            this.pingSender = new PingSender(this);
         }
 
         public void IrcRun()
@@ -84,6 +89,8 @@ namespace ConfigurableIrcBotApp
             joinRoom(channel);
             outputStream.Flush();
 
+
+            this.pingSender.Start();
             while (_ircrunning)
             {
                 string rawMessage = inputStream.ReadLine();
@@ -140,11 +147,18 @@ namespace ConfigurableIrcBotApp
 
         public void sendIrcMessage(String message)
         {
-            outputStream.WriteLine(message);
-            main.Dispatcher.Invoke(() =>
+            try
             {
-                main.sendMessageBox.Text = "";
-            });
+                outputStream.WriteLine(message);
+                main.Dispatcher.Invoke(() =>
+                {
+                    main.sendMessageBox.Text = "";
+                });
+            }
+            catch (Exception chatException)
+            {
+                main.writeError("Something has caused an error writing to chat", chatException);
+            }
         }
 
         public void sendChatMessage(string message)
@@ -164,7 +178,7 @@ namespace ConfigurableIrcBotApp
 
         public void ParseMessageThread(Message message)
         {
-
+            if (message.userName.ToLower().Equals(userName.ToLower())) return;
             string commandParent = message.message.IndexOf(" ") > 0 ?
                     message.message.Substring(0, message.message.IndexOf(" ")) : message.message;
             if (message.message.StartsWith("!") 

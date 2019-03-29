@@ -7,7 +7,6 @@ using System.ComponentModel;
 
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using System.Collections;
 
 namespace ConfigurableIrcBotApp
 {
@@ -72,6 +71,7 @@ namespace ConfigurableIrcBotApp
                     main.botSetup(bot);
                     main.Show();
                     this.Hide();
+
                 }
                 else if (bot._ircrunning)
                 {

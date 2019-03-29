@@ -44,9 +44,10 @@ namespace ConfigurableIrcBotApp
         public SelectProcess selectProcess { get; set; }
 
         public List<PlayBotAction> playActionsList { get; set; }
+        public List<string> playBotCommands { get; set; }
 
         readonly List<string> fontFormats = new List<string> { ".ttf", ".ttc", ".fnt", ".fon", ".otf" };
-        readonly List<String> imgFormats = new List<string> {".jpg",".jpeg",".png", ".gif", ".bmp"};
+        readonly List<String> imgFormats = new List<string> {".jpg",".jpeg",".png", ".bmp"};
 
         [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
         public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
@@ -75,8 +76,12 @@ namespace ConfigurableIrcBotApp
 
             InitializeComponent();
 
+            this.playBotCommands = new List<string>();
             this.playActionsList = this.playBotActions.Values.ToList();
+            playBotCommands = playBotActions.Keys.ToList();
             currentPlayActionsGrid.ItemsSource = playActionsList;
+
+            popOutChat.playBotControlDisplayGrid.ItemsSource = playBotCommands;
 
             this.settingsKeys = settingsKeys;
 
@@ -88,6 +93,9 @@ namespace ConfigurableIrcBotApp
         {
             botChatActivity.saveDataOnClose();
             playBotSettingsManager.saveDataOnClose();
+            bot.ircThread.Abort();
+            bot.pingSender.pingSenderThread.Abort();
+
             System.Windows.Application.Current.Shutdown();
         }
 
@@ -312,6 +320,7 @@ namespace ConfigurableIrcBotApp
                 popOutChat.titleImageDock.Visibility = Visibility.Collapsed;
             }
         }
+
         private void controlsActiveBox_Checked(object sender, RoutedEventArgs e)
         {
             if ((bool)controlsActiveBox.IsChecked)
@@ -368,6 +377,9 @@ namespace ConfigurableIrcBotApp
             var action = (PlayBotAction)currentPlayActionsGrid.SelectedItem;
             playBotSettingsManager.removePlayBotAction(action);
             playActionsList.Remove(action);
+            playBotCommands.Remove(action.command);
+
+            popOutChat.playBotControlDisplayGrid.Items.Refresh();
             currentPlayActionsGrid.Items.Refresh();
         }
 
@@ -385,7 +397,10 @@ namespace ConfigurableIrcBotApp
 
                     playBotSettingsManager.addPlayBotAction(newAction);
                     playActionsList.Add(newAction);
+                    playBotCommands.Add(playCommand.Text);
+
                     currentPlayActionsGrid.Items.Refresh();
+                    popOutChat.playBotControlDisplayGrid.Items.Refresh();
                 }
                 else
                 {
