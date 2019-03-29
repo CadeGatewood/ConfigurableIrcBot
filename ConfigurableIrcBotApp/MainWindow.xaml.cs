@@ -93,6 +93,9 @@ namespace ConfigurableIrcBotApp
         {
             botChatActivity.saveDataOnClose();
             playBotSettingsManager.saveDataOnClose();
+            bot.ircThread.Abort();
+            bot.pingSender.pingSenderThread.Abort();
+
             System.Windows.Application.Current.Shutdown();
         }
 

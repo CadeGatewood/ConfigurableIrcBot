@@ -15,18 +15,18 @@ namespace ConfigurableIrcBotApp
         IrcClient ircClient;
 
         static string PING = "PING ";
-        private Thread pingSender;
+        public Thread pingSenderThread { get; set; }
 
         // Empty constructor makes instance of Thread
         public PingSender(IrcClient ircClient)
         {
             this.ircClient = ircClient;
-            pingSender = new Thread(new ThreadStart(this.Run));
+            pingSenderThread = new Thread(new ThreadStart(this.Run));
         }
         // Starts the thread
         public void Start()
         {
-            pingSender.Start();
+            pingSenderThread.Start();
         }
         // Send PING to irc server every 5 minutes
         public void Run()
