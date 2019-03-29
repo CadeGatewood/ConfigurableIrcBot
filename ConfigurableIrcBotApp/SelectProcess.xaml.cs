@@ -54,6 +54,7 @@ namespace ConfigurableIrcBotApp
             InitializeComponent();
 
             loadProcesses();
+
             processListBox.ItemsSource = this.processDisplays;
 
         }
@@ -61,7 +62,8 @@ namespace ConfigurableIrcBotApp
 
         public void loadProcesses()
         {
-            processDisplays = new List<processDisplay>();
+            try { 
+            var newProcessList = new List<processDisplay>();
 
             var processes = Process.GetProcesses();
             
@@ -70,11 +72,20 @@ namespace ConfigurableIrcBotApp
                 if (!String.IsNullOrEmpty(process.MainWindowTitle))
                 {
                     System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(process.MainModule.FileName);
-                    this.processDisplays.Add(new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName));
+                    newProcessList.Add(new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName));
                 }
             }
 
+            this.processDisplays = newProcessList;
+
             processListBox.Items.Refresh();
+            }
+            catch(Exception processException)
+            {
+                //problem accessing a process, some processes will through accessdenied exceptions, will deal with this later
+                //todo idk something
+            }
+
         }
 
         private void RefreshProcess_Click(object sender, RoutedEventArgs e)
