@@ -93,8 +93,13 @@ namespace ConfigurableIrcBotApp
         {
             botChatActivity.saveDataOnClose();
             playBotSettingsManager.saveDataOnClose();
-            bot.ircThread.Abort();
-            bot.pingSender.pingSenderThread.Abort();
+
+            if (bot != null)
+            {
+                bot.ircThread.Abort();
+                bot.pingSender.pingSenderThread.Abort();
+            }
+            
 
             System.Windows.Application.Current.Shutdown();
         }
@@ -429,6 +434,12 @@ namespace ConfigurableIrcBotApp
         private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
         {
             playBotIsActive = (bool)playBotActive.IsChecked;
+        }
+
+        private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
+        {
+            TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
+            chatSettingsManager.offsetTimer(test);
         }
     }
 }

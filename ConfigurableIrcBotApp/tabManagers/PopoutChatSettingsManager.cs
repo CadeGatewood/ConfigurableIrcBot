@@ -103,5 +103,10 @@ namespace ConfigurableIrcBotApp.tabManagers
                 main.popOutChat.Background = color;
             }
         }
+
+        public void offsetTimer(TimeSpan offset)
+        {
+            main.popOutChat.startTime = main.popOutChat.startTime.Subtract(offset);
+        }
     }
 }

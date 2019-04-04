@@ -41,9 +41,12 @@
                 <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="214,326,0,-40" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
 
                 <Button x:Name="startTimer" Content="Start Timer" HorizontalAlignment="Left" Margin="214,99,0,0" VerticalAlignment="Top" Width="92" Click="start_Click" />
-                <Button x:Name="stopTimer" Content="Stop Timer" HorizontalAlignment="Left" Margin="214,149,0,0" VerticalAlignment="Top" Width="92" Click="stop_Click"/>
+                <Button x:Name="stopTimer" Content="Reset Timer" HorizontalAlignment="Left" Margin="214,149,0,0" VerticalAlignment="Top" Width="92" Click="stop_Click"/>
                 <Button x:Name="pauseTimer" Content="Pause Timer" HorizontalAlignment="Left" Margin="214,124,0,0" VerticalAlignment="Top" Width="92" Click="pause_Click" />
 
+                <TextBox x:Name="offsetTimerInsert" Margin="214,190,0,86"></TextBox>
+                <Button x:Name="offsetTimerButton" Content="Offset Timer" HorizontalAlignment="Left" Margin="214,225,0,0" VerticalAlignment="Top" Width="92" Click="OffsetTimerButton_Click" />
+                
             </Grid>
         </TabItem>
         <TabItem>

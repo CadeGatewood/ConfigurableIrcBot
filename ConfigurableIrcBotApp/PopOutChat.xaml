@@ -7,19 +7,24 @@
         mc:Ignorable="d"
         Closing="popoutChat_Closing"
         Title="Chat" 
-        Background="#323232" MinHeight="830" Height="830" MinWidth="380" Width="380">
+        Background="#323232" MinHeight="830" Height="830" MinWidth="200" Width="380">
 
     <Grid x:Name="chatMainGrid" Width="auto" Margin="0,0,0,3">
 
-        <DockPanel x:Name="titleTextDock" MinHeight="120" Margin="10,10,10,655">
-            <Label x:Name="titleBlock" Background="#323232" Margin="1,0,1,9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Height="101" VerticalAlignment="Bottom"/>
+        <DockPanel x:Name="titleTextDock" MinHeight="120" Margin="10,10,10,0" Height="131" VerticalAlignment="Top" >
+            <Border BorderThickness="1" CornerRadius="3" BorderBrush="LightGray" Height="131" VerticalAlignment="Top">
+                <Label x:Name="titleBlock" Background="#323232" Margin="1,0,1,9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Height="101" VerticalAlignment="Bottom"/>
+            </Border>
         </DockPanel>
-        <DockPanel x:Name="titleImageDock" MinHeight="120" Margin="10,10,10,655" Visibility="Collapsed">
-            <Image x:Name="titleImage"/>
+        <DockPanel x:Name="titleImageDock" MinHeight="120" Margin="10,10,10,0" Height="131" VerticalAlignment="Top" Visibility="Collapsed">
+            <Border BorderThickness="1" CornerRadius="3" BorderBrush="LightGray">
+                <Image x:Name="titleImage" Margin="0,0,0,-1" Height="130" VerticalAlignment="Top"/>
+            </Border>
         </DockPanel>
 
         <DockPanel x:Name="controlsDock" Margin="10,146,10,499">
-            <ItemsControl x:Name="playBotControlDisplayGrid" ItemsSource="{Binding}">
+            
+            <ItemsControl BorderThickness="1" BorderBrush="LightGray" x:Name="playBotControlDisplayGrid" ItemsSource="{Binding}" >
                 <ItemsControl.ItemContainerStyle>
                     <Style>
                         <Setter Property="FrameworkElement.Margin" Value="5"/>
@@ -27,21 +32,21 @@
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid></UniformGrid>
+                        <UniformGrid ></UniformGrid>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock x:Name="playBotControl" Text="{Binding}"/>
+                        <TextBlock x:Name="playBotControl" Text="{Binding}" Margin="0,5,0,0" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
         <DockPanel x:Name="timerDock" Margin="10,302,10,396" >
-            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" MinHeight="84" VerticalAlignment="Bottom" Width="344" Height="88" BorderThickness="0"/>
+            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" MinHeight="84" VerticalAlignment="Bottom" Width="344" Height="98" BorderThickness="0"/>
         </DockPanel>
 
-        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="0"/>
+        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="1"/>
 
     </Grid>
 </Window>

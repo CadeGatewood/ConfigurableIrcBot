@@ -24,7 +24,7 @@ namespace ConfigurableIrcBotApp
         {
             InitializeComponent();
 
-            this.settingsKeys = new List<String>(new string[] { "ip", "port", "channel", "userName", "password" });
+            this.settingsKeys = new List<String>(new string[] { "ip", "host", "port", "channel", "userName", "password" });
             foreach (string key in settingsKeys)
             {
                 ((TextBox)connectionGrid.FindName(key)).Text = ConfigurationManager.AppSettings[key];
@@ -60,12 +60,13 @@ namespace ConfigurableIrcBotApp
                 password.Text != "" &&
                 channel.Text != "" &&
                 ip.Text != "" &&
+                host.Text != "" &&
                 port.Text != ""
                 )
             {
                 if (bot == null || (bot != null && !bot._ircrunning))
                 {
-                    this.bot = new IrcClient(main, userName.Text, password.Text, channel.Text, ip.Text, Int32.Parse(port.Text));
+                    this.bot = new IrcClient(main, userName.Text, password.Text, channel.Text, ip.Text, host.Text, Int32.Parse(port.Text));
                     bot.IrcStart();
 
                     main.botSetup(bot);

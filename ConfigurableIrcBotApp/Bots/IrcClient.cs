@@ -26,12 +26,13 @@ namespace ConfigurableIrcBotApp
 
     public class IrcClient
     {
-        public string userName{ get; set; }
-        public string channel{ get; set; }
-        public string password{ get; set; }
+        public string userName { get; set; }
+        public string channel { get; set; }
+        public string password { get; set; }
 
-        public string ip{ get; set; }
-        public int port{ get; set; }
+        public string ip { get; set; }
+        public string host { get; set; }
+        public int port { get; set; }
 
         public TcpClient tcpClient { get; set; }
         public StreamReader inputStream { get; set; }
@@ -48,7 +49,7 @@ namespace ConfigurableIrcBotApp
 
         public PingSender pingSender { get; set; }
 
-        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, int port)
+        public IrcClient(MainWindow main, string userName, string password, string channel, string ip, string host, int port)
         {
             ircThread = new Thread(new ThreadStart(IrcRun))
             {
@@ -56,6 +57,7 @@ namespace ConfigurableIrcBotApp
             };
 
             this.ip = ip;
+            this.host = host;
             this.port = port;
 
             this.userName = userName;
@@ -163,12 +165,13 @@ namespace ConfigurableIrcBotApp
 
         public void sendChatMessage(string message)
         {
-            sendIrcMessage(":" + userName + "!" + userName + "@" + userName + ".tmi.twitch.tv PRIVMSG #" + channel + " :" + message);
+            //".tmi.twitch.tv
+            sendIrcMessage(":" + userName + "!" + userName + "@" + userName + "." + host + " PRIVMSG #" + channel + " :" + message);
         }
 
         public void sendPrivateMessage(string message, string targetUser)
         {
-            sendIrcMessage(":" + userName + "!" + userName + "@" + userName + ".tmi.twitch.tv PRIVMSG #" + channel + " :/w " + targetUser + " " + message);
+            sendIrcMessage(":" + userName + "!" + userName + "@" + userName + "." + host + " PRIVMSG #" + channel + " :/w " + targetUser + " " + message);
         }
 
         public string readMessage()
