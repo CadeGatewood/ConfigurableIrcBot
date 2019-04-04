@@ -10,6 +10,10 @@
         Background="#323232" MinHeight="830" Height="830" MinWidth="200" Width="380">
 
     <Grid x:Name="chatMainGrid" Width="auto" Margin="0,0,0,3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="350*"/>
+            <RowDefinition Height="447*"/>
+        </Grid.RowDefinitions>
 
         <DockPanel x:Name="titleTextDock" MinHeight="120" Margin="10,10,10,0" Height="131" VerticalAlignment="Top" >
             <Border BorderThickness="1" CornerRadius="3" BorderBrush="LightGray" Height="131" VerticalAlignment="Top">
@@ -22,8 +26,8 @@
             </Border>
         </DockPanel>
 
-        <DockPanel x:Name="controlsDock" Margin="10,146,10,499">
-            
+        <DockPanel x:Name="controlsDock" Margin="10,146,10,52.5">
+
             <ItemsControl BorderThickness="1" BorderBrush="LightGray" x:Name="playBotControlDisplayGrid" ItemsSource="{Binding}" >
                 <ItemsControl.ItemContainerStyle>
                     <Style>
@@ -42,11 +46,11 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
-        <DockPanel x:Name="timerDock" Margin="10,302,10,396" >
+        <DockPanel x:Name="timerDock" Margin="10,302,10,396" HorizontalAlignment="Center" Width="352" Grid.RowSpan="2" >
             <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" MinHeight="84" VerticalAlignment="Bottom" Width="344" Height="98" BorderThickness="0"/>
         </DockPanel>
 
-        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="1"/>
+        <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="1" Grid.Row="1"/>
 
     </Grid>
 </Window>

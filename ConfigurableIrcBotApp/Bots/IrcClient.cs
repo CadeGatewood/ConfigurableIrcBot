@@ -113,7 +113,7 @@ namespace ConfigurableIrcBotApp
                         
                         main.Dispatcher.Invoke(() =>
                         {
-                            main.writeToChatBlock(message, false);
+                            main.writeToChatBlock(message, messageType(message.message));
                         });
                     }
                 }
@@ -209,7 +209,7 @@ namespace ConfigurableIrcBotApp
         {
             main.Dispatcher.Invoke(() =>
             {
-                main.writeToChatBlock(message, true);
+                main.writeToChatBlock(message, messageType(message.message));
             });
             
             Commands command = main.commands[commandParent];
@@ -227,6 +227,19 @@ namespace ConfigurableIrcBotApp
                     }
                 }
             }
+        }
+
+        public string messageType(string message)
+        {
+            if (message.StartsWith("!")
+                && main.commands != null
+                && main.commands.Count > 0
+                && main.commands.ContainsKey(message.IndexOf(" ") > 0 ?
+                    message.Substring(0, message.IndexOf(" ")) : message)) return "command";
+            else if (main.playBotActions != null
+                    && main.playBotActions.Count > 0
+                    && main.playBotActions.ContainsKey(message)) return "playBotCommand";
+            else return "all";
         }
     }
 }
