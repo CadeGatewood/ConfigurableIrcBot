@@ -7,21 +7,23 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Closing="connectionSetup_Closing"
-        Title="ConnectionSetup" Height="297.334" Width="223.333">
+        Title="ConnectionSetup" Height="314.211" Width="233.757">
     <Grid x:Name="connectionGrid">
-        <Label x:Name="ipLabel" Content="Server:" HorizontalAlignment="Left" Margin="26,8,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="portLabel" Content="Port:" HorizontalAlignment="Left" Margin="38,34,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="channelLabel" Content="Channel:" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.847,0.429"/>
-        <Label x:Name="userNameLabel" Content="Username:" HorizontalAlignment="Left" Margin="6,86,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="passwordLabel" Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top"/>
+        <Label Content="Server:" HorizontalAlignment="Left" Margin="26,7,0,0" VerticalAlignment="Top"/>
+        <Label Content="Host:" HorizontalAlignment="Left" Margin="35,35,0,0" VerticalAlignment="Top"/>
+        <Label Content="Port:" HorizontalAlignment="Left" Margin="38,61,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.108"/>
+        <Label Content="Channel:" HorizontalAlignment="Left" Margin="16,87,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.847,0.429"/>
+        <Label Content="Username:" HorizontalAlignment="Left" Margin="6,113,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="ip" HorizontalAlignment="Left" Height="23" Margin="77,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="port" HorizontalAlignment="Left" Height="23" Margin="77,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="numberValidation"/>
-        <TextBox x:Name="channel" HorizontalAlignment="Left" Height="23" Margin="77,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="userName" HorizontalAlignment="Left" Height="23" Margin="77,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="password" HorizontalAlignment="Left" Height="53" Margin="77,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" AcceptsReturn="True"/>
-        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="123,176,0,0" VerticalAlignment="Top" Width="75" Click="connectButton_Click" />
-        <Button x:Name="disconnectButton" Content="Disconnect" HorizontalAlignment="Left" Margin="123,201,0,0" VerticalAlignment="Top" Width="75" Click="disconnectButton_Click"/>
-        <Button x:Name="saveSettingsButton" HorizontalAlignment="Left" Margin="31,176,0,0" VerticalAlignment="Top" Width="80" Height="45" Click="saveSettingsButton_Click">
+        <TextBox x:Name="host" HorizontalAlignment="Left" Height="23" Margin="77,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="port" HorizontalAlignment="Left" Height="23" Margin="77,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="numberValidation"/>
+        <TextBox x:Name="channel" HorizontalAlignment="Left" Height="23" Margin="77,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="userName" HorizontalAlignment="Left" Height="23" Margin="77,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="password" HorizontalAlignment="Left" Height="53" Margin="77,149,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" AcceptsReturn="True"/>
+        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="122,213,0,0" VerticalAlignment="Top" Width="75" Click="connectButton_Click" />
+        <Button x:Name="disconnectButton" Content="Disconnect" HorizontalAlignment="Left" Margin="122,238,0,0" VerticalAlignment="Top" Width="75" Click="disconnectButton_Click"/>
+        <Button x:Name="saveSettingsButton" HorizontalAlignment="Left" Margin="30,213,0,0" VerticalAlignment="Top" Width="80" Height="45" Click="saveSettingsButton_Click">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Save Settings as Default</TextBlock>
         </Button>
     </Grid>

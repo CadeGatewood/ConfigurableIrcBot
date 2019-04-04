@@ -3,24 +3,22 @@ using System.Windows;
 
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ConfigurableIrcBotApp
 {
-    /// <summary>
-    /// Interaction logic for PopOutChat.xaml
-    /// </summary>
+
     public partial class PopOutChat : Window
     {
         private MainWindow main;
         string currentTime = string.Empty;
-        Timer stopWatch;
+        Timer tickTimer;
 
-        DateTime startTime;
-        DateTime pauseTime;
-        TimeSpan elapsedTimeSpan;
+        public DateTime startTime { get; set; }
+        DateTime pausedTime;
 
         bool _running;
-        bool _wasPaused;
+        bool _paused;
 
         public string titleType { get; set; }
         public PopOutChat(MainWindow main)
@@ -29,6 +27,9 @@ namespace ConfigurableIrcBotApp
             this.main = main;
 
             titleType = "Text";
+
+            _running = false;
+            _paused = false;
         }
 
         private void popoutChat_Closing(object sender, CancelEventArgs e)
@@ -39,49 +40,51 @@ namespace ConfigurableIrcBotApp
 
         void timer_Tick(object sender, EventArgs e)
         {
+            TimeSpan currentSpan = DateTime.Now - startTime;
+            var watchTime = String.Format("{0:00}d {1:00}h {2:00}m {3:00}s",
+                     currentSpan.Days, currentSpan.Hours, currentSpan.Minutes, currentSpan.Seconds);
 
-            TimeSpan ts = DateTime.Now - startTime;
-            if (_wasPaused)
-            {
-                ts.Add(elapsedTimeSpan);
-            }
-            
-            currentTime = String.Format("{0:00}d {1:00}h {2:00}m {3:00}s",
-                     ts.Days, ts.Hours, ts.Minutes, ts.Seconds);
-            clockTxt.Text = currentTime; 
+            clockTxt.Text = watchTime; 
         }
 
         public void startTimer()
         {
-            stopWatch = new Timer();
-            stopWatch.Tick += new EventHandler(timer_Tick);
-            stopWatch.Interval = 1000;
-            stopWatch.Enabled = true;
-            stopWatch.Start();
-
-            startTime = DateTime.Now;
-            if (_wasPaused)
+            if(startTime == DateTime.MinValue)
             {
-                startTime = pauseTime;
+                startTime = DateTime.Now;
             }
+
+            if (_paused)
+            {
+                this.startTime = startTime.Add(DateTime.Now - pausedTime);
+                _paused = false;
+            }
+
+            tickTimer = new Timer();
+            tickTimer.Tick += new EventHandler(timer_Tick);
+            tickTimer.Interval = 1000;
+            tickTimer.Enabled = true;
+
+            tickTimer.Start();
+
             _running = true;
         }
 
         public void pauseTimer()
         {
-            stopWatch.Stop();
+            tickTimer.Stop();
+            pausedTime = DateTime.Now;
+            _paused = true;
             _running = false;
-            _wasPaused = true;
-            pauseTime = DateTime.Now;
-            elapsedTimeSpan = DateTime.Now - startTime;
         }
 
         public void stopTimer()
         {
             if (_running)
             {
-                stopWatch.Stop();
-                _wasPaused = false;
+                tickTimer.Stop();
+                this.startTime = DateTime.MinValue;
+                _paused = false;
                 _running = false;
             }
         }

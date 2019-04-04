@@ -41,9 +41,12 @@
                 <Button x:Name="sendMessageButton" Content="Send" HorizontalAlignment="Left" Margin="214,326,0,-40" VerticalAlignment="Top" Width="92" Click="sendMessageButton_Click"/>
 
                 <Button x:Name="startTimer" Content="Start Timer" HorizontalAlignment="Left" Margin="214,99,0,0" VerticalAlignment="Top" Width="92" Click="start_Click" />
-                <Button x:Name="stopTimer" Content="Stop Timer" HorizontalAlignment="Left" Margin="214,149,0,0" VerticalAlignment="Top" Width="92" Click="stop_Click"/>
+                <Button x:Name="stopTimer" Content="Reset Timer" HorizontalAlignment="Left" Margin="214,149,0,0" VerticalAlignment="Top" Width="92" Click="stop_Click"/>
                 <Button x:Name="pauseTimer" Content="Pause Timer" HorizontalAlignment="Left" Margin="214,124,0,0" VerticalAlignment="Top" Width="92" Click="pause_Click" />
 
+                <TextBox x:Name="offsetTimerInsert" Margin="214,190,0,86"></TextBox>
+                <Button x:Name="offsetTimerButton" Content="Offset Timer" HorizontalAlignment="Left" Margin="214,225,0,0" VerticalAlignment="Top" Width="92" Click="OffsetTimerButton_Click" />
+                
             </Grid>
         </TabItem>
         <TabItem>
@@ -91,13 +94,20 @@
                 <CheckBox x:Name="titleActiveBox" Margin="263,25,84,355" Height="30" Checked="titleActiveBox_Checked" Unchecked="titleActiveBox_Checked" IsChecked="True">Title</CheckBox>
                 <CheckBox x:Name="controlsActiveBox" Margin="263,55,84,323" Height="30" Checked="controlsActiveBox_Checked" Unchecked="controlsActiveBox_Checked" IsChecked="True">Play Bot Controls</CheckBox>
                 <CheckBox x:Name="chatActiveBox" Margin="263,85,84,293" Height="30" Checked="chatActiveBox_Checked" Unchecked="chatActiveBox_Checked" IsChecked="True">Chat</CheckBox>
-                <CheckBox x:Name="clockActiveBox" Margin="263,113,84,265" Height="30" Checked="clockActiveBox_Checked" Unchecked="clockActiveBox_Checked" IsChecked="True">Timer</CheckBox>
+                <CheckBox x:Name="clockActiveBox" Margin="263,113,84,270" Checked="clockActiveBox_Checked" Unchecked="clockActiveBox_Checked" IsChecked="True">Timer</CheckBox>
 
                 <Label Content="Title Type:" Margin="10,173,383,195"></Label>
                 <StackPanel x:Name="titleType" Orientation="Horizontal" Height="30" Margin="85,179,263,199">
                     <RadioButton x:Name="titleIsText" Content="Text" Margin="0,0,8,0" IsChecked="True" Checked="TitleIsText_Checked"/>
 
                     <RadioButton x:Name="titleIsImage" Content="Image" Checked="TitleIsImage_Checked"/>
+                </StackPanel>
+
+                <Label Content="Chat Display:" Margin="223,143,139,194"></Label>
+                <StackPanel x:Name="chatDisplayPanel" Margin="234,168,65,161">
+                    <RadioButton x:Name="chatAll" Content="All" IsChecked="True" Checked="ChatAll_Checked"/>
+                    <RadioButton x:Name="chatCommands" Content="All Commands" Checked="ChatCommands_Checked"/>
+                    <RadioButton x:Name="chatPlayBot" Content="Play Bot Commands" Checked="ChatPlayBot_Checked"/>
                 </StackPanel>
             </Grid>
         </TabItem>

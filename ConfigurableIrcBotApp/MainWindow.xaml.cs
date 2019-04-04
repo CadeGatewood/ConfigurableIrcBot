@@ -29,6 +29,7 @@ namespace ConfigurableIrcBotApp
 
         public bool playBotIsActive { get; set; }
         public string emulationProcessName { get; set; }
+        public string chatOutput { get; set; }
 
         public PopoutChatSettingsManager chatSettingsManager { get; set; }
         public BotChatActivitySettingsManager botChatActivity { get; set; }
@@ -67,7 +68,7 @@ namespace ConfigurableIrcBotApp
 
             this.connectionSetup = connectionSetup;
             this.bot = bot;
-            this.playBot = new PlayBot();
+            this.playBot = new PlayBot(this);
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
@@ -93,8 +94,13 @@ namespace ConfigurableIrcBotApp
         {
             botChatActivity.saveDataOnClose();
             playBotSettingsManager.saveDataOnClose();
-            bot.ircThread.Abort();
-            bot.pingSender.pingSenderThread.Abort();
+
+            if (bot != null)
+            {
+                bot.ircThread.Abort();
+                bot.pingSender.pingSenderThread.Abort();
+            }
+            
 
             System.Windows.Application.Current.Shutdown();
         }
@@ -149,24 +155,22 @@ namespace ConfigurableIrcBotApp
             }
         }
 
-        public void writeToChatBlock(Message message, bool command)
+        public void writeToChatBlock(Message message, string messageType)
         {
-            if (!chatPoppedOut)
+            if (chatOutput.Equals("all") || messageType.Equals(chatOutput))
             {
-                TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd)
+                if (!chatPoppedOut)
                 {
-                    Text = message.userName + ": " + message.message + "\r"
-                };
-                output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
-                if (command)
-                {
-                    output.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                    TextRange output = new TextRange(chatTextBox.Document.ContentEnd, chatTextBox.Document.ContentEnd)
+                    {
+                        Text = message.userName + ": " + message.message + "\r"
+                    };
+                    chatTextBox.ScrollToEnd();
                 }
-                chatTextBox.ScrollToEnd();
-            }
-            else
-            {
-                popOutChat.writeToChat(message);
+                else
+                {
+                    popOutChat.writeToChat(message);
+                }
             }
         }
 
@@ -429,6 +433,27 @@ namespace ConfigurableIrcBotApp
         private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
         {
             playBotIsActive = (bool)playBotActive.IsChecked;
+        }
+
+        private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
+        {
+            TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
+            chatSettingsManager.offsetTimer(test);
+        }
+
+        private void ChatCommands_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "command";
+        }
+
+        private void ChatPlayBot_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "playBotCommand";
+        }
+
+        private void ChatAll_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "all";
         }
     }
 }
