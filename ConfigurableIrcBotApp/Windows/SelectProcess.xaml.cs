@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace ConfigurableIrcBotApp
 {   internal static class IconUtilities
@@ -46,7 +47,7 @@ namespace ConfigurableIrcBotApp
     {
         MainWindow main;
 
-        List<processDisplay> processDisplays = new List<processDisplay>();
+        ObservableCollection<processDisplay> processDisplays = new ObservableCollection<processDisplay>();
 
         public SelectProcess(MainWindow main)
         {
@@ -63,22 +64,24 @@ namespace ConfigurableIrcBotApp
         public void loadProcesses()
         {
             try { 
-            var newProcessList = new List<processDisplay>();
+            var newProcessList = new ObservableCollection<processDisplay>();
 
             var processes = Process.GetProcesses();
-            
+
+            removeProcesses(processes);
+
             foreach (Process process in processes)
             {
                 if (!String.IsNullOrEmpty(process.MainWindowTitle))
                 {
                     System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(process.MainModule.FileName);
-                    newProcessList.Add(new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName));
+                    var item = new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName);
+                        addProcess(item);
                 }
             }
 
-            this.processDisplays = newProcessList;
+            
 
-            processListBox.Items.Refresh();
             }
             catch(Exception processException)
             {
@@ -105,6 +108,25 @@ namespace ConfigurableIrcBotApp
             main.emulationProcessName = selection.processName;
             System.Threading.Thread.Sleep(1000);
             Hide();
+        }
+
+        private void addProcess(processDisplay process)
+        {
+            if (!processDisplays.Select(proc => proc.processName).Contains(process.processName))
+                processDisplays.Add(process);
+        }
+
+        private void removeProcesses(Process[] currentProcesses)
+        {
+            var oldProcessDisplays = processDisplays
+                .Where(proc => processDisplays
+                .Select(process => process.processName)
+                .Except(currentProcesses
+                    .Select(process => process.ProcessName))
+                    .Contains(proc.processName));
+            foreach(processDisplay process in oldProcessDisplays){
+                processDisplays.Remove(process);
+            }
         }
     }
 }
