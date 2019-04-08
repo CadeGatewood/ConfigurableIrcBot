@@ -199,6 +199,44 @@ namespace ConfigurableIrcBotApp
 
         }
 
+        public void fontFileDrop_DragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)) e.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
+        {
+            try
+            {
+                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+                foreach (string file in files)
+                {
+                    if (fontFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
+                    {
+                        installFont(file);
+                    }
+                    else if (imgFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
+                    {
+                        popOutChat.titleImage.Source = new BitmapImage(new Uri(file));
+                    }
+                    else
+                    {
+                        throw new FileFormatException("Unaccepted file format");
+                    }
+                }
+            }
+            catch (FileFormatException fException)
+            {
+                string fileExceptionMessage = "";
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "For fonts, accepted formats include: " + string.Join(", ", fontFormats.ToArray());
+                fileExceptionMessage += "\n";
+                fileExceptionMessage += "For images, accepted formats include: " + string.Join(", ", imgFormats.ToArray());
+                writeError(fileExceptionMessage, fException);
+            }
+        }
+
         private void ConnectionSettings_Click(object sender, RoutedEventArgs e)
         {
             connectionSetup.Show();
@@ -247,44 +285,6 @@ namespace ConfigurableIrcBotApp
         private void ChangeBackGroundColor_Click(object sender, RoutedEventArgs e)
         {
             this.chatSettingsManager.changeBackGroundColors();
-        }
-
-        public void fontFileDrop_DragEnter(object sender, System.Windows.DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop)) e.Effects = System.Windows.DragDropEffects.Copy;
-        }
-
-        public void fontFileDrop_DragDrop(object sender, System.Windows.DragEventArgs e)
-        {
-            try
-            {
-                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
-                foreach (string file in files)
-                {
-                    if (fontFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
-                    {
-                        installFont(file);
-                    }
-                    else if (imgFormats.Contains(System.IO.Path.GetExtension(file).ToLowerInvariant()))
-                    {
-                        popOutChat.titleImage.Source = new BitmapImage(new Uri(file));
-                    }
-                    else
-                    {
-                        throw new FileFormatException("Unaccepted file format");
-                    }
-                }
-            }
-            catch(FileFormatException fException)
-            {
-                string fileExceptionMessage = "";
-                fileExceptionMessage += "\n";
-                fileExceptionMessage += "\n";
-                fileExceptionMessage += "For fonts, accepted formats include: " + string.Join(", ", fontFormats.ToArray());
-                fileExceptionMessage += "\n";
-                fileExceptionMessage += "For images, accepted formats include: " + string.Join(", ", imgFormats.ToArray());
-                writeError(fileExceptionMessage, fException);
-            }
         }
 
         private void titleChangeButton_Click(object sender, RoutedEventArgs e)
@@ -387,17 +387,43 @@ namespace ConfigurableIrcBotApp
             currentPlayActionsGrid.Items.Refresh();
         }
 
+        private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
+        {
+            playBotIsActive = (bool)playBotActive.IsChecked;
+        }
+
+        private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
+        {
+            TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
+            chatSettingsManager.offsetTimer(test);
+        }
+
+        private void ChatCommands_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "command";
+        }
+
+        private void ChatPlayBot_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "playBotCommand";
+        }
+
+        private void ChatAll_Checked(object sender, RoutedEventArgs e)
+        {
+            chatOutput = "all";
+        }
+
         private void AddPlayAction_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 VirtualKeyCode code;
-                
+
                 if (Enum.TryParse<VirtualKeyCode>(convertKeyInputToEnumValue(playKey.Text.ToUpper()), out code))
                 {
                     var durationCalculation = Math.Floor(Double.Parse(playDuration.Text) * 1000);
 
-                    PlayBotAction newAction = new PlayBotAction(playCommand.Text, code, new TimeSpan(0,0,0,0, (int)durationCalculation));
+                    PlayBotAction newAction = new PlayBotAction(playCommand.Text, code, new TimeSpan(0, 0, 0, 0, (int)durationCalculation));
 
                     playBotSettingsManager.addPlayBotAction(newAction);
                     playActionsList.Add(newAction);
@@ -428,32 +454,6 @@ namespace ConfigurableIrcBotApp
             {
                 return input;
             }
-        }
-
-        private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
-        {
-            playBotIsActive = (bool)playBotActive.IsChecked;
-        }
-
-        private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
-        {
-            TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
-            chatSettingsManager.offsetTimer(test);
-        }
-
-        private void ChatCommands_Checked(object sender, RoutedEventArgs e)
-        {
-            chatOutput = "command";
-        }
-
-        private void ChatPlayBot_Checked(object sender, RoutedEventArgs e)
-        {
-            chatOutput = "playBotCommand";
-        }
-
-        private void ChatAll_Checked(object sender, RoutedEventArgs e)
-        {
-            chatOutput = "all";
         }
     }
 }

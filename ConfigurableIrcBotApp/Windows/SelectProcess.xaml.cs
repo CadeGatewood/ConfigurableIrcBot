@@ -64,24 +64,20 @@ namespace ConfigurableIrcBotApp
         public void loadProcesses()
         {
             try { 
-            var newProcessList = new ObservableCollection<processDisplay>();
+                var newProcessList = new ObservableCollection<processDisplay>();
 
-            var processes = Process.GetProcesses();
+                var processes = Process.GetProcesses();
 
-            removeProcesses(processes);
+                removeProcesses(processes);
 
-            foreach (Process process in processes)
-            {
-                if (!String.IsNullOrEmpty(process.MainWindowTitle))
+                foreach (Process process in processes)
                 {
-                    System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(process.MainModule.FileName);
-                    var item = new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName);
-                        addProcess(item);
+                    if (!String.IsNullOrEmpty(process.MainWindowTitle))
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(process.MainModule.FileName);
+                        addProcess(new processDisplay(IconUtilities.ToImageSource(icon), process.ProcessName));
+                    }
                 }
-            }
-
-            
-
             }
             catch(Exception processException)
             {
@@ -112,7 +108,8 @@ namespace ConfigurableIrcBotApp
 
         private void addProcess(processDisplay process)
         {
-            if (!processDisplays.Select(proc => proc.processName).Contains(process.processName))
+            if (!processDisplays.Select(proc => proc.processName)
+                                .Contains(process.processName))
                 processDisplays.Add(process);
         }
 
