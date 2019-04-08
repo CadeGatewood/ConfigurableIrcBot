@@ -94,31 +94,31 @@
     </ApplicationDefinition>
     <Compile Include="Bots\PingSender.cs" />
     <Compile Include="DataObjects\processDisplay.cs" />
-    <Compile Include="EditCommands.xaml.cs">
+    <Compile Include="Windows\EditCommands.xaml.cs">
       <DependentUpon>EditCommands.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditModerators.xaml.cs">
+    <Compile Include="Windows\EditModerators.xaml.cs">
       <DependentUpon>EditModerators.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectProcess.xaml.cs">
+    <Compile Include="Windows\SelectProcess.xaml.cs">
       <DependentUpon>SelectProcess.xaml</DependentUpon>
     </Compile>
     <Compile Include="tabManagers\BotChatActivitySettingsManager.cs" />
     <Compile Include="tabManagers\PlayBotSettingsManager.cs" />
     <Compile Include="tabManagers\PopoutChatSettingsManager.cs" />
-    <Page Include="ConnectionSetup.xaml">
+    <Page Include="Windows\ConnectionSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditCommands.xaml">
+    <Page Include="Windows\EditCommands.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditModerators.xaml">
+    <Page Include="Windows\EditModerators.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -126,28 +126,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConnectionSetup.xaml.cs">
+    <Compile Include="Windows\ConnectionSetup.xaml.cs">
       <DependentUpon>ConnectionSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Bots\PlayBot.cs" />
     <Compile Include="fileManagers\JsonFileHandler.cs" />
     <Compile Include="DataObjects\jsonObjects.cs" />
     <Compile Include="Bots\IrcClient.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PopOutChat.xaml">
+    <Page Include="Windows\PopOutChat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectProcess.xaml">
+    <Page Include="Windows\SelectProcess.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PopOutChat.xaml.cs">
+    <Compile Include="Windows\PopOutChat.xaml.cs">
       <DependentUpon>PopOutChat.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
