@@ -8,7 +8,7 @@ namespace ConfigurableIrcBotApp
 {
     public class JsonFileHandler
     {
-        string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations";
+        string filesBase = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\SavedConfigurations\\";
         string moderatorFile = "moderators.json";
         string commandsFile = "commands.json";
         string playBotActionFile = "playBotActions.json";
