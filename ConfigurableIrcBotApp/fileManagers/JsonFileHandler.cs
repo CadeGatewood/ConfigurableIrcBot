@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Newtonsoft.Json;
@@ -22,9 +23,9 @@ namespace ConfigurableIrcBotApp
             JsonTextReader jsonReader;
             StreamReader fileRead;
 
-            IDictionary<string, Commands> resultingCommands = new Dictionary<string, Commands>();
-            IDictionary<string, Moderator> resultingModerators = new Dictionary<string, Moderator>();
-            IDictionary<string, PlayBotAction> resultingActions = new Dictionary<string, PlayBotAction>();
+            IDictionary<string, Commands> resultingCommands = new Dictionary<string, Commands>(StringComparer.InvariantCultureIgnoreCase);
+            IDictionary<string, Moderator> resultingModerators = new Dictionary<string, Moderator>(StringComparer.InvariantCultureIgnoreCase);
+            IDictionary<string, PlayBotAction> resultingActions = new Dictionary<string, PlayBotAction>(StringComparer.InvariantCultureIgnoreCase);
 
             try
             {
