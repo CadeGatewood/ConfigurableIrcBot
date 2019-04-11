@@ -50,7 +50,7 @@ namespace ConfigurableIrcBotApp
             }
             catch(Exception e)
             {
-                main.writeError("\n\n There was an error sending events from chat. \n Make sure to select a destination process.", e);
+                main.writeError("\n\n There was an error sending events from chat.", e);
             }
         }
     }
