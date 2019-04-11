@@ -14,6 +14,7 @@ namespace ConfigurableIrcBotApp
         readonly InputSimulator sim;
         MainWindow main;
 
+        private Semaphore _controlPool;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         internal static extern IntPtr SetForegroundWindow(IntPtr hWnd);
@@ -22,12 +23,17 @@ namespace ConfigurableIrcBotApp
         {
             this.main = main;
             sim = new InputSimulator();
+
+            _controlPool = new Semaphore(1, 1);
         }
 
         public void controlEmulator(PlayBotAction action, string emulationProcessName)
         {
             try
             {
+                if (main.commandMode.Equals("F.I.F.O"))
+                    _controlPool.WaitOne();
+
                 Process targetEmulator = Process.GetProcessesByName(emulationProcessName).FirstOrDefault();
                 IntPtr hWnd = targetEmulator.MainWindowHandle;
                 if (hWnd != IntPtr.Zero)
@@ -37,10 +43,14 @@ namespace ConfigurableIrcBotApp
                 sim.Keyboard.KeyDown(action.keyPress);
                 Thread.Sleep(action.duration);
                 sim.Keyboard.KeyUp(action.keyPress);
+
+                if (main.commandMode.Equals("F.I.F.O"))
+                    _controlPool.Release();
+                    
             }
             catch(Exception e)
             {
-                main.writeError("\n\n There was an error sending events from chat. \n Make sure to select a destination process.", e);
+                main.writeError("\n\n There was an error sending events from chat.", e);
             }
         }
     }
