@@ -53,5 +53,10 @@ namespace ConfigurableIrcBotApp
                 main.writeError("\n\n There was an error sending events from chat.", e);
             }
         }
+
+        public void resetSemaphore()
+        {
+            _controlPool = new Semaphore(1, 1);
+        }
     }
 }

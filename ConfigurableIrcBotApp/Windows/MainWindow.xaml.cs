@@ -393,6 +393,8 @@ namespace ConfigurableIrcBotApp
         private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
         {
             playBotIsActive = (bool)playBotActive.IsChecked;
+            if ((bool)playBotActive.IsChecked)
+                playBot.resetSemaphore();
         }
 
         private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
