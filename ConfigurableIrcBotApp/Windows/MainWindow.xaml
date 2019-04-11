@@ -64,6 +64,7 @@
                     <ComboBoxItem Content="Chat"></ComboBoxItem>
                     <ComboBoxItem Content="Timer"></ComboBoxItem>
                     <ComboBoxItem Content="Play Bot Controls"></ComboBoxItem>
+                    <ComboBoxItem Content="Command Mode"></ComboBoxItem>
                 </ComboBox>
 
                 <DockPanel Margin="0,218,0,10" >
@@ -147,7 +148,13 @@
                 <Label Content="Duration (seconds):" Height="30" Margin="10,180,306,198"/>
                 <TextBox x:Name="playDuration"  Margin="10,210,306,163" PreviewTextInput="secondsValidation"/>
                 <Button x:Name="addPlayAction" Content="Add Action" Margin="10,250,343,123" Click="AddPlayAction_Click"/>
-                <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,307,343,66" Click="SelectEmulatorWindow_Click" />
+                <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,290,343,83" Click="SelectEmulatorWindow_Click" />
+
+                <ComboBox x:Name="commandModeDropdown"  HorizontalAlignment="Left" Width="110" Margin="10,340,0,0" Height="39" VerticalAlignment="Top" RenderTransformOrigin="0.581,8.734" DropDownClosed="CommandModeDropdown_Closed">
+                    <ComboBoxItem Content="All At Once" IsSelected="True"></ComboBoxItem>
+                    <ComboBoxItem Content="F.I.F.O"></ComboBoxItem>
+                </ComboBox>
+
                 <DataGrid x:Name="currentPlayActionsGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" Margin="162,0,0,0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Command" MinWidth="50" Binding="{Binding Path=command}">

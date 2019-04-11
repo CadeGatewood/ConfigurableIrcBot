@@ -30,6 +30,7 @@ namespace ConfigurableIrcBotApp
         public bool playBotIsActive { get; set; }
         public string emulationProcessName { get; set; }
         public string chatOutput { get; set; }
+        public string commandMode { get; set; }
 
         public PopoutChatSettingsManager chatSettingsManager { get; set; }
         public BotChatActivitySettingsManager botChatActivity { get; set; }
@@ -69,6 +70,7 @@ namespace ConfigurableIrcBotApp
             this.connectionSetup = connectionSetup;
             this.bot = bot;
             this.playBot = new PlayBot(this);
+            commandMode = "All At Once";
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
@@ -83,6 +85,7 @@ namespace ConfigurableIrcBotApp
             currentPlayActionsGrid.ItemsSource = playActionsList;
 
             popOutChat.playBotControlDisplayGrid.ItemsSource = playBotCommands;
+            popOutChat.commandModeTextBox.Text = commandMode;
 
             this.settingsKeys = settingsKeys;
 
@@ -455,5 +458,12 @@ namespace ConfigurableIrcBotApp
                 return input;
             }
         }
+
+        private void CommandModeDropdown_Closed(object sender, EventArgs e)
+        {
+            commandMode = commandModeDropdown.Text;
+            popOutChat.commandModeTextBox.Text = commandMode;
+        }
+
     }
 }

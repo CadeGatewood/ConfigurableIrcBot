@@ -46,8 +46,11 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
-        <DockPanel x:Name="timerDock" Margin="10,302,10,396" HorizontalAlignment="Center" Width="352" Grid.RowSpan="2" >
-            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" MinHeight="84" VerticalAlignment="Bottom" Width="344" Height="98" BorderThickness="0"/>
+        <DockPanel x:Name="timerDock" Margin="10,302,10,0" HorizontalAlignment="Center" Width="352" >
+            <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" VerticalAlignment="Bottom" Width="344" Height="48" BorderThickness="0"/>
+        </DockPanel>
+        <DockPanel x:Name="commandModeDock" HorizontalAlignment="Center" Margin="0,5,0,394" RenderTransformOrigin="0.5,0.5" Width="372" Grid.Row="1">
+            <TextBox x:Name="commandModeTextBox" Background="#323232" BorderThickness="0" HorizontalContentAlignment="Center" IsReadOnly="True" VerticalContentAlignment="Center"/>
         </DockPanel>
 
         <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="1" Grid.Row="1"/>
