@@ -56,19 +56,24 @@ namespace ConfigurableIrcBotApp.tabManagers
                         main.popOutChat.playBotControlDisplayGrid.FontStyle = fd.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
                         break;
                     case "Command Mode":
-                        main.popOutChat.commandModeTextBox.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
-                        main.popOutChat.commandModeTextBox.FontSize = fd.Font.Size * 96.0 / 72.0;
-                        main.popOutChat.commandModeTextBox.FontWeight = fd.Font.Bold ? FontWeights.Bold : FontWeights.Regular;
-                        main.popOutChat.commandModeTextBox.FontStyle = fd.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
+                        main.popOutChat.rightVote.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
+                        main.popOutChat.rightVote.FontSize = fd.Font.Size * 96.0 / 72.0;
+                        main.popOutChat.rightVote.FontWeight = fd.Font.Bold ? FontWeights.Bold : FontWeights.Regular;
+                        main.popOutChat.rightVote.FontStyle = fd.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
+
+                        main.popOutChat.leftVote.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
+                        main.popOutChat.leftVote.FontSize = fd.Font.Size * 96.0 / 72.0;
+                        main.popOutChat.leftVote.FontWeight = fd.Font.Bold ? FontWeights.Bold : FontWeights.Regular;
+                        main.popOutChat.leftVote.FontStyle = fd.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
                         break;
                     default:
-                        System.Windows.MessageBox.Show("Please select a valid section");
+                        System.Windows.MessageBox.Show("Please select a valid font section");
                         break;
                 }
             }
         }
 
-        public void changeFontColor()
+        public void changeColor()
         {
             ColorDialog cd = new ColorDialog();
             var result = cd.ShowDialog();
@@ -89,7 +94,11 @@ namespace ConfigurableIrcBotApp.tabManagers
                         main.popOutChat.playBotControlDisplayGrid.Foreground = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
                         break;
                     case "Command Mode":
-                        main.popOutChat.commandModeTextBox.Foreground = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
+                        main.popOutChat.rightVote.Foreground = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
+                        main.popOutChat.leftVote.Foreground = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
+                        break;
+                    case "Vote Bar":
+                        main.popOutChat.voteProgressBar.Foreground = new SolidColorBrush(Color.FromArgb(cd.Color.A, cd.Color.R, cd.Color.G, cd.Color.B));
                         break;
                     default:
                         System.Windows.MessageBox.Show("Please select a valid section");
@@ -110,6 +119,8 @@ namespace ConfigurableIrcBotApp.tabManagers
                 main.popOutChat.clockTxt.Background = color;
                 main.popOutChat.chatBlock.Background = color;
                 main.popOutChat.commandModeDock.Background = color;
+                main.popOutChat.modeVoteHolder.Background = color;
+                main.popOutChat.voteProgressBar.Background = color;
                 main.popOutChat.Background = color;
             }
         }

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 
 using WindowsInput.Native;
+using ConfigurableIrcBotApp.DataObjects;
 
 namespace ConfigurableIrcBotApp
 {
@@ -30,12 +31,13 @@ namespace ConfigurableIrcBotApp
         public bool playBotIsActive { get; set; }
         public string emulationProcessName { get; set; }
         public string chatOutput { get; set; }
-        public string commandMode { get; set; }
+        public int voteResults { get; set; }
 
         public PopoutChatSettingsManager chatSettingsManager { get; set; }
         public BotChatActivitySettingsManager botChatActivity { get; set; }
         public PlayBotSettingsManager playBotSettingsManager { get; set; }
 
+        public ComplexCommands complexCommands { get; set; }
         //Windows
         public PopOutChat popOutChat { get; set; }
         public bool chatPoppedOut { get; set; }
@@ -61,7 +63,7 @@ namespace ConfigurableIrcBotApp
             this.chatSettingsManager = new PopoutChatSettingsManager(this);
             this.botChatActivity = new BotChatActivitySettingsManager(this);
             this.playBotSettingsManager = new PlayBotSettingsManager(this);
-             
+            this.complexCommands = new ComplexCommands(this);
 
             this.moderators = botChatActivity.moderators;
             this.commands = botChatActivity.commands;
@@ -70,7 +72,6 @@ namespace ConfigurableIrcBotApp
             this.connectionSetup = connectionSetup;
             this.bot = bot;
             this.playBot = new PlayBot(this);
-            commandMode = "All At Once";
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
@@ -85,7 +86,8 @@ namespace ConfigurableIrcBotApp
             currentPlayActionsGrid.ItemsSource = playActionsList;
 
             popOutChat.playBotControlDisplayGrid.ItemsSource = playBotCommands;
-            popOutChat.commandModeTextBox.Text = commandMode;
+            voteResults = 50;
+            popOutChat.voteProgressBar.Value = voteResults;
 
             this.settingsKeys = settingsKeys;
 
@@ -282,7 +284,7 @@ namespace ConfigurableIrcBotApp
 
         private void changeFontColor_Click(object sender, RoutedEventArgs e)
         {
-            this.chatSettingsManager.changeFontColor();
+            this.chatSettingsManager.changeColor();
         }
 
         private void ChangeBackGroundColor_Click(object sender, RoutedEventArgs e)
@@ -459,12 +461,6 @@ namespace ConfigurableIrcBotApp
             {
                 return input;
             }
-        }
-
-        private void CommandModeDropdown_Closed(object sender, EventArgs e)
-        {
-            commandMode = commandModeDropdown.Text;
-            popOutChat.commandModeTextBox.Text = commandMode;
         }
 
     }
