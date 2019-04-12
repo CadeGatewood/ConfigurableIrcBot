@@ -94,6 +94,13 @@ namespace ConfigurableIrcBotApp
             chatBlock.AppendText(message.userName + ": " + message.message + "\r");
             chatBlock.ScrollToEnd();
         }
-        
+
+        public void updateVote()
+        {
+            this.Dispatcher.Invoke(() => //Use Dispather to Update UI Immediately  
+            {
+                voteProgressBar.Value = main.voteResults;
+            });
+        }
     }
 }

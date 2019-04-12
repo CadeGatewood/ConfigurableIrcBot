@@ -60,11 +60,12 @@
                 <Label x:Name="selectLabel" Content="Select Section:"/>
 
                 <ComboBox x:Name="sectionSelection"  HorizontalAlignment="Left" Width="90" Margin="10,26,0,0" Height="39" VerticalAlignment="Top">
-                    <ComboBoxItem Content="Title" IsSelected="True"></ComboBoxItem>
-                    <ComboBoxItem Content="Chat"></ComboBoxItem>
-                    <ComboBoxItem Content="Timer"></ComboBoxItem>
-                    <ComboBoxItem Content="Play Bot Controls"></ComboBoxItem>
-                    <ComboBoxItem Content="Command Mode"></ComboBoxItem>
+                    <ComboBoxItem Content="Title" IsSelected="True"/>
+                    <ComboBoxItem Content="Chat"/>
+                    <ComboBoxItem Content="Timer"/>
+                    <ComboBoxItem Content="Play Bot Controls"/>
+                    <ComboBoxItem Content="Command Mode"/>
+                    <ComboBoxItem Content="Vote Bar"/>
                 </ComboBox>
 
                 <DockPanel Margin="0,218,0,10" >
@@ -79,7 +80,7 @@
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font</TextBlock>
                 </Button>
                 <Button x:Name="changeFontColor" Margin="10,113,0,0" HorizontalAlignment="Left" Width="90" Click="changeFontColor_Click" Height="55" VerticalAlignment="Top" >
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Font Color</TextBlock>
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change Color</TextBlock>
                 </Button>
                 <Button x:Name="changeBackGroundColor" Margin="110,113,0,0" HorizontalAlignment="Left" Width="90"  Height="55" VerticalAlignment="Top" Click="ChangeBackGroundColor_Click" >
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Change BackGround Color</TextBlock>
@@ -149,11 +150,6 @@
                 <TextBox x:Name="playDuration"  Margin="10,210,306,163" PreviewTextInput="secondsValidation"/>
                 <Button x:Name="addPlayAction" Content="Add Action" Margin="10,250,343,123" Click="AddPlayAction_Click"/>
                 <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,290,343,83" Click="SelectEmulatorWindow_Click" />
-
-                <ComboBox x:Name="commandModeDropdown"  HorizontalAlignment="Left" Width="110" Margin="10,340,0,0" Height="39" VerticalAlignment="Top" RenderTransformOrigin="0.581,8.734" DropDownClosed="CommandModeDropdown_Closed">
-                    <ComboBoxItem Content="All At Once" IsSelected="True"></ComboBoxItem>
-                    <ComboBoxItem Content="F.I.F.O"></ComboBoxItem>
-                </ComboBox>
 
                 <DataGrid x:Name="currentPlayActionsGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" Margin="162,0,0,0">
                     <DataGrid.Columns>

@@ -93,6 +93,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bots\PingSender.cs" />
+    <Compile Include="DataObjects\ComplexCommands.cs" />
     <Compile Include="DataObjects\processDisplay.cs" />
     <Compile Include="Windows\EditCommands.xaml.cs">
       <DependentUpon>EditCommands.xaml</DependentUpon>

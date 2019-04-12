@@ -202,6 +202,10 @@ namespace ConfigurableIrcBotApp
                     main.playBot.controlEmulator(main.playBotActions[message.message], main.emulationProcessName);
                 }
             }
+            else if (main.complexCommands.commandNames.Contains(commandParent))
+            {
+                main.complexCommands.processComplexCommand(commandParent);
+            }
             return;
         }
         

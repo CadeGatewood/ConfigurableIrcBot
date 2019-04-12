@@ -31,7 +31,7 @@ namespace ConfigurableIrcBotApp
         {
             try
             {
-                if (main.commandMode.Equals("F.I.F.O"))
+                if (main.voteResults > 50)
                     _controlPool.WaitOne();
 
                 Process targetEmulator = Process.GetProcessesByName(emulationProcessName).FirstOrDefault();
@@ -44,7 +44,7 @@ namespace ConfigurableIrcBotApp
                 Thread.Sleep(action.duration);
                 sim.Keyboard.KeyUp(action.keyPress);
 
-                if (main.commandMode.Equals("F.I.F.O"))
+                if (main.voteResults > 50)
                     _controlPool.Release();
                     
             }
@@ -52,6 +52,11 @@ namespace ConfigurableIrcBotApp
             {
                 main.writeError("\n\n There was an error sending events from chat.", e);
             }
+        }
+
+        public void resetSemaphore()
+        {
+            _controlPool = new Semaphore(1, 1);
         }
     }
 }
