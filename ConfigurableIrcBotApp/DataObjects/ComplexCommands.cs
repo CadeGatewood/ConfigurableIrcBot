@@ -9,7 +9,7 @@ namespace ConfigurableIrcBotApp.DataObjects
     public class ComplexCommands
     {
         MainWindow main;
-        public List<string> commandNames = new List<string> { "!FirstInFirstOut", "!AllAtOnce" };
+        public List<string> commandNames = new List<string> { "!firstinfirstout", "!allatonce" };
 
         public ComplexCommands(MainWindow main)
         {
@@ -18,12 +18,12 @@ namespace ConfigurableIrcBotApp.DataObjects
         
         public void processComplexCommand(string command)
         {
-            switch (command)
+            switch (command.ToLower())
             {
-                case "!FirstInFirstOut":
+                case "!firstinfirstout":
                     processVote(1);
                     break;
-                case "!AllAtOnce":
+                case "!allatonce":
                     processVote(-1);
                     break;
             }

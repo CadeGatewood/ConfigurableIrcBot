@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bots\AutoSave.cs" />
     <Compile Include="Bots\PingSender.cs" />
     <Compile Include="DataObjects\ComplexCommands.cs" />
     <Compile Include="DataObjects\processDisplay.cs" />
