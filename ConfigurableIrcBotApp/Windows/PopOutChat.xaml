@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Closing="popoutChat_Closing"
         Title="Chat" 
-        Background="#323232" MinHeight="830" Height="830" MinWidth="200" Width="380">
+        Background="#323232" MinHeight="830" Height="830" MinWidth="200" Width="379.333">
 
     <Grid x:Name="chatMainGrid" Width="auto" Margin="0,0,0,3">
         <Grid.RowDefinitions>
@@ -50,21 +50,12 @@
         <DockPanel x:Name="timerDock" Margin="10,302,10,0" HorizontalAlignment="Center" Width="352" >
             <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" VerticalAlignment="Bottom" Width="344" Height="48" BorderThickness="0"/>
         </DockPanel>
-        <DockPanel x:Name="commandModeDock" Margin="10,5,10,394" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Grid.RowSpan="2">
+        <DockPanel x:Name="commandModeDock" Margin="10,5,10,394" Grid.Row="1" Grid.RowSpan="2" LastChildFill="True">
             <!--Label x:Name="leftLabel" Content="!FirstInFirstOut" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
-            <StatusBar x:Name="modeVoteHolder" Width="351" Background="#323232" HorizontalAlignment="Center" Margin="0,10" BorderThickness="0">
-                <StatusBarItem HorizontalAlignment="Right" DockPanel.Dock="Right">
-                    <TextBlock x:Name="rightVote">!FirstInFirstOut</TextBlock>
-                </StatusBarItem>
-                <StatusBarItem>
-                    <TextBlock HorizontalAlignment="Left" DockPanel.Dock="Left" x:Name="leftVote">!AllAtOnce</TextBlock>
-                </StatusBarItem>
-                <StatusBarItem>
-                    <ProgressBar x:Name="voteProgressBar" Background="#323232" Foreground="#828282" Value="50" Height="21" Width="200" BorderThickness="0"></ProgressBar>
-                </StatusBarItem>
-            </StatusBar>
-            <!--<Label x:Name="rightLabel" Content="!AllAtOnce" HorizontalAlignment="Right" VerticalAlignment="Center"/>-->
-            <!--<TextBox x:Name="commandModeTextBox" Background="#323232" BorderThickness="0" HorizontalContentAlignment="Center" IsReadOnly="True" VerticalContentAlignment="Center"/>-->
+            <TextBlock x:Name="rightVote" VerticalAlignment ="Center" DockPanel.Dock="Right"> !FirstInFirstOut</TextBlock>
+            <TextBlock DockPanel.Dock="Left" VerticalAlignment ="Center" x:Name="leftVote">!AllAtOnce </TextBlock>
+            <ProgressBar x:Name="voteProgressBar" Background="#323232" Foreground="#828282" Value="50" Height="21" MinWidth="100" BorderThickness="0" Margin="0,13" ></ProgressBar>
+            
         </DockPanel>
 
         <RichTextBox x:Name="chatBlock" Background="#323232" Margin="10,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom" Height="381" BorderThickness="1" Grid.Row="2"/>
