@@ -51,7 +51,6 @@
             <TextBox x:Name="clockTxt" Background="#323232" HorizontalContentAlignment="Center"  IsReadOnly="True" VerticalContentAlignment="Center" RenderTransformOrigin="0.507,0.481" VerticalAlignment="Bottom" Width="344" Height="48" BorderThickness="0"/>
         </DockPanel>
         <DockPanel x:Name="commandModeDock" Margin="10,5,10,394" Grid.Row="1" Grid.RowSpan="2" LastChildFill="True">
-            <!--Label x:Name="leftLabel" Content="!FirstInFirstOut" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
             <TextBlock x:Name="rightVote" VerticalAlignment ="Center" DockPanel.Dock="Right"> !FirstInFirstOut</TextBlock>
             <TextBlock DockPanel.Dock="Left" VerticalAlignment ="Center" x:Name="leftVote">!AllAtOnce </TextBlock>
             <ProgressBar x:Name="voteProgressBar" Background="#323232" Foreground="#828282" Value="50" Height="21" MinWidth="100" BorderThickness="0" Margin="0,13" ></ProgressBar>
