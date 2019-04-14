@@ -15,6 +15,7 @@ using System.Linq;
 
 using WindowsInput.Native;
 using ConfigurableIrcBotApp.DataObjects;
+using ConfigurableIrcBotApp.Bots;
 
 namespace ConfigurableIrcBotApp
 {
@@ -27,6 +28,7 @@ namespace ConfigurableIrcBotApp
 
         public IrcClient bot { get; set; }
         public PlayBot playBot { get; set; }
+        public AutoSave autoSave { get; set; }
 
         public bool playBotIsActive { get; set; }
         public string emulationProcessName { get; set; }
@@ -72,6 +74,7 @@ namespace ConfigurableIrcBotApp
             this.connectionSetup = connectionSetup;
             this.bot = bot;
             this.playBot = new PlayBot(this);
+            this.autoSave = new AutoSave(this);
 
             this.popOutChat = new PopOutChat(this);
             this.editCommands = new EditCommands(this);
@@ -395,8 +398,25 @@ namespace ConfigurableIrcBotApp
         private void PlayBotActive_Checked(object sender, RoutedEventArgs e)
         {
             playBotIsActive = (bool)playBotActive.IsChecked;
-            if ((bool)playBotActive.IsChecked)
-                playBot.resetSemaphore();
+            if (emulationProcessName != null)
+            {
+                if ((bool)playBotActive.IsChecked)
+                {
+                    playBot.resetSemaphore();
+
+                    autoSave.Start();
+
+                }
+                else
+                {
+                    autoSave.Stop();
+                }
+            }
+            else
+            {
+                write("Please select an emulation process");
+            }
+
         }
 
         private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)

@@ -119,7 +119,6 @@ namespace ConfigurableIrcBotApp.tabManagers
                 main.popOutChat.clockTxt.Background = color;
                 main.popOutChat.chatBlock.Background = color;
                 main.popOutChat.commandModeDock.Background = color;
-                main.popOutChat.modeVoteHolder.Background = color;
                 main.popOutChat.voteProgressBar.Background = color;
                 main.popOutChat.Background = color;
             }

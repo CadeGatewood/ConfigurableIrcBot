@@ -165,7 +165,6 @@ namespace ConfigurableIrcBotApp
 
         public void sendChatMessage(string message)
         {
-            //".tmi.twitch.tv
             sendIrcMessage(":" + userName + "!" + userName + "@" + userName + "." + host + " PRIVMSG #" + channel + " :" + message);
         }
 
@@ -202,7 +201,7 @@ namespace ConfigurableIrcBotApp
                     main.playBot.controlEmulator(main.playBotActions[message.message], main.emulationProcessName);
                 }
             }
-            else if (main.complexCommands.commandNames.Contains(commandParent))
+            else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))
             {
                 main.complexCommands.processComplexCommand(commandParent);
             }

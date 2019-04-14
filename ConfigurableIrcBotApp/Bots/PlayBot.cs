@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
+using WindowsInput.Native;
 
 namespace ConfigurableIrcBotApp
 {
@@ -58,5 +59,6 @@ namespace ConfigurableIrcBotApp
         {
             _controlPool = new Semaphore(1, 1);
         }
+
     }
 }
