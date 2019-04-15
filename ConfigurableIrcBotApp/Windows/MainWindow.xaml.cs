@@ -16,12 +16,14 @@ using System.Linq;
 using WindowsInput.Native;
 using ConfigurableIrcBotApp.DataObjects;
 using ConfigurableIrcBotApp.Bots;
+using System.Configuration;
 
 namespace ConfigurableIrcBotApp
 {
     public partial class MainWindow : Window
     {
-        public List<String> settingsKeys { get; set; }
+        public List<string> settingsKeys { get; set; }
+
         public IDictionary<string, Moderator> moderators { get; set; }
         public IDictionary<string, Commands> commands { get; set; }
         public IDictionary<string, PlayBotAction> playBotActions { get; set; }
@@ -108,7 +110,11 @@ namespace ConfigurableIrcBotApp
                 bot.ircThread.Abort();
                 bot.pingSender.pingSenderThread.Abort();
             }
-            
+
+            autoSave.autoSaveThread.Abort();
+
+            chatSettingsManager.saveDisplayFontSettings();
+            chatSettingsManager.saveTitlePictureSource();
 
             System.Windows.Application.Current.Shutdown();
         }
@@ -251,6 +257,7 @@ namespace ConfigurableIrcBotApp
         }
         private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
+            chatSettingsManager.loadConfigurations();
             this.popOutChat.Show();
             chatPoppedOut = true;
         }
@@ -405,11 +412,6 @@ namespace ConfigurableIrcBotApp
                     playBot.resetSemaphore();
 
                     autoSave.Start();
-
-                }
-                else
-                {
-                    autoSave.Stop();
                 }
             }
             else
@@ -421,8 +423,15 @@ namespace ConfigurableIrcBotApp
 
         private void OffsetTimerButton_Click(object sender, RoutedEventArgs e)
         {
-            TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
-            chatSettingsManager.offsetTimer(test);
+            try
+            {
+                TimeSpan test = TimeSpan.Parse(offsetTimerInsert.Text);
+                chatSettingsManager.offsetTimer(test);
+            }
+            catch (Exception offsetException)
+            {
+                writeError("\n\nThere was an issue entering the offset time", offsetException);
+            }
         }
 
         private void ChatCommands_Checked(object sender, RoutedEventArgs e)

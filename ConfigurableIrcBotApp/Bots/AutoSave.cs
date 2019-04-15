@@ -23,20 +23,16 @@ namespace ConfigurableIrcBotApp.Bots
         {
             this.main = main;
             sim = new InputSimulator();
-            autoSaveThread = new Thread(new ThreadStart(this.Run));
+            autoSaveThread = new Thread(new ThreadStart(this.Run)) { IsBackground = true };
         }
         public void Start()
         {
+            autoSaveThread = new Thread(new ThreadStart(this.Run)) { IsBackground = true };
             autoSaveThread.Start();
         }
 
-        public void Stop()
-        {
-            autoSaveThread.Abort();
-        }
         public void Run()
         {
-            
                 for (int i = 1; i < 11; i++)
                 {
                     Process targetEmulator = Process.GetProcessesByName(main.emulationProcessName).FirstOrDefault();
@@ -55,7 +51,7 @@ namespace ConfigurableIrcBotApp.Bots
                     Thread.Sleep(3600000);
                     if(i >= 10)
                     {
-                    i = 1;
+                        i = 1;
                     }
                 }
         }

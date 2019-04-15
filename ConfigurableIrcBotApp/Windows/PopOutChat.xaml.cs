@@ -30,7 +30,10 @@ namespace ConfigurableIrcBotApp
 
             _running = false;
             _paused = false;
+
         }
+
+        
 
         private void popoutChat_Closing(object sender, CancelEventArgs e)
         {
