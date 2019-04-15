@@ -256,7 +256,16 @@ namespace ConfigurableIrcBotApp
                     message.Substring(0, message.IndexOf(" ")) : message)) return "command";
             else if (main.playBotActions != null
                     && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message)) return "playBotCommand";
+                    && main.playBotActions.ContainsKey(message)
+                    ||
+                    message.Contains("+")
+                    && main.playBotActions != null
+                    && main.playBotActions.Count > 0
+                    && main.playBotActions.ContainsKey(message.Substring(0, message.IndexOf("+")).Trim())
+                    && main.playBotActions.ContainsKey(message.Substring(message.IndexOf("+") + 1).Trim()))
+                    return "playBotCommand";
+
+
             else return "all";
         }
     }
