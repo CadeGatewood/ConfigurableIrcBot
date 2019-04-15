@@ -70,9 +70,7 @@ namespace ConfigurableIrcBotApp
                 }
                 sim.Keyboard.KeyDown(action1.keyPress);
                 sim.Keyboard.KeyDown(action2.keyPress);
-                Thread.Sleep(TimeSpan.Compare(action1.duration, action2.duration) == 1 ? action1.duration : action2.duration);
-                sim.Keyboard.KeyUp(action1.keyPress);
-                sim.Keyboard.KeyUp(action2.keyPress);
+                Thread.Sleep(TimeSpan.Compare(action1.duration, action2.duration) > 0 ? action1.duration : action2.duration);
                 sim.Keyboard.KeyUp(action1.keyPress);
                 sim.Keyboard.KeyUp(action2.keyPress);
 
