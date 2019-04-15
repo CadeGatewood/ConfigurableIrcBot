@@ -180,25 +180,40 @@ namespace ConfigurableIrcBotApp
 
         public void ParseMessageThread(Message message)
         {
+
             if (message.userName.ToLower().Equals(userName.ToLower())) return;
+
             string commandParent = message.message.IndexOf(" ") > 0 ?
                     message.message.Substring(0, message.message.IndexOf(" ")) : message.message;
-            if (message.message.StartsWith("!") 
-                && main.commands != null 
-                && main.commands.Count > 0 
+            if (message.message.StartsWith("!")
+                && main.commands != null
+                && main.commands.Count > 0
                 && main.commands.ContainsKey(commandParent))
             {
                 //check for potential commands
                 parseCommand(message, commandParent);
             }
-            else if (main.playBotActions != null 
-                    && main.playBotActions.Count > 0 
+            else if (main.playBotActions != null
+                    && main.playBotActions.Count > 0
                     && main.playBotActions.ContainsKey(message.message))
             {
                 //check for play bot input
                 if (main.playBotIsActive)
                 {
                     main.playBot.controlEmulator(main.playBotActions[message.message], main.emulationProcessName);
+                }
+            }
+            else if (message.message.Contains("+")
+                    && main.playBotActions != null
+                    && main.playBotActions.Count > 0
+                    && main.playBotActions.ContainsKey(message.message.Substring(0, message.message.IndexOf("+")).Trim())
+                    && main.playBotActions.ContainsKey(message.message.Substring(message.message.IndexOf("+")+1).Trim()))
+            {
+                if (main.playBotIsActive)
+                {
+                    main.playBot.comboControlEmulator(main.playBotActions[message.message.Substring(0, message.message.IndexOf("+")).Trim()],
+                                                        main.playBotActions[message.message.Substring(message.message.IndexOf("+") + 1).Trim()],
+                                                        main.emulationProcessName);
                 }
             }
             else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))
