@@ -15,7 +15,7 @@ namespace ConfigurableIrcBotApp
         public string userName { get; set; }
         public string message { get; set; }
 
-        public Message(){}
+        public Message() { }
 
         public Message(string userName, string message)
         {
@@ -104,20 +104,20 @@ namespace ConfigurableIrcBotApp
                         message = new Message(rawMessage.Substring(rawMessage.IndexOf(":") + 1, rawMessage.IndexOf("!") - 1),
                                                 rawMessage.Substring(rawMessage.IndexOf(":", rawMessage.IndexOf(":") + 1) + 1)
                                             );
-                        
+
                         parseMessageThread = new Thread(() => ParseMessageThread(message))
                         {
                             IsBackground = true
                         };
                         parseMessageThread.Start();
-                        
+
                         main.Dispatcher.Invoke(() =>
                         {
                             main.writeToChatBlock(message, messageType(message.message));
                         });
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     //this is a dead catch, the app seems to
                     //just randomly end up here from irc activity
@@ -208,29 +208,27 @@ namespace ConfigurableIrcBotApp
                     && main.playBotActions.Count > 0
                     )
             {
-
+                //todo add a config point on the front end to customize length
                 if (main.playBotIsActive)
                 {
                     string[] complexControl = message.message.Split('+');
-                    if (complexControl.Length == 2 
-                        && main.playBotActions.ContainsKey(complexControl[0].Trim())
-                        && main.playBotActions.ContainsKey(complexControl[1].Trim()))
+                    bool playBotCommand = false;
+                    foreach (string command in complexControl)
                     {
-                        main.playBot.comboControlEmulator(main.playBotActions[complexControl[0].Trim()],
-                                                            main.playBotActions[complexControl[1].Trim()],
-                                                            main.emulationProcessName);
+                        if (main.playBotActions.ContainsKey(command.Trim()))
+                        {
+                            playBotCommand = true;
+                            continue;
+                        }
+                        else
+                        {
+                            playBotCommand = false;
+                            break;
+                        }
                     }
-                    else if(complexControl.Length > 2 
-                        && main.playBotActions.ContainsKey(complexControl[0].Trim())
-                        && main.playBotActions.ContainsKey(complexControl[1].Trim())
-                        && main.playBotActions.ContainsKey(complexControl[2].Trim())
-                        )
-                    {
-                        main.playBot.tripleControlEmulator(main.playBotActions[complexControl[0].Trim()],
-                                                            main.playBotActions[complexControl[1].Trim()],
-                                                            main.playBotActions[complexControl[2].Trim()],
+                    if (complexControl.Length > 3 ? false : playBotCommand)
+                        main.playBot.comboControlEmulator(convertActions(complexControl),
                                                             main.emulationProcessName);
-                    }
                 }
             }
             else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))
@@ -238,6 +236,7 @@ namespace ConfigurableIrcBotApp
                 main.complexCommands.processComplexCommand(commandParent);
             }
             return;
+   
         }
         
         public void parseCommand(Message message, string commandParent)
@@ -271,19 +270,44 @@ namespace ConfigurableIrcBotApp
                 && main.commands.Count > 0
                 && main.commands.ContainsKey(message.IndexOf(" ") > 0 ?
                     message.Substring(0, message.IndexOf(" ")) : message)) return "command";
-            else if (main.playBotActions != null
-                    && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message)
-                    ||
-                    message.Contains("+")
+            else if (main.playBotIsActive
                     && main.playBotActions != null
                     && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message.Substring(0, message.IndexOf("+")).Trim())
-                    && main.playBotActions.ContainsKey(message.Substring(message.IndexOf("+") + 1).Trim()))
-                    return "playBotCommand";
+                    && main.playBotActions.ContainsKey(message)) return "playBotCommand";
 
+            else if(main.playBotIsActive
+                    && message.Contains("+")
+                    && main.playBotActions != null
+                    && main.playBotActions.Count > 0)
+            {
+                string[] complexControl = message.Split('+');
+                bool playBotCommand = false;
+                foreach(string command in complexControl){
+                    if (main.playBotActions.ContainsKey(command.Trim()))
+                    {
+                        playBotCommand = true;
+                        continue;
+                    }
+                    else
+                    {
+                        playBotCommand = false;
+                        break;
+                    }
+                }
+                if (playBotCommand) return "playBotCommand";
+                else return "all";
+            }
 
             else return "all";
+        }
+
+        private List<PlayBotAction> convertActions(string[] commands)
+        {
+            List<PlayBotAction> actions = new List<PlayBotAction>();
+            foreach (string command in commands)
+                actions.Add(main.playBotActions[command.Trim()]);
+
+            return actions;
         }
     }
 }
