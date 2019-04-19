@@ -271,17 +271,33 @@ namespace ConfigurableIrcBotApp
                 && main.commands.Count > 0
                 && main.commands.ContainsKey(message.IndexOf(" ") > 0 ?
                     message.Substring(0, message.IndexOf(" ")) : message)) return "command";
-            else if (main.playBotActions != null
-                    && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message)
-                    ||
-                    message.Contains("+")
+            else if (main.playBotIsActive
                     && main.playBotActions != null
                     && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message.Substring(0, message.IndexOf("+")).Trim())
-                    && main.playBotActions.ContainsKey(message.Substring(message.IndexOf("+") + 1).Trim()))
-                    return "playBotCommand";
+                    && main.playBotActions.ContainsKey(message)) return "playBotCommand";
 
+            else if(main.playBotIsActive
+                    && message.Contains("+")
+                    && main.playBotActions != null
+                    && main.playBotActions.Count > 0)
+            {
+                string[] complexControl = message.Split('+');
+                bool playBotCommand = false;
+                foreach(string command in complexControl){
+                    if (main.playBotActions.ContainsKey(command.Trim()))
+                    {
+                        playBotCommand = true;
+                        continue;
+                    }
+                    else
+                    {
+                        playBotCommand = false;
+                        break;
+                    }
+                }
+                if (playBotCommand) return "playBotCommand";
+                else return "all";
+            }
 
             else return "all";
         }
