@@ -79,7 +79,7 @@ namespace ConfigurableIrcBotApp
 
                 foreach (PlayBotAction action in actions)
                 {
-                    sim.Keyboard.KeyDown(action.keyPress);
+                    sim.Keyboard.KeyUp(action.keyPress);
                 }
                 
 
