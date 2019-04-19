@@ -206,14 +206,31 @@ namespace ConfigurableIrcBotApp
             else if (message.message.Contains("+")
                     && main.playBotActions != null
                     && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message.message.Substring(0, message.message.IndexOf("+")).Trim())
-                    && main.playBotActions.ContainsKey(message.message.Substring(message.message.IndexOf("+")+1).Trim()))
+                    )
             {
+
                 if (main.playBotIsActive)
                 {
-                    main.playBot.comboControlEmulator(main.playBotActions[message.message.Substring(0, message.message.IndexOf("+")).Trim()],
-                                                        main.playBotActions[message.message.Substring(message.message.IndexOf("+") + 1).Trim()],
-                                                        main.emulationProcessName);
+                    string[] complexControl = message.message.Split('+');
+                    if (complexControl.Length == 2 
+                        && main.playBotActions.ContainsKey(complexControl[0].Trim())
+                        && main.playBotActions.ContainsKey(complexControl[1].Trim()))
+                    {
+                        main.playBot.comboControlEmulator(main.playBotActions[complexControl[0].Trim()],
+                                                            main.playBotActions[complexControl[1].Trim()],
+                                                            main.emulationProcessName);
+                    }
+                    else if(complexControl.Length > 2 
+                        && main.playBotActions.ContainsKey(complexControl[0].Trim())
+                        && main.playBotActions.ContainsKey(complexControl[1].Trim())
+                        && main.playBotActions.ContainsKey(complexControl[2].Trim())
+                        )
+                    {
+                        main.playBot.tripleControlEmulator(main.playBotActions[complexControl[0].Trim()],
+                                                            main.playBotActions[complexControl[1].Trim()],
+                                                            main.playBotActions[complexControl[2].Trim()],
+                                                            main.emulationProcessName);
+                    }
                 }
             }
             else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))

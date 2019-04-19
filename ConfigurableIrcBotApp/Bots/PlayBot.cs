@@ -84,6 +84,38 @@ namespace ConfigurableIrcBotApp
             }
         }
 
+        public void tripleControlEmulator(PlayBotAction action1, PlayBotAction action2, PlayBotAction action3, string emulationProcessName)
+        {
+            try
+            {
+                if (main.voteResults > 50)
+                    _controlPool.WaitOne();
+
+                Process targetEmulator = Process.GetProcessesByName(emulationProcessName).FirstOrDefault();
+                IntPtr hWnd = targetEmulator.MainWindowHandle;
+                if (hWnd != IntPtr.Zero)
+                {
+                    SetForegroundWindow(hWnd);
+                }
+                sim.Keyboard.KeyDown(action1.keyPress);
+                sim.Keyboard.KeyDown(action2.keyPress);
+                sim.Keyboard.KeyDown(action3.keyPress);
+                Thread.Sleep(TimeSpan.Compare(action1.duration, action2.duration) > 0 ? 
+                                                action1.duration > action3.duration ? action1.duration : action3.duration : 
+                                                action2.duration > action3.duration ? action2.duration : action3.duration);
+                sim.Keyboard.KeyUp(action1.keyPress);
+                sim.Keyboard.KeyUp(action2.keyPress);
+                sim.Keyboard.KeyUp(action3.keyPress);
+
+                if (main.voteResults > 50)
+                    _controlPool.Release();
+
+            }
+            catch (Exception e)
+            {
+                main.writeError("\n\n There was an error sending events from chat.", e);
+            }
+        }
 
         public void resetSemaphore()
         {
