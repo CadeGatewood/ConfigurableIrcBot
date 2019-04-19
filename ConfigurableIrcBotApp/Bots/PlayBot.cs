@@ -55,7 +55,7 @@ namespace ConfigurableIrcBotApp
             }
         }
 
-        public void comboControlEmulator(PlayBotAction action1, PlayBotAction action2, string emulationProcessName)
+        public void comboControlEmulator(List<PlayBotAction> actions, string emulationProcessName)
         {
             try
             {
@@ -68,44 +68,20 @@ namespace ConfigurableIrcBotApp
                 {
                     SetForegroundWindow(hWnd);
                 }
-                sim.Keyboard.KeyDown(action1.keyPress);
-                sim.Keyboard.KeyDown(action2.keyPress);
-                Thread.Sleep(TimeSpan.Compare(action1.duration, action2.duration) > 0 ? action1.duration : action2.duration);
-                sim.Keyboard.KeyUp(action1.keyPress);
-                sim.Keyboard.KeyUp(action2.keyPress);
 
-                if (main.voteResults > 50)
-                    _controlPool.Release();
-
-            }
-            catch (Exception e)
-            {
-                main.writeError("\n\n There was an error sending events from chat.", e);
-            }
-        }
-
-        public void tripleControlEmulator(PlayBotAction action1, PlayBotAction action2, PlayBotAction action3, string emulationProcessName)
-        {
-            try
-            {
-                if (main.voteResults > 50)
-                    _controlPool.WaitOne();
-
-                Process targetEmulator = Process.GetProcessesByName(emulationProcessName).FirstOrDefault();
-                IntPtr hWnd = targetEmulator.MainWindowHandle;
-                if (hWnd != IntPtr.Zero)
+                foreach(PlayBotAction action in actions)
                 {
-                    SetForegroundWindow(hWnd);
+                    sim.Keyboard.KeyDown(action.keyPress);
                 }
-                sim.Keyboard.KeyDown(action1.keyPress);
-                sim.Keyboard.KeyDown(action2.keyPress);
-                sim.Keyboard.KeyDown(action3.keyPress);
-                Thread.Sleep(TimeSpan.Compare(action1.duration, action2.duration) > 0 ? 
-                                                action1.duration > action3.duration ? action1.duration : action3.duration : 
-                                                action2.duration > action3.duration ? action2.duration : action3.duration);
-                sim.Keyboard.KeyUp(action1.keyPress);
-                sim.Keyboard.KeyUp(action2.keyPress);
-                sim.Keyboard.KeyUp(action3.keyPress);
+
+                var test = actions.Max(action => action.duration);
+                Thread.Sleep(test);
+
+                foreach (PlayBotAction action in actions)
+                {
+                    sim.Keyboard.KeyDown(action.keyPress);
+                }
+                
 
                 if (main.voteResults > 50)
                     _controlPool.Release();
