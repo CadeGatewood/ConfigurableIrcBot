@@ -28,34 +28,7 @@ namespace ConfigurableIrcBotApp
             _controlPool = new Semaphore(1, 1);
         }
 
-        public void controlEmulator(PlayBotAction action, string emulationProcessName)
-        {
-            try
-            {
-                if (main.voteResults > 50)
-                    _controlPool.WaitOne();
-
-                Process targetEmulator = Process.GetProcessesByName(emulationProcessName).FirstOrDefault();
-                IntPtr hWnd = targetEmulator.MainWindowHandle;
-                if (hWnd != IntPtr.Zero)
-                {
-                    SetForegroundWindow(hWnd);
-                }
-                sim.Keyboard.KeyDown(action.keyPress);
-                Thread.Sleep(action.duration);
-                sim.Keyboard.KeyUp(action.keyPress);
-
-                if (main.voteResults > 50)
-                    _controlPool.Release();
-                    
-            }
-            catch(Exception e)
-            {
-                main.writeError("\n\n There was an error sending events from chat.", e);
-            }
-        }
-
-        public void comboControlEmulator(List<PlayBotAction> actions, string emulationProcessName)
+        public void comboControlEmulator(List<PlayBotAction> actions, string emulationProcessName, int repeat)
         {
             try
             {
@@ -69,17 +42,24 @@ namespace ConfigurableIrcBotApp
                     SetForegroundWindow(hWnd);
                 }
 
-                foreach(PlayBotAction action in actions)
+                for (int i = 0; i < repeat; i++)
                 {
-                    sim.Keyboard.KeyDown(action.keyPress);
-                }
+                    foreach (PlayBotAction action in actions)
+                    {
+                        sim.Keyboard.KeyDown(action.keyPress);
+                    }
 
-                var test = actions.Max(action => action.duration);
-                Thread.Sleep(test);
+                    Thread.Sleep(actions.Max(action => action.duration));
 
-                foreach (PlayBotAction action in actions)
-                {
-                    sim.Keyboard.KeyUp(action.keyPress);
+                    foreach (PlayBotAction action in actions)
+                    {
+                        sim.Keyboard.KeyUp(action.keyPress);
+                    }
+
+                    if (repeat > 1)
+                    {
+                        Thread.Sleep(250);
+                    }
                 }
                 
 

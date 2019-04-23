@@ -17,9 +17,6 @@ namespace ConfigurableIrcBotApp.tabManagers
     {
         private MainWindow main;
 
-        string fontsfolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
-        string localFonts = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\Fonts";
-
         public PopoutChatSettingsManager(MainWindow main)
         {
             this.main = main;
@@ -142,7 +139,6 @@ namespace ConfigurableIrcBotApp.tabManagers
         {
             if (ConfigurationManager.AppSettings["titleBlock"] != null)
             {
-                //main.popOutChat.titleBlock.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
                 var fontName = ConfigurationManager.AppSettings["titleBlock"];
                 main.popOutChat.titleBlock.FontFamily = new System.Windows.Media.FontFamily(fontName);
                 main.popOutChat.titleBlock.FontSize = Double.Parse(ConfigurationManager.AppSettings["titleBlockSize"]);
