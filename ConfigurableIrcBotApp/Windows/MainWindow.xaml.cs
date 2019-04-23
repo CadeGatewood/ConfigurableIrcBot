@@ -263,9 +263,16 @@ namespace ConfigurableIrcBotApp
         }
         private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
-            chatSettingsManager.loadConfigurations();
-            this.popOutChat.Show();
-            chatPoppedOut = true;
+            try
+            {
+                chatSettingsManager.loadConfigurations();
+                this.popOutChat.Show();
+                chatPoppedOut = true;
+            }
+            catch(Exception openChatException)
+            {
+                writeError("something went wrong", openChatException);
+            }
         }
         
         private void connectionConfig_Click(object sender, RoutedEventArgs e)

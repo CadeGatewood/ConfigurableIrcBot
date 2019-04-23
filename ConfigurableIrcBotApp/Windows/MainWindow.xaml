@@ -105,7 +105,7 @@
                     <RadioButton x:Name="titleIsImage" Content="Image" Checked="TitleIsImage_Checked"/>
                 </StackPanel>
 
-                <Label Content="Chat Display:" Margin="223,143,139,194"></Label>
+                <Label Content="Chat Display:" Margin="223,143,139,267"></Label>
                 <StackPanel x:Name="chatDisplayPanel" Margin="234,168,65,161">
                     <RadioButton x:Name="chatAll" Content="All" IsChecked="True" Checked="ChatAll_Checked"/>
                     <RadioButton x:Name="chatCommands" Content="All Commands" Checked="ChatCommands_Checked"/>
