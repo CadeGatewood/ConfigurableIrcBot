@@ -53,7 +53,7 @@
         <DockPanel x:Name="commandModeDock" Margin="10,5,10,394" Grid.Row="1" Grid.RowSpan="2" LastChildFill="True">
             <TextBlock x:Name="rightVote" VerticalAlignment ="Center" DockPanel.Dock="Right"> !FirstInFirstOut</TextBlock>
             <TextBlock DockPanel.Dock="Left" VerticalAlignment ="Center" x:Name="leftVote">!AllAtOnce </TextBlock>
-            <ProgressBar x:Name="voteProgressBar" Background="#323232" Foreground="#828282" Value="50" Height="21" MinWidth="100" BorderThickness="0" Margin="0,13" ></ProgressBar>
+            <ProgressBar x:Name="voteProgressBar" Background="#323232" Foreground="#828282" Value="75" Height="21" MinWidth="100" BorderThickness="0" Margin="0,13"></ProgressBar>
             
         </DockPanel>
 

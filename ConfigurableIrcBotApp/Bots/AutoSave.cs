@@ -33,27 +33,29 @@ namespace ConfigurableIrcBotApp.Bots
 
         public void Run()
         {
-                for (int i = 1; i < 11; i++)
+            for (int i = 1; i < 11; i++)
+            {
+                Process targetEmulator = Process.GetProcessesByName(main.emulationProcessName).FirstOrDefault();
+                IntPtr hWnd = targetEmulator.MainWindowHandle;
+                if (hWnd != IntPtr.Zero)
                 {
-                    Process targetEmulator = Process.GetProcessesByName(main.emulationProcessName).FirstOrDefault();
-                    IntPtr hWnd = targetEmulator.MainWindowHandle;
-                    if (hWnd != IntPtr.Zero)
-                    {
-                        SetForegroundWindow(hWnd);
-                    }
-
-                    VirtualKeyCode code;
-                    Enum.TryParse<VirtualKeyCode>("F" + i, out code);
-
-                    sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
-                    sim.Keyboard.KeyPress(code);
-                    sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
-                    Thread.Sleep(3600000);
-                    if(i >= 10)
-                    {
-                        i = 1;
-                    }
+                    SetForegroundWindow(hWnd);
                 }
+
+                VirtualKeyCode code;
+                Enum.TryParse<VirtualKeyCode>("F" + i, out code);
+
+                sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
+                Thread.Sleep(100);
+                sim.Keyboard.KeyDown(code);
+                sim.Keyboard.KeyDown(code);
+                sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
+                Thread.Sleep(3600000);
+                if(i >= 10)
+                {
+                    i = 1;
+                }
+            }
         }
     }
 }

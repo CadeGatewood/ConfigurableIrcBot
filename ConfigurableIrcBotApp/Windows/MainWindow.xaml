@@ -8,7 +8,7 @@
         Closing="MainWindow_Closing"
         mc:Ignorable="d"
         AllowDrop="True"
-        Title="Bot Configuration" Height="475" Width="475" >
+        Title="Bot Configuration" Height="552.146" Width="475" >
 
 
     <TabControl>
@@ -46,7 +46,7 @@
 
                 <TextBox x:Name="offsetTimerInsert" Margin="214,190,0,86"></TextBox>
                 <Button x:Name="offsetTimerButton" Content="Offset Timer" HorizontalAlignment="Left" Margin="214,225,0,0" VerticalAlignment="Top" Width="92" Click="OffsetTimerButton_Click" />
-                
+
             </Grid>
         </TabItem>
         <TabItem>
@@ -93,19 +93,19 @@
 
                 <Label x:Name="selectActiveLabel" Content="Active Sections:" Margin="263,0,31,355"/>
 
-                <CheckBox x:Name="titleActiveBox" Margin="263,25,84,355" Height="30" Checked="titleActiveBox_Checked" Unchecked="titleActiveBox_Checked" IsChecked="True">Title</CheckBox>
-                <CheckBox x:Name="controlsActiveBox" Margin="263,55,84,323" Height="30" Checked="controlsActiveBox_Checked" Unchecked="controlsActiveBox_Checked" IsChecked="True">Play Bot Controls</CheckBox>
-                <CheckBox x:Name="chatActiveBox" Margin="263,85,84,293" Height="30" Checked="chatActiveBox_Checked" Unchecked="chatActiveBox_Checked" IsChecked="True">Chat</CheckBox>
-                <CheckBox x:Name="clockActiveBox" Margin="263,113,84,270" Checked="clockActiveBox_Checked" Unchecked="clockActiveBox_Checked" IsChecked="True">Timer</CheckBox>
+                <CheckBox x:Name="titleActiveBox" Margin="263,26,84,429" Height="30" Checked="titleActiveBox_Checked" Unchecked="titleActiveBox_Checked" IsChecked="True">Title</CheckBox>
+                <CheckBox x:Name="controlsActiveBox" Margin="263,44,84,411" Height="30" Checked="controlsActiveBox_Checked" Unchecked="controlsActiveBox_Checked" IsChecked="True">Play Bot Controls</CheckBox>
+                <CheckBox x:Name="chatActiveBox" Margin="263,62,84,393" Height="30" Checked="chatActiveBox_Checked" Unchecked="chatActiveBox_Checked" IsChecked="True">Chat</CheckBox>
+                <CheckBox x:Name="clockActiveBox" Margin="263,82,84,377" Checked="clockActiveBox_Checked" Unchecked="clockActiveBox_Checked" IsChecked="True">Timer</CheckBox>
 
                 <Label Content="Title Type:" Margin="10,173,383,195"></Label>
-                <StackPanel x:Name="titleType" Orientation="Horizontal" Height="30" Margin="85,179,263,199">
+                <StackPanel x:Name="titleType" Orientation="Horizontal" Height="30" Margin="80,183,268,0" VerticalAlignment="Top">
                     <RadioButton x:Name="titleIsText" Content="Text" Margin="0,0,8,0" IsChecked="True" Checked="TitleIsText_Checked"/>
 
                     <RadioButton x:Name="titleIsImage" Content="Image" Checked="TitleIsImage_Checked"/>
                 </StackPanel>
 
-                <Label Content="Chat Display:" Margin="223,143,139,194"></Label>
+                <Label Content="Chat Display:" Margin="223,143,139,267"></Label>
                 <StackPanel x:Name="chatDisplayPanel" Margin="234,168,65,161">
                     <RadioButton x:Name="chatAll" Content="All" IsChecked="True" Checked="ChatAll_Checked"/>
                     <RadioButton x:Name="chatCommands" Content="All Commands" Checked="ChatCommands_Checked"/>
@@ -121,8 +121,8 @@
             </TabItem.Header>
 
             <Grid Margin="0,-2,0,2">
-                <Button x:Name="commndsEditButton" Content="Edit Commands" Margin="10,10,267,360" Click="CommndsEditButton_Click"/>
-                <Button x:Name="moderatorsEditButton" Content="Edit Moderators" Margin="10,53,267,317" Click="ModeratorsEditButton_Click"/>
+                <Button x:Name="commndsEditButton" Content="Edit Commands" Margin="10,10,267,0" Click="CommndsEditButton_Click" Height="42" VerticalAlignment="Top"/>
+                <Button x:Name="moderatorsEditButton" Content="Edit Moderators" Margin="10,67,267,0" Click="ModeratorsEditButton_Click" Height="43" VerticalAlignment="Top"/>
             </Grid>
 
         </TabItem>
@@ -142,14 +142,20 @@
                           Checked="PlayBotActive_Checked"
                           Unchecked="PlayBotActive_Checked"/>
 
-                <Label Content="Command:" Height="30" Margin="10,40,306,338"/>
-                <TextBox x:Name="playCommand"  Margin="10,70,306,303"/>
-                <Label Content="KeyPress Output:" Height="30" Margin="10,110,306,268" RenderTransformOrigin="-0.836,-2.767"/>
-                <TextBox x:Name="playKey"  Margin="10,140,306,233"/>
-                <Label Content="Duration (seconds):" Height="30" Margin="10,180,306,198"/>
-                <TextBox x:Name="playDuration"  Margin="10,210,306,163" PreviewTextInput="secondsValidation"/>
-                <Button x:Name="addPlayAction" Content="Add Action" Margin="10,250,343,123" Click="AddPlayAction_Click"/>
-                <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,290,343,83" Click="SelectEmulatorWindow_Click" />
+                <Label Content="Command:" Height="30" Margin="10,35,306,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="playCommand"  Margin="10,65,306,0" Height="35" VerticalAlignment="Top"/>
+                <Label Content="KeyPress Output:" Height="30" Margin="10,100,306,0" RenderTransformOrigin="-0.836,-2.767" VerticalAlignment="Top"/>
+                <TextBox x:Name="playKey"  Margin="10,130,306,0" Height="35" VerticalAlignment="Top"/>
+                <Label Content="Duration (seconds):" Height="30" Margin="10,170,306,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="playDuration"  Margin="10,200,306,0" PreviewTextInput="secondsValidation" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="addPlayAction" Content="Add Action" Margin="10,240,343,0" Click="AddPlayAction_Click" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="selectEmulatorWindow" Content="Select Emulator" Margin="10,280,343,0" Click="SelectEmulatorWindow_Click" Height="35" VerticalAlignment="Top" />
+
+                <TextBox x:Name="comboLengthBox"  Margin="10,320,306,0" PreviewTextInput="numberValidation" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="setComboLength" Content="Set Combo Length" Margin="10,360,319,0" Click="SetComboLength_Click" Height="35" VerticalAlignment="Top"/>
+
+                <TextBox x:Name="iterativeCommandBox"  Margin="10,400,306,0" PreviewTextInput="numberValidation" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="setIterativeLength" Content="Set Repeat Length" Margin="10,440,319,0" Height="35" VerticalAlignment="Top" Click="SetIterativeLength_Click"/>
 
                 <DataGrid x:Name="currentPlayActionsGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" Margin="162,0,0,0">
                     <DataGrid.Columns>
@@ -177,13 +183,13 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                            <DataGridTemplateColumn Width="50*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
+                        <DataGridTemplateColumn Width="50*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
                                     <Button Click="removePlayAction_Click" Height="30" Width="50" >Remove</Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 

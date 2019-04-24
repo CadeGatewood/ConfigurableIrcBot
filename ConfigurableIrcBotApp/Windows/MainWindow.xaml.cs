@@ -36,6 +36,8 @@ namespace ConfigurableIrcBotApp
         public string emulationProcessName { get; set; }
         public string chatOutput { get; set; }
         public int voteResults { get; set; }
+        public int comboLength { get; set; }
+        public int repeatLength { get; set; }
 
         public PopoutChatSettingsManager chatSettingsManager { get; set; }
         public BotChatActivitySettingsManager botChatActivity { get; set; }
@@ -85,13 +87,15 @@ namespace ConfigurableIrcBotApp
 
             InitializeComponent();
 
+            playBotSettingsManager.loadPlayBotSettings();
+
             this.playBotCommands = new List<string>();
             this.playActionsList = this.playBotActions.Values.ToList();
             playBotCommands = playBotActions.Keys.ToList();
             currentPlayActionsGrid.ItemsSource = playActionsList;
 
             popOutChat.playBotControlDisplayGrid.ItemsSource = playBotCommands;
-            voteResults = 50;
+            voteResults = 75;
             popOutChat.voteProgressBar.Value = voteResults;
 
             this.settingsKeys = settingsKeys;
@@ -115,6 +119,8 @@ namespace ConfigurableIrcBotApp
 
             chatSettingsManager.saveDisplayFontSettings();
             chatSettingsManager.saveTitlePictureSource();
+
+            playBotSettingsManager.savePlayBotSettings();
 
             System.Windows.Application.Current.Shutdown();
         }
@@ -257,9 +263,16 @@ namespace ConfigurableIrcBotApp
         }
         private void popoutChat_Click(object sender, RoutedEventArgs e)
         {
-            chatSettingsManager.loadConfigurations();
-            this.popOutChat.Show();
-            chatPoppedOut = true;
+            try
+            {
+                chatSettingsManager.loadConfigurations();
+                this.popOutChat.Show();
+                chatPoppedOut = true;
+            }
+            catch(Exception openChatException)
+            {
+                writeError("something went wrong", openChatException);
+            }
         }
         
         private void connectionConfig_Click(object sender, RoutedEventArgs e)
@@ -492,5 +505,14 @@ namespace ConfigurableIrcBotApp
             }
         }
 
+        private void SetComboLength_Click(object sender, RoutedEventArgs e)
+        {
+            comboLength = Int32.Parse(comboLengthBox.Text);
+        }
+
+        private void SetIterativeLength_Click(object sender, RoutedEventArgs e)
+        {
+            repeatLength = Int32.Parse(iterativeCommandBox.Text);
+        }
     }
 }

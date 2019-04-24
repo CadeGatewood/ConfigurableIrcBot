@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using System.Net.Sockets;
-
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 
@@ -183,57 +183,38 @@ namespace ConfigurableIrcBotApp
 
             if (message.userName.ToLower().Equals(userName.ToLower())) return;
 
-            string commandParent = message.message.IndexOf(" ") > 0 ?
+            if (!main.playBotIsActive)
+            {
+                string commandParent = message.message.IndexOf(" ") > 0 ?
                     message.message.Substring(0, message.message.IndexOf(" ")) : message.message;
-            if (message.message.StartsWith("!")
-                && main.commands != null
-                && main.commands.Count > 0
-                && main.commands.ContainsKey(commandParent))
-            {
-                //check for potential commands
-                parseCommand(message, commandParent);
-            }
-            else if (main.playBotActions != null
-                    && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message.message))
-            {
-                //check for play bot input
-                if (main.playBotIsActive)
+                if (message.message.StartsWith("!")
+                    && main.commands != null
+                    && main.commands.Count > 0
+                    && main.commands.ContainsKey(commandParent))
                 {
-                    main.playBot.controlEmulator(main.playBotActions[message.message], main.emulationProcessName);
+                    //check for potential commands
+                    parseCommand(message, commandParent);
+                }
+                else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))
+                {
+                    main.complexCommands.processComplexCommand(commandParent);
                 }
             }
-            else if (message.message.Contains("+")
-                    && main.playBotActions != null
-                    && main.playBotActions.Count > 0
-                    )
+            else
             {
-                //todo add a config point on the front end to customize length
-                if (main.playBotIsActive)
+                //then split into processing
+                var containsNumberRegex = new Regex(@"\d+");
+                Match match = containsNumberRegex.Match(message.message);
+                if (match.Success)
                 {
-                    string[] complexControl = message.message.Split('+');
-                    bool playBotCommand = false;
-                    foreach (string command in complexControl)
-                    {
-                        if (main.playBotActions.ContainsKey(command.Trim()))
-                        {
-                            playBotCommand = true;
-                            continue;
-                        }
-                        else
-                        {
-                            playBotCommand = false;
-                            break;
-                        }
-                    }
-                    if (complexControl.Length > 3 ? false : playBotCommand)
-                        main.playBot.comboControlEmulator(convertActions(complexControl),
-                                                            main.emulationProcessName);
+                    //repeat number found
+                    processPlayBotCommand(message.message.Remove(message.message.IndexOf(match.ToString())), Int32.Parse(match.ToString()));
                 }
-            }
-            else if (main.complexCommands.commandNames.Contains(commandParent.ToLower()))
-            {
-                main.complexCommands.processComplexCommand(commandParent);
+                else
+                {
+                    //process as combo
+                    processPlayBotCommand(message.message, 1);
+                }
             }
             return;
    
@@ -265,28 +246,46 @@ namespace ConfigurableIrcBotApp
 
         public string messageType(string message)
         {
+
+            //check for repeat command number abd remove if present for chat writing
+            var containsNumberRegex = new Regex(@"\d+");
+            Match match = containsNumberRegex.Match(message);
+            if (match.Success)
+            {
+               message = message.Remove(message.IndexOf(match.ToString())).Trim();
+            }
+
+
             if (message.StartsWith("!")
                 && main.commands != null
                 && main.commands.Count > 0
                 && main.commands.ContainsKey(message.IndexOf(" ") > 0 ?
-                    message.Substring(0, message.IndexOf(" ")) : message)) return "command";
+                message.Substring(0, message.IndexOf(" ")) : message)) return "command";
             else if (main.playBotIsActive
                     && main.playBotActions != null
                     && main.playBotActions.Count > 0
-                    && main.playBotActions.ContainsKey(message)) return "playBotCommand";
+                    && main.playBotActions.ContainsKey(message))
+            {
+                if (match.Success && Int32.Parse(match.ToString()) <= main.repeatLength)
+                    return "playBotCommand";
+                else if (!match.Success)
+                    return "playBotCommand";
+                else return "all";
+            }
 
-            else if(main.playBotIsActive
+            else if (main.playBotIsActive
                     && message.Contains("+")
                     && main.playBotActions != null
                     && main.playBotActions.Count > 0)
             {
                 string[] complexControl = message.Split('+');
                 bool playBotCommand = false;
-                foreach(string command in complexControl){
+                foreach (string command in complexControl)
+                {
                     if (main.playBotActions.ContainsKey(command.Trim()))
                     {
                         playBotCommand = true;
-                        continue;
+                        continue;   
                     }
                     else
                     {
@@ -294,6 +293,18 @@ namespace ConfigurableIrcBotApp
                         break;
                     }
                 }
+
+                var test1 = complexControl.Length;
+                var test2 = main.comboLength;
+                if (match.Success && Int32.Parse(match.ToString()) > main.repeatLength)
+                {
+                    playBotCommand = false;
+                }
+                if (complexControl.Length > main.comboLength)
+                {
+                    playBotCommand = false;
+                }
+
                 if (playBotCommand) return "playBotCommand";
                 else return "all";
             }
@@ -308,6 +319,46 @@ namespace ConfigurableIrcBotApp
                 actions.Add(main.playBotActions[command.Trim()]);
 
             return actions;
+        }
+
+        private void processPlayBotCommand(string message, int repeat)
+        {
+            if (repeat > main.repeatLength) return;
+            
+
+            string[] control;
+            if (message.Contains("+"))
+            {
+                control = message.Split('+');
+            }
+            else
+            {
+                control = new[] { message };
+            }
+
+            if (control.Length > main.comboLength) return;
+
+            if(main.playBotActions != null
+                && main.playBotActions.Count > 0)
+            {
+                bool playBotCommand = false;
+                foreach (string command in control)
+                {
+                    if (main.playBotActions.ContainsKey(command.Trim()))
+                    {
+                        playBotCommand = true;
+                        continue;
+                    }
+                    else
+                    {
+                        playBotCommand = false;
+                        break;
+                    }
+                }
+                if (playBotCommand)
+                    main.playBot.comboControlEmulator(convertActions(control),
+                                                        main.emulationProcessName, repeat);
+            }
         }
     }
 }
